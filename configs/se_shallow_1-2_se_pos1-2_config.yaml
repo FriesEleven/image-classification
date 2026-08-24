@@ -1,0 +1,30 @@
+dataset:
+  name: CIFAR-10
+  num_classes: 10
+  test_samples: 10000
+  train_samples: 50000
+experiment_info:
+  aux_positions: 1,2
+  cbam_positions: ''
+  model_type: se
+  name: se_shallow_1-2
+  se_positions: ''
+  timestamp: 2025-10-24_18-41-07
+hyperparameters:
+  accumulation_steps: 2
+  amp: true
+  batch_size: 64
+  epochs: 200
+  learning_rate: 0.01
+  optimizer: AdamW
+  scheduler: OneCycleLR
+  weight_decay: 0.0001
+model_architecture:
+  aux_positions: 1,2
+  cbam_positions: ''
+  num_classes: 10
+  se_positions: ''
+  type: se
+training_info:
+  device: cuda
+  device_name: NVIDIA GeForce RTX 4060 Ti

@@ -1,0 +1,24 @@
+
+    === KEY FINDINGS ===
+
+    1. PERFORMANCE IMPROVEMENT:
+       - Baseline (baseline_mobilenetv2): 81.81%
+       - Best Model: hybrid_se1-2_cbam15-16 - 83.83%
+       - Improvement: +2.02%
+
+    2. EFFICIENCY ANALYSIS:
+       - Most Accurate: hybrid_se1-2_cbam15-16 
+       - Most Efficient (Accuracy vs Parameters): hybrid_se1-2_cbam15-16
+       - Parameters Increase (Best vs Baseline): 0.007M
+       - FLOPs Increase (Best vs Baseline): 2.000M
+
+    3. POSITION STRATEGY INSIGHTS:
+       - Deep layers generally provide better performance gains
+       - Shallow layers offer better parameter efficiency
+       - Mixed strategy balances performance and efficiency
+
+    4. MODULE COMPARISON:
+       - CBAM: Better absolute performance, higher computational cost
+       - SE: Better parameter efficiency, competitive performance
+       - ECA: Lightweight design with moderate performance improvement
+    

@@ -1,0 +1,40 @@
+\begin{table}
+\caption{Experimental Results Comparison}
+\label{tab:results}
+\begin{tabular}{lllrrrr}
+\toprule
+Experiment & Model_Type & Positions & Parameters_Total (M) & FLOPs_Total (M) & Best_Val_Acc (%) & Inference_Latency (ms) \\
+\midrule
+baseline_mobilenetv2 & mobilenetv2 & N/A & 2.237000 & 91.000000 & 81.810000 & 4.471000 \\
+eca_global & eca & N/A & 2.237000 & 91.010000 & 83.170000 & 5.967000 \\
+cbam_shallow_1-2 & cbam & [1, 2] & 2.237000 & 92.600000 & 83.120000 & 5.331000 \\
+cbam_middle_7-8 & cbam & [7, 8] & 2.238000 & 92.600000 & 83.620000 & 4.599000 \\
+cbam_deep_15-16 & cbam & [15, 16] & 2.243000 & 92.600000 & 83.440000 & 5.825000 \\
+se_shallow_1-2 & se & [1, 2] & 2.237000 & 91.400000 & 83.240000 & 4.920000 \\
+se_middle_7-8 & se & [7, 8] & 2.238000 & 91.400000 & 82.640000 & 5.811000 \\
+se_deep_15-16 & se & [15, 16] & 2.243000 & 91.400000 & 83.200000 & 5.225000 \\
+hybrid_se1-2_cbam15-16 & hybrid & NaN & 2.243000 & 93.000000 & 83.830000 & 6.821000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{table}
+\caption{Performance Improvement Over Baseline}
+\label{tab:improvement}
+\begin{tabular}{lrr}
+\toprule
+Experiment & Accuracy_Improvement (%) & Relative_Improvement (%) \\
+\midrule
+baseline_mobilenetv2 & 0.000000 & 0.000000 \\
+eca_global & 1.360000 & 1.662000 \\
+cbam_shallow_1-2 & 1.310000 & 1.601000 \\
+cbam_middle_7-8 & 1.810000 & 2.212000 \\
+cbam_deep_15-16 & 1.630000 & 1.992000 \\
+se_shallow_1-2 & 1.430000 & 1.748000 \\
+se_middle_7-8 & 0.830000 & 1.015000 \\
+se_deep_15-16 & 1.390000 & 1.699000 \\
+hybrid_se1-2_cbam15-16 & 2.020000 & 2.469000 \\
+\bottomrule
+\end{tabular}
+\end{table}

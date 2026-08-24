@@ -1,0 +1,24 @@
+{
+  "parameters_total": 2236804,
+  "parameters_trainable": 2236804,
+  "parameters_backbone": 2211062,
+  "parameters_classifier": 25620,
+  "parameters_eca": 0,
+  "parameters_cbam": 0,
+  "parameters_se": 122,
+  "parameters_main_attention": 122,
+  "parameters_aux_attention": 0,
+  "num_eca_modules": 0,
+  "num_cbam_modules": 0,
+  "num_se_modules": 2,
+  "flops_total": 91400000.0,
+  "flops_base": 91000000.0,
+  "flops_attention_adjustment": 400000.0,
+  "model_type": "se",
+  "aux_positions": [
+    1,
+    2
+  ],
+  "se_positions": [],
+  "cbam_positions": []
+}
