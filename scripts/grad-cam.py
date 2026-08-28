@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from io import BytesIO
 import os
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 # ==================== 用户配置区域 ====================
 # 模型配置
@@ -18,13 +21,13 @@ cbam_deep = "cbam_deep_15-16_cbam_pos15-16_mobilenetv2_latest.pth"
 hybrid = "hybrid_se1-2_cbam15-16_hybrid_se1-2_cbam15-16_mobilenetv2_best.pth"
 
 MODEL_FILENAME = mobilenetv2
-MODEL_PATH = f"../models/final/{MODEL_FILENAME}"
+MODEL_PATH = REPO_ROOT / "artifacts/models/final" / MODEL_FILENAME
 TRAINED_MODEL_TYPE = 'hybrid'
 MODEL_DISPLAY_NAME = ""  # 在SVG中显示的模型名称
 
 # 图像配置
-IMAGE_PATH = "../CIFAR-10-images-master/train/cat/0011.jpg"
-IMAGE_NAME = "0011.jpg"  # 用于标注的可选图像名称
+IMAGE_PATH = REPO_ROOT / "assets/gradcam/airplane/0003.jpg"
+IMAGE_NAME = "0003.jpg"  # 用于标注的可选图像名称
 
 # 模型参数配置
 cur_model_type = "mobilenetv2"
@@ -39,7 +42,7 @@ TARGET_CLASS = None
 TARGET_LAYER_NAME = "model.features.1.conv.2"
 
 # 输出配置
-OUTPUT_FOLDER = "../gradCAM/cat/"
+OUTPUT_FOLDER = REPO_ROOT / "results/visualizations/gradcam/airplane"
 RESULT_FILENAME = cur_model_type + "-" + IMAGE_NAME.replace(".jpg", ".svg")
 RESULT_FILE_PATH = os.path.join(OUTPUT_FOLDER, RESULT_FILENAME)
 

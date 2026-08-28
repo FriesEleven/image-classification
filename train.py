@@ -31,10 +31,10 @@ RESET = '\033[0m'
 def create_directories():
     """创建实验所需的目录结构"""
     dirs = [
-        'models/final',
-        'models/checkpoints',
-        'logs/csv',
-        'logs/tensorboard',
+        'artifacts/models/final',
+        'artifacts/models/checkpoints',
+        'artifacts/logs/csv',
+        'artifacts/logs/tensorboard',
         'results/metrics',
         'results/predictions',
         'results/visualizations',
@@ -769,9 +769,9 @@ def train():
 
     # 文件路径
     config_path = f"./configs/{experiment_id}_config.yaml"
-    csv_log_path = f"./logs/csv/{experiment_id}_training_log.csv"
-    final_model_path = f"./models/final/{model_name}_best.pth"
-    checkpoint_path = f"./models/checkpoints/{model_name}_checkpoint_epoch_{{}}.pth"
+    csv_log_path = f"./artifacts/logs/csv/{experiment_id}_training_log.csv"
+    final_model_path = f"./artifacts/models/final/{model_name}_best.pth"
+    checkpoint_path = f"./artifacts/models/checkpoints/{model_name}_checkpoint_epoch_{{}}.pth"
     metrics_path = f"./results/metrics/{experiment_id}_metrics.json"
     benchmark_path = f"./results/metrics/{experiment_id}_benchmark.json"
     predictions_path = f"./results/predictions/{experiment_id}_predictions.npz"
@@ -804,7 +804,7 @@ def train():
 
     criterion = nn.CrossEntropyLoss()
     scaler = GradScaler('cuda', enabled=args.amp)
-    tensorboard_writer = SummaryWriter(f"./logs/tensorboard/{experiment_id}")
+    tensorboard_writer = SummaryWriter(f"./artifacts/logs/tensorboard/{experiment_id}")
     train_loader, test_loader = build_dataloaders(args.batch_size)
 
     best_acc = 0.0
@@ -957,7 +957,7 @@ def train():
                      probabilities=val_probs)
 
         # 保存最新模型
-        torch.save(model.state_dict(), f"./models/final/{model_name}_latest.pth")
+        torch.save(model.state_dict(), f"./artifacts/models/final/{model_name}_latest.pth")
 
         # 计算epoch耗时
         epoch_time = time.time() - epoch_start_time
@@ -986,7 +986,7 @@ def train():
 
     # 保存最终训练状态
     save_checkpoint(args.epochs - 1, model, optimizer, scheduler, best_acc, train_losses, val_accuracies,
-                    f"./models/checkpoints/{model_name}_final.pth")
+                    f"./artifacts/models/checkpoints/{model_name}_final.pth")
 
     tensorboard_writer.close()
 

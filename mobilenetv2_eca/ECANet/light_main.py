@@ -194,7 +194,7 @@ def main():
         print((n-m)/3600)
         return
     
-    directory = "runs/%s/"%(args.arch + '_' + args.action)
+    directory = "artifacts/runs/%s/"%(args.arch + '_' + args.action)
     if not os.path.exists(directory):
         os.makedirs(directory)
 
@@ -351,7 +351,7 @@ def validate(val_loader, model, criterion):
 
 
 def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
-    directory = "runs/%s/"%(args.arch + '_' + args.action)
+    directory = "artifacts/runs/%s/"%(args.arch + '_' + args.action)
     
     filename = directory + filename
     torch.save(state, filename)

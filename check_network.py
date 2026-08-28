@@ -13,7 +13,7 @@ def diagnose_training_issues():
     print("=" * 50)
 
     # 检查训练曲线
-    training_logs = glob.glob("./logs/csv/*training_log.csv")
+    training_logs = glob.glob("./artifacts/logs/csv/*training_log.csv")
 
     for log_file in training_logs:
         df = pd.read_csv(log_file)

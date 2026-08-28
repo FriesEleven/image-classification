@@ -52,7 +52,7 @@ def create_results_summary():
                 metrics = json.load(f)
 
             # 读取训练日志
-            log_path = f"./logs/csv/{exp_id}_training_log.csv"
+            log_path = f"./artifacts/logs/csv/{exp_id}_training_log.csv"
             df = pd.read_csv(log_path)
             best_val_acc = df['val_acc'].max()
             final_val_acc = df['val_acc'].iloc[-1]

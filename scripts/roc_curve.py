@@ -2,9 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, auc
 from sklearn.preprocessing import label_binarize
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 # 加载保存的用于绘制 ROC 曲线的数据
-data = np.load("../output/ECA_MobileNetV2_roc_data.npz")
+data = np.load(
+    REPO_ROOT / "results/predictions/eca_global_eca_val_roc_data.npz",
+    allow_pickle=True,
+)
 true_labels = data["true_labels"]
 probabilities = data["probabilities"]
 
@@ -40,5 +46,5 @@ plt.legend(loc="lower right")
 plt.grid(True)
 
 # 保存绘制好的 ROC 曲线图
-plt.savefig('../result/roc_curve.png')
+plt.savefig(REPO_ROOT / 'results/visualizations/roc_curve.png')
 plt.show()

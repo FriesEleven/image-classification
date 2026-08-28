@@ -2,9 +2,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
 import numpy as np
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 # 1. 读取.npz文件中的真实标签和预测标签
-data = np.load("../results/predictions/hybrid_se1-2_cbam15-16_hybrid_se1-2_cbam15-16_val_confusion_matrix.npz")
+data = np.load(REPO_ROOT / "results/predictions/hybrid_se1-2_cbam15-16_hybrid_se1-2_cbam15-16_val_confusion_matrix.npz")
 true_labels = data["true_labels"]  # 单独提取，代码更清晰
 predictions = data["predictions"]
 
@@ -31,7 +34,7 @@ plt.title("Confusion Matrix", fontsize=14, fontweight="bold", pad=20)
 
 # 5. 保存为SVG矢量格式（核心修改）
 # 文件名建议去掉.npz后缀，避免误解（SVG文件后缀为.svg）
-output_path = "../result/hybrid_se1-2_cbam15-16_confusion_matrix.svg"
+output_path = REPO_ROOT / "results/visualizations/hybrid_se1-2_cbam15-16_confusion_matrix.svg"
 plt.savefig(
     output_path,
     format="svg",  # 指定输出格式为SVG

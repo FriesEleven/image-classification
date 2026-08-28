@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.metrics import classification_report, confusion_matrix
 from tqdm import tqdm
 import argparse
+from pathlib import Path
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -18,6 +19,7 @@ from mobilenetv2_eca.ECANet.models import eca_layer  # ECA层定义
 # ANSI 转义序列用于设置文本颜色为绿色
 COLOR = '\033[97m'
 RESET = '\033[0m'
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def get_args():
@@ -199,8 +201,12 @@ def train():
         # 保存模型... (保留原有代码)
         if acc > best_acc:
             best_acc = acc
-            torch.save(model.state_dict(), "../models/best_model.pth")
-        torch.save(model.state_dict(), "../models/last_model.pth")
+            model_dir = REPO_ROOT / "artifacts/models"
+            model_dir.mkdir(parents=True, exist_ok=True)
+            torch.save(model.state_dict(), model_dir / "best_model.pth")
+        model_dir = REPO_ROOT / "artifacts/models"
+        model_dir.mkdir(parents=True, exist_ok=True)
+        torch.save(model.state_dict(), model_dir / "last_model.pth")
     tensorboard_writer.close()
 
 

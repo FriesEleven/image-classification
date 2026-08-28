@@ -8,14 +8,17 @@ import numpy as np
 from io import BytesIO
 import os
 import cairosvg
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 # -------------------------- 第一步：配置（最终版）--------------------------
 mobilenetv2 = "baseline_mobilenetv2_mobilenetv2_mobilenetv2_latest.pth"
 se_shallow = "se_shallow_1-2_se_pos1-2_mobilenetv2_latest.pth"
 hybrid = "hybrid_se1-2_cbam15-16_hybrid_se1-2_cbam15-16_mobilenetv2_best.pth"
-IMAGE_PATH = "../gradCAM-images/airplane/0003.jpg"
+IMAGE_PATH = REPO_ROOT / "assets/gradcam/airplane/0003.jpg"
 MODEL_FILENAME = hybrid
-MODEL_PATH = f"../models/final/{MODEL_FILENAME}"
+MODEL_PATH = REPO_ROOT / "artifacts/models/final" / MODEL_FILENAME
 
 TRAINED_MODEL_TYPE = 'hybrid'
 
@@ -28,8 +31,9 @@ IMAGE_MEAN = (0.4914, 0.4822, 0.4465)
 IMAGE_STD = (0.247, 0.243, 0.261)
 TARGET_CLASS = None
 TARGET_LAYER_NAME = "model.features.1.conv.2"
-result_file_name = "../gradCAM/airplane/" + cur_model_type +"-0003.svg"
-result_heatmap = "../gradCAM/airplane/"+ cur_model_type +"-heatmap-0003.svg"
+result_file_name = str(REPO_ROOT / "results/visualizations/gradcam/airplane" / f"{cur_model_type}-0003.svg")
+result_heatmap = str(REPO_ROOT / "results/visualizations/gradcam/airplane" / f"{cur_model_type}-heatmap-0003.svg")
+os.makedirs(Path(result_file_name).parent, exist_ok=True)
 # ----------------------------------------------------------------------------------
 
 # -------------------------- 第二步：模型类（不变）--------------------------

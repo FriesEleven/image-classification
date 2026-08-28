@@ -23,3 +23,9 @@ env/
 *.pth
 *.pt
 
+# Local datasets and generated experiment artifacts
+data/*
+!data/cifar-10-batches-py/
+!data/cifar-10-batches-py/batches.meta
+!data/cifar-10-batches-py/readme.html
+artifacts/

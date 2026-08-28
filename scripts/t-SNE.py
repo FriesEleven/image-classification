@@ -8,11 +8,14 @@ import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
 import random
 import os
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 # -------------------------- 1. 核心配置（用你的绝对路径）--------------------------
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-BASELINE_MODEL_PATH = "../models/final/baseline_mobilenetv2_mobilenetv2_mobilenetv2_latest.pth"
-HYBRID_MODEL_PATH = "../models/final/hybrid_se1-2_cbam15-16_hybrid_se1-2_cbam15-16_mobilenetv2_best.pth"
+BASELINE_MODEL_PATH = REPO_ROOT / "artifacts/models/final/baseline_mobilenetv2_mobilenetv2_mobilenetv2_latest.pth"
+HYBRID_MODEL_PATH = REPO_ROOT / "artifacts/models/final/hybrid_se1-2_cbam15-16_hybrid_se1-2_cbam15-16_mobilenetv2_best.pth"
 NUM_SAMPLES = 2000
 PERPLEXITY = 30
 LEARNING_RATE = 200
@@ -21,7 +24,7 @@ CIFAR10_CLASSES = ['airplane', 'automobile', 'bird', 'cat', 'deer',
                    'dog', 'frog', 'horse', 'ship', 'truck']
 COLORS = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF',
           '#00FFFF', '#880000', '#008800', '#000088', '#888800']
-SAVE_PATH = "./tsne_visualization.svg"
+SAVE_PATH = REPO_ROOT / "results/visualizations/tsne_visualization.svg"
 
 
 # -------------------------- 2. 注意力模块（无修改）--------------------------
