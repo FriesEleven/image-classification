@@ -2,6 +2,8 @@
 
 项目比较 MobileNetV2、全局 ECA、不同位置的 CBAM/SE，以及两种 SE+CBAM 混合放置策略。正式配置统一存放在 `configs/experiments/`。
 
+正式对比统一使用 200 epochs、batch size 64、梯度累积 2、AdamW 和 OneCycleLR。OneCycleLR 在每次实际 optimizer update 后推进一次，因此其总步数已经包含梯度累积的影响。
+
 数据集由配置中的 `dataset: cifar10|cifar100` 选择。两个数据集均使用按类别分层且由 `seed` 固定的 45,000/5,000 train/validation 划分；官方 test set 不参与 checkpoint 或位置选择。
 
 ## 单项实验

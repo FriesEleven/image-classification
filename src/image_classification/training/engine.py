@@ -1,6 +1,7 @@
 """End-to-end experiment orchestration."""
 
 import json
+import math
 import time
 from pathlib import Path
 
@@ -40,7 +41,12 @@ def _save_resolved_config(path: Path, config: ExperimentConfig, device: torch.de
         yaml.safe_dump(value, handle, sort_keys=False, allow_unicode=True)
 
 
-def _train_epoch(model, loader, criterion, optimizer, scaler, config, device) -> dict:
+def optimizer_updates_per_epoch(num_batches: int, accumulation_steps: int) -> int:
+    """Return the number of optimizer updates made during one training epoch."""
+    return math.ceil(num_batches / accumulation_steps)
+
+
+def _train_epoch(model, loader, criterion, optimizer, scheduler, scaler, config, device) -> dict:
     model.train()
     optimizer.zero_grad()
     accumulated_loss = 0.0
@@ -50,25 +56,25 @@ def _train_epoch(model, loader, criterion, optimizer, scaler, config, device) ->
     with tqdm(loader, desc="Training", unit="batch") as progress:
         for step, (inputs, targets) in enumerate(progress, start=1):
             inputs, targets = inputs.to(device), targets.to(device)
+            group_start = ((step - 1) // config.accumulation_steps) * config.accumulation_steps
+            group_size = min(config.accumulation_steps, len(loader) - group_start)
             with autocast(device_type=device.type, enabled=amp_enabled):
                 outputs = model(inputs)
-                loss = criterion(outputs, targets) / config.accumulation_steps
+                batch_loss = criterion(outputs, targets)
+                loss = batch_loss / group_size
             scaler.scale(loss).backward()
-            accumulated_loss += loss.item()
+            accumulated_loss += batch_loss.item()
             predictions.extend(outputs.argmax(dim=1).detach().cpu().numpy())
             labels.extend(targets.cpu().numpy())
-            progress.set_postfix(loss=f"{loss.item() * config.accumulation_steps:.4f}")
-            if step % config.accumulation_steps == 0:
+            progress.set_postfix(loss=f"{batch_loss.item():.4f}")
+            if step % config.accumulation_steps == 0 or step == len(loader):
                 scaler.step(optimizer)
                 scaler.update()
                 optimizer.zero_grad()
-        if len(loader) % config.accumulation_steps:
-            scaler.step(optimizer)
-            scaler.update()
-            optimizer.zero_grad()
+                scheduler.step()
     report = classification_report(labels, predictions, output_dict=True, zero_division=0)
     return {
-        "loss": accumulated_loss / len(loader) * config.accumulation_steps,
+        "loss": accumulated_loss / len(loader),
         "accuracy": float(np.mean(np.asarray(predictions) == np.asarray(labels))),
         "precision": float(report["macro avg"]["precision"]),
         "recall": float(report["macro avg"]["recall"]),
@@ -96,8 +102,9 @@ def train(config: ExperimentConfig) -> dict:
     optimizer = optim.AdamW(model.parameters(), lr=config.lr, weight_decay=1e-4, betas=(0.9, 0.999))
     criterion = nn.CrossEntropyLoss()
     scaler = GradScaler("cuda", enabled=config.amp and device.type == "cuda")
+    updates_per_epoch = optimizer_updates_per_epoch(len(loaders.train), config.accumulation_steps)
     scheduler = torch.optim.lr_scheduler.OneCycleLR(
-        optimizer, max_lr=config.lr, epochs=config.epochs, steps_per_epoch=len(loaders.train),
+        optimizer, max_lr=config.lr, epochs=config.epochs, steps_per_epoch=updates_per_epoch,
         pct_start=0.3, anneal_strategy="cos", div_factor=25, final_div_factor=100,
     )
     best_accuracy = -1.0
@@ -108,9 +115,9 @@ def train(config: ExperimentConfig) -> dict:
     with SummaryWriter(paths.tensorboard) as writer:
         for epoch in range(config.epochs):
             started = time.perf_counter()
-            train_metrics = _train_epoch(model, loaders.train, criterion, optimizer, scaler, config, device)
-            # Preserve the historical experiment schedule: one scheduler step per epoch.
-            scheduler.step()
+            train_metrics = _train_epoch(
+                model, loaders.train, criterion, optimizer, scheduler, scaler, config, device,
+            )
             train_metrics["learning_rate"] = scheduler.get_last_lr()[0]
             val_metrics, _labels, _predictions, _probabilities = validate(
                 model, loaders.validation, criterion, device,

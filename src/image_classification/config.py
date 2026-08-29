@@ -38,7 +38,7 @@ class ExperimentConfig:
     dataset: str = "cifar10"
     validation_size: int = 5000
     batch_size: int = 64
-    epochs: int = 100
+    epochs: int = 200
     lr: float = 0.01
     amp: bool = True
     accumulation_steps: int = 2
@@ -55,6 +55,12 @@ class ExperimentConfig:
             raise ValueError(f"Unsupported dataset: {self.dataset}")
         if not 0 < self.validation_size < 50_000:
             raise ValueError("validation_size must be between 1 and 49,999")
+        if self.epochs < 1:
+            raise ValueError("epochs must be at least 1")
+        if self.batch_size < 1:
+            raise ValueError("batch_size must be at least 1")
+        if self.accumulation_steps < 1:
+            raise ValueError("accumulation_steps must be at least 1")
 
     @property
     def num_classes(self) -> int:
