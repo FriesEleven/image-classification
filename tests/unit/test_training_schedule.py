@@ -38,6 +38,13 @@ def test_optimizer_updates_include_partial_accumulation_group():
     assert optimizer_updates_per_epoch(num_batches=6, accumulation_steps=2) == 3
 
 
+def test_optimized_batching_preserves_cifar_optimizer_update_count():
+    old_updates = optimizer_updates_per_epoch(num_batches=704, accumulation_steps=2)
+    optimized_updates = optimizer_updates_per_epoch(num_batches=352, accumulation_steps=1)
+
+    assert old_updates == optimized_updates == 352
+
+
 def test_scheduler_steps_after_each_optimizer_update():
     loader = DataLoader(
         TensorDataset(torch.randn(5, 2), torch.tensor([0, 1, 0, 1, 0])),

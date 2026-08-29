@@ -90,7 +90,8 @@ def _transforms(spec: DatasetSpec) -> tuple[transforms.Compose, transforms.Compo
 def build_dataloaders(
     dataset: str,
     batch_size: int,
-    num_workers: int = 0,
+    num_workers: int = 8,
+    prefetch_factor: int = 4,
     validation_size: int = 5000,
     split_seed: int = 42,
 ) -> DatasetLoaders:
@@ -114,6 +115,8 @@ def build_dataloaders(
         "pin_memory": torch.cuda.is_available(),
         "persistent_workers": num_workers > 0,
     }
+    if num_workers > 0:
+        loader_options["prefetch_factor"] = prefetch_factor
     shuffle_generator = torch.Generator().manual_seed(split_seed)
     return DatasetLoaders(
         train=DataLoader(

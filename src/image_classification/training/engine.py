@@ -68,7 +68,8 @@ def _train_epoch(model, loader, criterion, optimizer, scheduler, scaler, config,
     amp_enabled = config.amp and device.type == "cuda"
     with tqdm(loader, desc="Training", unit="batch", disable=not sys.stderr.isatty()) as progress:
         for step, (inputs, targets) in enumerate(progress, start=1):
-            inputs, targets = inputs.to(device), targets.to(device)
+            inputs = inputs.to(device, non_blocking=True)
+            targets = targets.to(device, non_blocking=True)
             group_start = ((step - 1) // config.accumulation_steps) * config.accumulation_steps
             group_size = min(config.accumulation_steps, len(loader) - group_start)
             with autocast(device_type=device.type, enabled=amp_enabled):
@@ -106,6 +107,7 @@ def train(config: ExperimentConfig) -> dict:
         dataset=config.dataset,
         batch_size=config.batch_size,
         num_workers=config.num_workers,
+        prefetch_factor=config.prefetch_factor,
         validation_size=config.validation_size,
         split_seed=config.seed,
     )

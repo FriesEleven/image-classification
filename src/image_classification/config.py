@@ -37,15 +37,16 @@ class ExperimentConfig:
     model_type: str = "mobilenetv2"
     dataset: str = "cifar10"
     validation_size: int = 5000
-    batch_size: int = 64
+    batch_size: int = 128
     epochs: int = 200
     lr: float = 0.01
     amp: bool = True
-    accumulation_steps: int = 2
+    accumulation_steps: int = 1
     aux_positions: tuple[int, ...] = ()
     se_positions: tuple[int, ...] = ()
     cbam_positions: tuple[int, ...] = ()
-    num_workers: int = 0
+    num_workers: int = 8
+    prefetch_factor: int = 4
     seed: int = 42
 
     def __post_init__(self) -> None:
@@ -61,6 +62,10 @@ class ExperimentConfig:
             raise ValueError("batch_size must be at least 1")
         if self.accumulation_steps < 1:
             raise ValueError("accumulation_steps must be at least 1")
+        if self.num_workers < 0:
+            raise ValueError("num_workers cannot be negative")
+        if self.prefetch_factor < 1:
+            raise ValueError("prefetch_factor must be at least 1")
 
     @property
     def num_classes(self) -> int:
@@ -100,6 +105,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--se_positions")
     parser.add_argument("--cbam_positions")
     parser.add_argument("--num_workers", type=int)
+    parser.add_argument("--prefetch_factor", type=int)
     parser.add_argument("--seed", type=int)
     return parser
 

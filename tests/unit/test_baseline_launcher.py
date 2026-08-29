@@ -14,3 +14,6 @@ def test_baseline_plan_contains_two_datasets_and_three_seeds():
     assert {run["resolved_config"]["dataset"] for run in plan} == {"cifar10", "cifar100"}
     assert len({run["experiment_id"] for run in plan}) == 6
     assert all(run["resolved_config"]["epochs"] == 200 for run in plan)
+    assert all(run["resolved_config"]["batch_size"] == 128 for run in plan)
+    assert all(run["resolved_config"]["accumulation_steps"] == 1 for run in plan)
+    assert all(run["resolved_config"]["num_workers"] == 8 for run in plan)

@@ -34,7 +34,8 @@ def validate(
         loader, desc=description, unit="batch", disable=not sys.stderr.isatty(),
     ) as progress:
         for inputs, targets in progress:
-            inputs, targets = inputs.to(device), targets.to(device)
+            inputs = inputs.to(device, non_blocking=True)
+            targets = targets.to(device, non_blocking=True)
             outputs = model(inputs)
             total_loss += criterion(outputs, targets).item()
             probabilities.extend(torch.softmax(outputs, dim=1).cpu().numpy())
