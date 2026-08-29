@@ -1,0 +1,4 @@
+experiments:
+  - configs/experiments/position_se_shallow_cbam_shallow.yaml
+  - configs/experiments/position_se_shallow_cbam_middle.yaml
+  - configs/experiments/position_se_shallow_cbam_deep.yaml

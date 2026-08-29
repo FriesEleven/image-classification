@@ -7,7 +7,7 @@ import torch
 from torch import nn
 
 from image_classification.config import ExperimentConfig
-from image_classification.models.attention import CBAM, SEBlock
+from image_classification.models.attention import CBAM, CrossStageGuidedCBAM, SEBlock
 from image_classification.models.eca import ECALayer
 
 
@@ -16,25 +16,43 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
     trainable = sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad)
     eca = sum(sum(parameter.numel() for parameter in module.parameters()) for module in model.modules() if isinstance(module, ECALayer))
     cbam = sum(sum(parameter.numel() for parameter in module.parameters()) for module in model.modules() if isinstance(module, CBAM))
+    guided_modules = [module for module in model.modules() if isinstance(module, CrossStageGuidedCBAM)]
+    guided_cbam = sum(sum(parameter.numel() for parameter in module.parameters()) for module in guided_modules)
+    guidance_projection = sum(
+        sum(parameter.numel() for parameter in module.channel_attention.guide_projection.parameters())
+        for module in guided_modules
+    )
     se = sum(sum(parameter.numel() for parameter in module.parameters()) for module in model.modules() if isinstance(module, SEBlock))
     classifier = sum(parameter.numel() for name, parameter in model.named_parameters() if "classifier" in name)
     eca_count = sum(isinstance(module, ECALayer) for module in model.modules())
     cbam_count = sum(isinstance(module, CBAM) for module in model.modules())
+    guided_cbam_count = len(guided_modules)
     se_count = sum(isinstance(module, SEBlock) for module in model.modules())
     base_flops = 91.0e6
-    estimated_attention_flops = eca_count * 0.01e6 + cbam_count * 0.8e6 + se_count * 0.2e6
+    estimated_attention_flops = (
+        eca_count * 0.01e6
+        + cbam_count * 0.8e6
+        + guided_cbam_count * 0.8e6
+        + guidance_projection
+        + se_count * 0.2e6
+    )
     return {
         "parameters_total": total,
         "parameters_trainable": trainable,
-        "parameters_backbone": total - classifier - eca - cbam - se,
+        "parameters_backbone": total - classifier - eca - cbam - guided_cbam - se,
         "parameters_classifier": classifier,
         "parameters_eca": eca,
         "parameters_cbam": cbam,
+        "parameters_guided_cbam": guided_cbam,
+        "parameters_cross_stage_projection": guidance_projection,
         "parameters_se": se,
-        "parameters_main_attention": cbam if config.model_type == "hybrid" else eca + cbam + se,
-        "parameters_aux_attention": se if config.model_type == "hybrid" else 0,
+        "parameters_main_attention": (
+            cbam + guided_cbam if config.model_type in {"hybrid", "csgha"} else eca + cbam + se
+        ),
+        "parameters_aux_attention": se if config.model_type in {"hybrid", "csgha"} else 0,
         "num_eca_modules": eca_count,
         "num_cbam_modules": cbam_count,
+        "num_guided_cbam_modules": guided_cbam_count,
         "num_se_modules": se_count,
         "flops_total": base_flops + estimated_attention_flops,
         "flops_base": base_flops,
@@ -43,6 +61,10 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
         "aux_positions": list(config.aux_positions),
         "se_positions": list(config.se_positions),
         "cbam_positions": list(config.cbam_positions),
+        "guidance_position": config.guidance_position,
+        "guidance_reduction": config.guidance_reduction,
+        "guidance_source_channels": getattr(model, "guide_channels", None),
+        "guidance_target_channels": getattr(model, "guided_target_channels", {}),
         "flops_note": "FLOPs are an analytical estimate, not profiler output.",
     }
 

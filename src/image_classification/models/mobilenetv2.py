@@ -4,7 +4,7 @@ import torch
 from torch import nn
 from torchvision.models import mobilenet_v2
 
-from .attention import CBAM, SEBlock
+from .attention import CBAM, CrossStageGuidedCBAM, SEBlock
 from .eca import ECAMobileNetV2
 
 
@@ -103,5 +103,70 @@ class HybridAttentionMobileNetV2(nn.Module):
                 outputs = module.se(outputs)
             if index in self.cbam_positions:
                 outputs = module.cbam(outputs)
+        outputs = outputs.mean((2, 3))
+        return self.model.classifier(outputs)
+
+
+class CSGHAMobileNetV2(nn.Module):
+    """MobileNetV2 with shallow SE and cross-stage guided CBAM modules."""
+
+    def __init__(
+        self,
+        num_classes: int = 10,
+        width_mult: float = 1.0,
+        se_positions: tuple[int, ...] = (),
+        cbam_positions: tuple[int, ...] = (),
+        guidance_position: int = 2,
+        guidance_reduction: int = 4,
+    ):
+        super().__init__()
+        self.model = mobilenet_v2(weights=None, width_mult=width_mult)
+        self.se_positions = tuple(se_positions)
+        self.cbam_positions = tuple(cbam_positions)
+        self.guidance_position = guidance_position
+        self.guidance_reduction = guidance_reduction
+        if guidance_position not in self.se_positions:
+            raise ValueError("guidance_position must identify a shallow SE position")
+        if any(position <= guidance_position for position in self.cbam_positions):
+            raise ValueError("guided CBAM positions must follow guidance_position")
+        self.model.classifier[1] = nn.Linear(self.model.last_channel, num_classes)
+
+        guidance_module = self.model.features[guidance_position]
+        guide_channels = _output_channels(guidance_module)
+        if guide_channels is None:
+            raise ValueError(f"Cannot determine output channels for guidance layer {guidance_position}")
+        self.guide_channels = guide_channels
+        self.guided_target_channels: dict[int, int] = {}
+
+        for index, module in enumerate(self.model.features):
+            if index in self.se_positions:
+                channels = _output_channels(module)
+                if channels is None:
+                    raise ValueError(f"Cannot determine output channels for feature layer {index}")
+                module.se = SEBlock(channels)
+            if index in self.cbam_positions:
+                channels = _output_channels(module)
+                if channels is None:
+                    raise ValueError(f"Cannot determine output channels for feature layer {index}")
+                self.guided_target_channels[index] = channels
+                module.guided_cbam = CrossStageGuidedCBAM(
+                    channels,
+                    guide_channels,
+                    guidance_reduction=guidance_reduction,
+                )
+
+    def forward(self, inputs: torch.Tensor) -> torch.Tensor:
+        outputs = inputs
+        shallow_descriptor = None
+        for index, module in enumerate(self.model.features):
+            outputs = module(outputs)
+            if index in self.se_positions:
+                outputs = module.se(outputs)
+            if index == self.guidance_position:
+                shallow_descriptor = outputs.mean((2, 3))
+            if index in self.cbam_positions:
+                if shallow_descriptor is None:
+                    raise RuntimeError("Shallow descriptor was not created before guided CBAM")
+                outputs = module.guided_cbam(outputs, shallow_descriptor)
         outputs = outputs.mean((2, 3))
         return self.model.classifier(outputs)

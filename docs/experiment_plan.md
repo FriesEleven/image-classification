@@ -44,6 +44,19 @@ python scripts/run_experiments.py
 
 每次实验的配置、指标、延迟、日志、权重和预测都保存在 `artifacts/runs/<experiment_id>/`，同一实验不会再横跨多个输出目录。
 
+## Validation-only 位置筛选
+
+位置选择只使用 CIFAR-10 validation set，不评估官方 test set：
+
+```bash
+python scripts/run_experiments.py --sweep configs/sweeps/position_screening.yaml --dry-run
+python scripts/run_experiments.py --sweep configs/sweeps/position_screening.yaml
+```
+
+筛选配置固定浅层 SE 在 blocks 1--2，分别比较 CBAM 位于 shallow 1--2、middle 7--8 和 deep 15--16。三者均设置 `evaluate_test: false`。确定最佳位置后，再将对应位置用于 CSGHA；当前 `configs/experiments/csgha_se_shallow_cbam_middle.yaml` 是 middle 位置的可运行候选配置。
+
+CSGHA 的引导描述取自 block 2 经 SE 增强后的特征：`g_s = GAP(F_2^SE) ∈ R^24`。对于 middle blocks 7--8，每个 Guided-CBAM 都有独立的两层投影 `P_t: R^24 → R^6 → R^64`。其通道门控为 `sigmoid(MLP(avg(F_t)) + MLP(max(F_t)) + P_t(g_s))`，随后继续使用标准 CBAM 空间注意力。代码只传递通道描述，不传递高分辨率浅层特征。
+
 ## 结果整理
 
 ```bash

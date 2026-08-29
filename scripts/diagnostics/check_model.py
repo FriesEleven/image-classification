@@ -20,6 +20,12 @@ CONFIGS = (
     ExperimentConfig(model_type="cbam", aux_positions=(1, 2)),
     ExperimentConfig(model_type="se", aux_positions=(1, 2)),
     ExperimentConfig(model_type="hybrid", se_positions=(1, 2), cbam_positions=(15, 16)),
+    ExperimentConfig(
+        model_type="csgha",
+        se_positions=(1, 2),
+        cbam_positions=(7, 8),
+        guidance_position=2,
+    ),
 )
 
 

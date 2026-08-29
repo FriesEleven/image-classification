@@ -13,6 +13,12 @@ from image_classification.models import build_model
         ExperimentConfig(model_type="cbam", aux_positions=(1, 2)),
         ExperimentConfig(model_type="se", aux_positions=(1, 2)),
         ExperimentConfig(model_type="hybrid", se_positions=(1, 2), cbam_positions=(15, 16)),
+        ExperimentConfig(
+            model_type="csgha",
+            se_positions=(1, 2),
+            cbam_positions=(7, 8),
+            guidance_position=2,
+        ),
     ],
 )
 def test_model_output_shape(config):
@@ -24,6 +30,22 @@ def test_model_output_shape(config):
 
 def test_cifar100_model_has_100_class_output():
     config = ExperimentConfig(model_type="mobilenetv2", dataset="cifar100")
+    model = build_model(config).eval()
+
+    with torch.no_grad():
+        output = model(torch.randn(2, 3, 32, 32))
+
+    assert output.shape == (2, 100)
+
+
+def test_cifar100_csgha_has_100_class_output():
+    config = ExperimentConfig(
+        model_type="csgha",
+        dataset="cifar100",
+        se_positions=(1, 2),
+        cbam_positions=(7, 8),
+        guidance_position=2,
+    )
     model = build_model(config).eval()
 
     with torch.no_grad():

@@ -1,0 +1,16 @@
+experiment_name: csgha_se1-2_cbam7-8
+model_type: csgha
+dataset: cifar10
+validation_size: 5000
+evaluate_test: false
+se_positions: [1, 2]
+cbam_positions: [7, 8]
+guidance_position: 2
+guidance_reduction: 4
+epochs: 200
+batch_size: 128
+lr: 0.01
+amp: true
+accumulation_steps: 1
+num_workers: 8
+prefetch_factor: 4

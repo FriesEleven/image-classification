@@ -7,7 +7,7 @@ from pathlib import Path
 
 import yaml
 
-MODEL_TYPES = ("mobilenetv2", "eca", "cbam", "se", "hybrid")
+MODEL_TYPES = ("mobilenetv2", "eca", "cbam", "se", "hybrid", "csgha")
 DATASETS = ("cifar10", "cifar100")
 DATASET_NUM_CLASSES = {"cifar10": 10, "cifar100": 100}
 
@@ -41,10 +41,13 @@ class ExperimentConfig:
     epochs: int = 200
     lr: float = 0.01
     amp: bool = True
+    evaluate_test: bool = True
     accumulation_steps: int = 1
     aux_positions: tuple[int, ...] = ()
     se_positions: tuple[int, ...] = ()
     cbam_positions: tuple[int, ...] = ()
+    guidance_position: int = 2
+    guidance_reduction: int = 4
     num_workers: int = 8
     prefetch_factor: int = 4
     seed: int = 42
@@ -66,6 +69,18 @@ class ExperimentConfig:
             raise ValueError("num_workers cannot be negative")
         if self.prefetch_factor < 1:
             raise ValueError("prefetch_factor must be at least 1")
+        if self.guidance_reduction < 1:
+            raise ValueError("guidance_reduction must be at least 1")
+        positions = self.aux_positions + self.se_positions + self.cbam_positions
+        if any(position < 0 or position > 18 for position in positions):
+            raise ValueError("MobileNetV2 attention positions must be between 0 and 18")
+        if self.model_type == "csgha":
+            if not self.se_positions or not self.cbam_positions:
+                raise ValueError("CSGHA requires both SE and guided CBAM positions")
+            if self.guidance_position not in self.se_positions:
+                raise ValueError("guidance_position must be one of the CSGHA SE positions")
+            if any(position <= self.guidance_position for position in self.cbam_positions):
+                raise ValueError("CSGHA CBAM positions must follow guidance_position")
 
     @property
     def num_classes(self) -> int:
@@ -73,6 +88,13 @@ class ExperimentConfig:
 
     @property
     def experiment_id(self) -> str:
+        if self.model_type == "csgha":
+            se = "-".join(map(str, self.se_positions))
+            cbam = "-".join(map(str, self.cbam_positions))
+            return (
+                f"{self.experiment_name}_csgha_se{se}_guide{self.guidance_position}_"
+                f"cbam{cbam}_{self.dataset}"
+            )
         if self.model_type == "hybrid":
             se = "-".join(map(str, self.se_positions))
             cbam = "-".join(map(str, self.cbam_positions))
@@ -100,10 +122,13 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--epochs", type=int)
     parser.add_argument("--lr", type=float)
     parser.add_argument("--amp", type=_boolean)
+    parser.add_argument("--evaluate_test", type=_boolean)
     parser.add_argument("--accumulation_steps", type=int)
     parser.add_argument("--aux_positions")
     parser.add_argument("--se_positions")
     parser.add_argument("--cbam_positions")
+    parser.add_argument("--guidance_position", type=int)
+    parser.add_argument("--guidance_reduction", type=int)
     parser.add_argument("--num_workers", type=int)
     parser.add_argument("--prefetch_factor", type=int)
     parser.add_argument("--seed", type=int)

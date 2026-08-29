@@ -26,8 +26,10 @@ def _row(run: Path) -> dict | None:
         config = yaml.safe_load(handle)
     metrics, benchmark, summary = _load(run / "metrics.json"), _load(run / "benchmark.json"), _load(run / "summary.json")
     positions = config.get("aux_positions") or []
-    if config["model_type"] == "hybrid":
+    if config["model_type"] in {"hybrid", "csgha"}:
         positions = f"SE={config.get('se_positions', [])}; CBAM={config.get('cbam_positions', [])}"
+        if config["model_type"] == "csgha":
+            positions += f"; Guide={config.get('guidance_position')}"
     training_log = run / "logs/training.csv"
     best_validation_accuracy = summary.get("best_validation_accuracy", summary.get("best_accuracy"))
     final_accuracy = best_validation_accuracy

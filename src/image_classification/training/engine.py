@@ -158,15 +158,6 @@ def train(config: ExperimentConfig) -> dict:
 
     save_checkpoint(paths.checkpoints / "final.pth", config.epochs - 1, model, optimizer, scheduler,
                     best_accuracy, train_losses, val_accuracies)
-    model.load_state_dict(
-        torch.load(paths.checkpoints / "model_best.pth", map_location=device, weights_only=True)
-    )
-    test_metrics, labels, predictions, probabilities = validate(
-        model, loaders.test, criterion, device, description="Test",
-    )
-    roc_auc = save_evaluation_data(
-        paths.predictions, labels, predictions, probabilities, loaders.class_names,
-    )
     summary = {
         "experiment_id": config.experiment_id,
         "dataset": config.dataset,
@@ -174,15 +165,30 @@ def train(config: ExperimentConfig) -> dict:
         "train_samples": len(loaders.train.dataset),
         "validation_samples": len(loaders.validation.dataset),
         "test_samples": len(loaders.test.dataset),
+        "test_evaluated": config.evaluate_test,
         "best_validation_accuracy": best_accuracy,
         "best_epoch": best_epoch,
-        "test_accuracy": test_metrics["accuracy"],
-        "test_loss": test_metrics["loss"],
-        "test_precision": test_metrics["precision"],
-        "test_recall": test_metrics["recall"],
-        "test_f1": test_metrics["f1"],
-        "micro_auc": float(roc_auc["micro"]),
         "run_directory": str(paths.root),
     }
+    if config.evaluate_test:
+        model.load_state_dict(
+            torch.load(paths.checkpoints / "model_best.pth", map_location=device, weights_only=True)
+        )
+        test_metrics, labels, predictions, probabilities = validate(
+            model, loaders.test, criterion, device, description="Test",
+        )
+        roc_auc = save_evaluation_data(
+            paths.predictions, labels, predictions, probabilities, loaders.class_names,
+        )
+        summary.update(
+            {
+                "test_accuracy": test_metrics["accuracy"],
+                "test_loss": test_metrics["loss"],
+                "test_precision": test_metrics["precision"],
+                "test_recall": test_metrics["recall"],
+                "test_f1": test_metrics["f1"],
+                "micro_auc": float(roc_auc["micro"]),
+            }
+        )
     _write_json(paths.root / "summary.json", summary)
     return summary
