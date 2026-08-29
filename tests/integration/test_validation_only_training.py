@@ -55,12 +55,13 @@ def test_validation_only_run_never_iterates_test_loader(monkeypatch, tmp_path):
     )
 
     summary = engine.train(config)
+    run_directory = tmp_path / "runs" / config.experiment_id
     saved_summary = json.loads(
-        (tmp_path / config.experiment_id / "summary.json").read_text(encoding="utf-8")
+        (run_directory / "summary.json").read_text(encoding="utf-8")
     )
 
     assert validation_calls == ["Validation"]
     assert summary == saved_summary
     assert summary["test_evaluated"] is False
     assert "test_accuracy" not in summary
-    assert not (tmp_path / config.experiment_id / "predictions/test.npz").exists()
+    assert not (run_directory / "predictions/test.npz").exists()
