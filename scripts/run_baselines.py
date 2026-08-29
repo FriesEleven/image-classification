@@ -1,25 +1,23 @@
 """Run and record the multi-seed CIFAR baseline experiment batch."""
 
 import argparse
-from datetime import datetime
 import json
 import os
-from pathlib import Path
 import platform
 import socket
 import subprocess
 import sys
+from datetime import datetime
+from pathlib import Path
 
 import torch
 import yaml
 
-
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from image_classification.config import load_config  # noqa: E402
-from image_classification.paths import RunPaths  # noqa: E402
-
+from image_classification.config import load_config
+from image_classification.paths import RunPaths
 
 DEFAULT_SWEEP = ROOT / "configs/sweeps/baselines.yaml"
 
