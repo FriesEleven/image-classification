@@ -58,6 +58,14 @@ python scripts/run_experiments.py --dry-run
 python scripts/run_experiments.py
 ```
 
+在 Linux GPU 服务器上一行启动 CIFAR-10/100 baseline 的三个随机种子实验：
+
+```bash
+bash scripts/launch_baselines.sh
+```
+
+该命令会在后台依次运行两个数据集的 seeds 42/43/44，断开 SSH 后仍会继续。终端会打印日志路径；批次级环境、配置、状态和最终结果记录在 `artifacts/sweeps/<launch_id>/manifest.json`。再次执行时，配置一致且已有 `summary.json` 的实验会自动跳过。
+
 ## 输出约定
 
 每次实验写入独立目录：

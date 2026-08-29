@@ -1,0 +1,6 @@
+name: mobilenetv2_baselines
+description: Unified 200-epoch MobileNetV2 baselines for CIFAR-10 and CIFAR-100.
+seeds: [42, 43, 44]
+experiments:
+  - configs/experiments/baseline.yaml
+  - configs/experiments/baseline_cifar100.yaml
