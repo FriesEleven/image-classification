@@ -1,9 +1,9 @@
 """Experiment configuration and command-line parsing."""
 
 import argparse
+from collections.abc import Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Sequence
 
 import yaml
 

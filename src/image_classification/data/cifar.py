@@ -1,7 +1,7 @@
 """CIFAR-10/100 datasets with a fixed train/validation/test boundary."""
 
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Sequence
 
 import torch
 from torch.utils.data import DataLoader, Subset
