@@ -9,7 +9,6 @@ from torchvision import datasets, transforms
 
 from image_classification.paths import DATA_DIR
 
-
 CIFAR10_MEAN = (0.4914, 0.4822, 0.4465)
 CIFAR10_STD = (0.2470, 0.2430, 0.2610)
 CIFAR100_MEAN = (0.5071, 0.4867, 0.4408)

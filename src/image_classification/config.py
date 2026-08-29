@@ -7,7 +7,6 @@ from pathlib import Path
 
 import yaml
 
-
 MODEL_TYPES = ("mobilenetv2", "eca", "cbam", "se", "hybrid")
 DATASETS = ("cifar10", "cifar100")
 DATASET_NUM_CLASSES = {"cifar10": 10, "cifar100": 100}
