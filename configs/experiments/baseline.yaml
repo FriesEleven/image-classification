@@ -1,0 +1,7 @@
+experiment_name: baseline_mobilenetv2
+model_type: mobilenetv2
+epochs: 100
+batch_size: 64
+lr: 0.01
+amp: true
+accumulation_steps: 2

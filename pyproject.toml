@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "image-classification-attention"
+version = "0.1.0"
+description = "MobileNetV2 attention experiments on CIFAR-10"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy",
+  "PyYAML",
+  "scikit-learn",
+  "tensorboard",
+  "torch",
+  "torchvision",
+  "tqdm",
+]
+
+[project.optional-dependencies]
+analysis = ["matplotlib", "openpyxl", "pandas", "scipy", "seaborn"]
+visualization = ["matplotlib", "Pillow", "seaborn"]
+dev = ["pytest", "ruff"]
+
+[project.scripts]
+image-classification-train = "image_classification.cli.train:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"

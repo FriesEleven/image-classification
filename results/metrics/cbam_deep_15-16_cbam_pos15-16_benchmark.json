@@ -1,8 +1,0 @@
-{
-  "device_name": "NVIDIA GeForce RTX 4060 Ti",
-  "batch_size": 1,
-  "input_resolution": "32x32",
-  "inference_latency_mean": 5.825414657592773,
-  "inference_latency_std": 1.2033853185564078,
-  "throughput_fps": 171.66159986510357
-}

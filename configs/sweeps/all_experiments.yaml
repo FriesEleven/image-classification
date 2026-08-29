@@ -1,0 +1,11 @@
+experiments:
+  - configs/experiments/baseline.yaml
+  - configs/experiments/eca_global.yaml
+  - configs/experiments/cbam_shallow.yaml
+  - configs/experiments/cbam_middle.yaml
+  - configs/experiments/cbam_deep.yaml
+  - configs/experiments/se_shallow.yaml
+  - configs/experiments/se_middle.yaml
+  - configs/experiments/se_deep.yaml
+  - configs/experiments/hybrid_se_shallow_cbam_deep.yaml
+  - configs/experiments/hybrid_se_deep_cbam_shallow.yaml
