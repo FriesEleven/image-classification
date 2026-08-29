@@ -80,6 +80,7 @@ artifacts/runs/<experiment_id>/
 ```bash
 python -m pytest
 python -m compileall -q src scripts tests train.py
+python scripts/diagnostics/check_data.py
 ```
 
 CPU 环境可运行模型前向和配置测试；完整训练会自动下载所选 CIFAR 数据集。论文与实验规划见 `docs/`。

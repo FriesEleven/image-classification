@@ -19,6 +19,7 @@ Run commands from the repository root.
 - `python scripts/train.py --config configs/experiments/baseline.yaml` runs one configured experiment.
 - `python scripts/run_experiments.py --dry-run` validates and prints the full sweep; omit `--dry-run` to train it.
 - `python scripts/diagnostics/check_model.py` runs forward passes for all model families.
+- `python scripts/diagnostics/check_data.py` verifies the CIFAR-10/100 45k/5k/10k dataset boundaries.
 - `python -m pytest` runs the test suite.
 - `python -m compileall -q src scripts tests train.py` checks Python syntax.
 
