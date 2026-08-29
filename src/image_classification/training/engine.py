@@ -46,6 +46,18 @@ def optimizer_updates_per_epoch(num_batches: int, accumulation_steps: int) -> in
     return math.ceil(num_batches / accumulation_steps)
 
 
+def _step_optimizer_and_scheduler(optimizer, scheduler, scaler) -> bool:
+    """Advance the scheduler only when AMP did not skip the optimizer update."""
+    scale_before = scaler.get_scale()
+    scaler.step(optimizer)
+    scaler.update()
+    optimizer.zero_grad()
+    optimizer_was_run = scaler.get_scale() >= scale_before
+    if optimizer_was_run:
+        scheduler.step()
+    return optimizer_was_run
+
+
 def _train_epoch(model, loader, criterion, optimizer, scheduler, scaler, config, device) -> dict:
     model.train()
     optimizer.zero_grad()
@@ -68,10 +80,7 @@ def _train_epoch(model, loader, criterion, optimizer, scheduler, scaler, config,
             labels.extend(targets.cpu().numpy())
             progress.set_postfix(loss=f"{batch_loss.item():.4f}")
             if step % config.accumulation_steps == 0 or step == len(loader):
-                scaler.step(optimizer)
-                scaler.update()
-                optimizer.zero_grad()
-                scheduler.step()
+                _step_optimizer_and_scheduler(optimizer, scheduler, scaler)
     report = classification_report(labels, predictions, output_dict=True, zero_division=0)
     return {
         "loss": accumulated_loss / len(loader),
