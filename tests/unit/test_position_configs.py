@@ -4,7 +4,6 @@ import pytest
 
 from image_classification.config import load_config
 
-
 ROOT = Path(__file__).resolve().parents[2]
 
 

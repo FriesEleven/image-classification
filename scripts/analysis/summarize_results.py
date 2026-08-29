@@ -7,7 +7,6 @@ from pathlib import Path
 import pandas as pd
 import yaml
 
-
 ROOT = Path(__file__).resolve().parents[2]
 RUNS_DIR = ROOT / "artifacts/runs"
 DEFAULT_OUTPUT = ROOT / "reports/tables/experiment_results_summary.csv"

@@ -4,11 +4,11 @@ from torch import nn
 
 from image_classification.config import ExperimentConfig
 
+from .eca import ECAMobileNetV2
 from .mobilenetv2 import (
     BaseMobileNetV2,
     CBAMMobileNetV2,
     CSGHAMobileNetV2,
-    ECAMobileNetV2,
     HybridAttentionMobileNetV2,
     SEMobileNetV2,
 )

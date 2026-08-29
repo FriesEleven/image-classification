@@ -5,7 +5,6 @@ from torch import nn
 from torchvision.models import mobilenet_v2
 
 from .attention import CBAM, CrossStageGuidedCBAM, SEBlock
-from .eca import ECAMobileNetV2
 
 
 def _output_channels(module: nn.Module) -> int | None:

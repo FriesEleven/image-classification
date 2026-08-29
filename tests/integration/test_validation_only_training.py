@@ -6,8 +6,8 @@ from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
 
 import image_classification.paths as paths_module
-import image_classification.training.engine as engine
 from image_classification.config import ExperimentConfig
+from image_classification.training import engine
 from image_classification.training.evaluate import validate as real_validate
 
 
