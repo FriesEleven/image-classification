@@ -86,28 +86,35 @@ def train(config: ExperimentConfig) -> dict:
     _write_json(paths.root / "metrics.json", model_metrics(model, config))
     _write_json(paths.root / "benchmark.json", benchmark_inference(model, device))
 
-    train_loader, test_loader = build_dataloaders(config.batch_size, config.num_workers)
+    loaders = build_dataloaders(
+        dataset=config.dataset,
+        batch_size=config.batch_size,
+        num_workers=config.num_workers,
+        validation_size=config.validation_size,
+        split_seed=config.seed,
+    )
     optimizer = optim.AdamW(model.parameters(), lr=config.lr, weight_decay=1e-4, betas=(0.9, 0.999))
     criterion = nn.CrossEntropyLoss()
     scaler = GradScaler("cuda", enabled=config.amp and device.type == "cuda")
     scheduler = torch.optim.lr_scheduler.OneCycleLR(
-        optimizer, max_lr=config.lr, epochs=config.epochs, steps_per_epoch=len(train_loader),
+        optimizer, max_lr=config.lr, epochs=config.epochs, steps_per_epoch=len(loaders.train),
         pct_start=0.3, anneal_strategy="cos", div_factor=25, final_div_factor=100,
     )
-    best_accuracy = 0.0
+    best_accuracy = -1.0
     best_epoch = 0
-    best_outputs = None
     train_losses: list[float] = []
     val_accuracies: list[float] = []
 
     with SummaryWriter(paths.tensorboard) as writer:
         for epoch in range(config.epochs):
             started = time.perf_counter()
-            train_metrics = _train_epoch(model, train_loader, criterion, optimizer, scaler, config, device)
+            train_metrics = _train_epoch(model, loaders.train, criterion, optimizer, scaler, config, device)
             # Preserve the historical experiment schedule: one scheduler step per epoch.
             scheduler.step()
             train_metrics["learning_rate"] = scheduler.get_last_lr()[0]
-            val_metrics, labels, predictions, probabilities = validate(model, test_loader, criterion, device)
+            val_metrics, _labels, _predictions, _probabilities = validate(
+                model, loaders.validation, criterion, device,
+            )
             train_losses.append(train_metrics["loss"])
             val_accuracies.append(val_metrics["accuracy"])
             append_training_log(paths.training_log, epoch, train_metrics, val_metrics)
@@ -121,7 +128,6 @@ def train(config: ExperimentConfig) -> dict:
             if val_metrics["accuracy"] > best_accuracy:
                 best_accuracy = val_metrics["accuracy"]
                 best_epoch = epoch + 1
-                best_outputs = labels, predictions, probabilities
                 torch.save(model.state_dict(), paths.checkpoints / "model_best.pth")
             torch.save(model.state_dict(), paths.checkpoints / "model_latest.pth")
             print(
@@ -130,14 +136,32 @@ def train(config: ExperimentConfig) -> dict:
                 f"best={best_accuracy:.4f}"
             )
 
-    roc_auc = save_evaluation_data(paths.predictions, *best_outputs) if best_outputs is not None else None
     save_checkpoint(paths.checkpoints / "final.pth", config.epochs - 1, model, optimizer, scheduler,
                     best_accuracy, train_losses, val_accuracies)
+    model.load_state_dict(
+        torch.load(paths.checkpoints / "model_best.pth", map_location=device, weights_only=True)
+    )
+    test_metrics, labels, predictions, probabilities = validate(
+        model, loaders.test, criterion, device, description="Test",
+    )
+    roc_auc = save_evaluation_data(
+        paths.predictions, labels, predictions, probabilities, loaders.class_names,
+    )
     summary = {
         "experiment_id": config.experiment_id,
-        "best_accuracy": best_accuracy,
+        "dataset": config.dataset,
+        "num_classes": config.num_classes,
+        "train_samples": len(loaders.train.dataset),
+        "validation_samples": len(loaders.validation.dataset),
+        "test_samples": len(loaders.test.dataset),
+        "best_validation_accuracy": best_accuracy,
         "best_epoch": best_epoch,
-        "micro_auc": float(roc_auc["micro"]) if roc_auc else None,
+        "test_accuracy": test_metrics["accuracy"],
+        "test_loss": test_metrics["loss"],
+        "test_precision": test_metrics["precision"],
+        "test_recall": test_metrics["recall"],
+        "test_f1": test_metrics["f1"],
+        "micro_auc": float(roc_auc["micro"]),
         "run_directory": str(paths.root),
     }
     _write_json(paths.root / "summary.json", summary)

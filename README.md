@@ -1,6 +1,6 @@
 # MobileNetV2 Attention Experiments
 
-本项目在 CIFAR-10 上比较 MobileNetV2、ECA、CBAM、SE 及混合注意力模型，重点分析注意力模块类型和插入位置对精度、参数量、计算量与推理延迟的影响。
+本项目在 CIFAR-10/100 上比较 MobileNetV2、ECA、CBAM、SE 及混合注意力模型，重点分析注意力模块类型和插入位置对精度、参数量、计算量与推理延迟的影响。
 
 ## 项目结构
 
@@ -30,6 +30,14 @@ Windows PowerShell 使用 `.venv\Scripts\Activate.ps1` 激活环境。
 ```bash
 python scripts/train.py --config configs/experiments/baseline.yaml
 ```
+
+CIFAR-100 baseline：
+
+```bash
+python scripts/train.py --config configs/experiments/baseline_cifar100.yaml
+```
+
+两个数据集都从官方 50,000 张训练图像中按类别分层划分 45,000 张训练集和 5,000 张验证集；官方 10,000 张测试集只在验证集选出的最佳 checkpoint 上评估一次。`dataset`、`validation_size` 和 `seed` 均记录在运行配置中。
 
 旧命令仍然兼容：
 
@@ -74,4 +82,4 @@ python -m pytest
 python -m compileall -q src scripts tests train.py
 ```
 
-CPU 环境可运行模型前向和配置测试；完整训练会自动下载 CIFAR-10。论文与实验规划见 `docs/`。
+CPU 环境可运行模型前向和配置测试；完整训练会自动下载所选 CIFAR 数据集。论文与实验规划见 `docs/`。

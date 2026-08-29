@@ -19,4 +19,14 @@ def test_model_output_shape(config):
     model = build_model(config).eval()
     with torch.no_grad():
         output = model(torch.randn(2, 3, 32, 32))
-    assert output.shape == (2, 10)
+    assert output.shape == (2, config.num_classes)
+
+
+def test_cifar100_model_has_100_class_output():
+    config = ExperimentConfig(model_type="mobilenetv2", dataset="cifar100")
+    model = build_model(config).eval()
+
+    with torch.no_grad():
+        output = model(torch.randn(2, 3, 32, 32))
+
+    assert output.shape == (2, 100)

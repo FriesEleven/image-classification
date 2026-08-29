@@ -1,6 +1,6 @@
 # Repository Guidelines
 
-This repository trains and evaluates MobileNetV2 image classifiers on CIFAR-10, comparing ECA, CBAM, SE, and hybrid attention placements.
+This repository trains and evaluates MobileNetV2 image classifiers on CIFAR-10/100, comparing ECA, CBAM, SE, and hybrid attention placements.
 
 ## Structure
 

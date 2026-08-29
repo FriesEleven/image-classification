@@ -2,10 +2,13 @@
 
 项目比较 MobileNetV2、全局 ECA、不同位置的 CBAM/SE，以及两种 SE+CBAM 混合放置策略。正式配置统一存放在 `configs/experiments/`。
 
+数据集由配置中的 `dataset: cifar10|cifar100` 选择。两个数据集均使用按类别分层且由 `seed` 固定的 45,000/5,000 train/validation 划分；官方 test set 不参与 checkpoint 或位置选择。
+
 ## 单项实验
 
 ```bash
 python scripts/train.py --config configs/experiments/baseline.yaml
+python scripts/train.py --config configs/experiments/baseline_cifar100.yaml
 python scripts/train.py --config configs/experiments/eca_global.yaml
 python scripts/train.py --config configs/experiments/cbam_shallow.yaml
 python scripts/train.py --config configs/experiments/cbam_middle.yaml

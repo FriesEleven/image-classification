@@ -15,6 +15,7 @@ from image_classification.models import build_model  # noqa: E402
 
 CONFIGS = (
     ExperimentConfig(model_type="mobilenetv2"),
+    ExperimentConfig(model_type="mobilenetv2", dataset="cifar100"),
     ExperimentConfig(model_type="eca"),
     ExperimentConfig(model_type="cbam", aux_positions=(1, 2)),
     ExperimentConfig(model_type="se", aux_positions=(1, 2)),
@@ -29,7 +30,10 @@ def main() -> int:
         with torch.no_grad():
             output = model(sample)
         parameters = sum(parameter.numel() for parameter in model.parameters())
-        print(f"{config.model_type:12s} output={tuple(output.shape)} parameters={parameters:,}")
+        print(
+            f"{config.dataset:8s} {config.model_type:12s} "
+            f"output={tuple(output.shape)} parameters={parameters:,}"
+        )
     return 0
 
 

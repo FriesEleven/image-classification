@@ -1,5 +1,5 @@
 """Dataset loaders."""
 
-from .cifar10 import build_dataloaders
+from .cifar import DatasetLoaders, build_dataloaders, stratified_split_indices
 
-__all__ = ["build_dataloaders"]
+__all__ = ["DatasetLoaders", "build_dataloaders", "stratified_split_indices"]

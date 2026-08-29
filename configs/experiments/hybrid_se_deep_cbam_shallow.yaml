@@ -1,5 +1,7 @@
 experiment_name: hybrid_se15-16_cbam1-2
 model_type: hybrid
+dataset: cifar10
+validation_size: 5000
 se_positions: [15, 16]
 cbam_positions: [1, 2]
 epochs: 200

@@ -1,6 +1,6 @@
 experiment_name: baseline_mobilenetv2
 model_type: mobilenetv2
-dataset: cifar10
+dataset: cifar100
 validation_size: 5000
 epochs: 100
 batch_size: 64

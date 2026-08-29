@@ -29,19 +29,22 @@ def _row(run: Path) -> dict | None:
     if config["model_type"] == "hybrid":
         positions = f"SE={config.get('se_positions', [])}; CBAM={config.get('cbam_positions', [])}"
     training_log = run / "logs/training.csv"
-    final_accuracy = summary["best_accuracy"]
+    best_validation_accuracy = summary.get("best_validation_accuracy", summary.get("best_accuracy"))
+    final_accuracy = best_validation_accuracy
     if training_log.exists():
         final_accuracy = pd.read_csv(training_log).iloc[-1]["val_acc"]
     return {
         "Experiment": summary["experiment_id"],
+        "Dataset": config.get("dataset", "cifar10"),
         "Model_Type": config["model_type"],
         "Positions": positions or "N/A",
         "Parameters_Total (M)": metrics["parameters_total"] / 1e6,
         "Parameters_Aux (K)": metrics["parameters_aux_attention"] / 1e3,
         "FLOPs_Total (M)": metrics["flops_total"] / 1e6,
         "FLOPs_Aux (M)": metrics["flops_attention_adjustment"] / 1e6,
-        "Best_Val_Acc (%)": summary["best_accuracy"] * 100,
+        "Best_Val_Acc (%)": best_validation_accuracy * 100,
         "Final_Val_Acc (%)": float(final_accuracy) * 100,
+        "Test_Acc (%)": summary.get("test_accuracy", float("nan")) * 100,
         "Inference_Latency (ms)": benchmark["inference_latency_mean"],
         "Throughput (FPS)": benchmark["throughput_fps"],
         "SE_Positions": config.get("se_positions") or "",
