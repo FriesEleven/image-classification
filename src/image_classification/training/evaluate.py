@@ -1,5 +1,6 @@
 """Validation metrics and reusable prediction exports."""
 
+import sys
 from collections.abc import Sequence
 from pathlib import Path
 
@@ -29,7 +30,9 @@ def validate(
     labels: list[int] = []
     probabilities: list[np.ndarray] = []
     total_loss = 0.0
-    with torch.no_grad(), tqdm(loader, desc=description, unit="batch") as progress:
+    with torch.no_grad(), tqdm(
+        loader, desc=description, unit="batch", disable=not sys.stderr.isatty(),
+    ) as progress:
         for inputs, targets in progress:
             inputs, targets = inputs.to(device), targets.to(device)
             outputs = model(inputs)

@@ -2,6 +2,7 @@
 
 import json
 import math
+import sys
 import time
 from pathlib import Path
 
@@ -65,7 +66,7 @@ def _train_epoch(model, loader, criterion, optimizer, scheduler, scaler, config,
     predictions: list[int] = []
     labels: list[int] = []
     amp_enabled = config.amp and device.type == "cuda"
-    with tqdm(loader, desc="Training", unit="batch") as progress:
+    with tqdm(loader, desc="Training", unit="batch", disable=not sys.stderr.isatty()) as progress:
         for step, (inputs, targets) in enumerate(progress, start=1):
             inputs, targets = inputs.to(device), targets.to(device)
             group_start = ((step - 1) // config.accumulation_steps) * config.accumulation_steps
@@ -149,7 +150,8 @@ def train(config: ExperimentConfig) -> dict:
             print(
                 f"Epoch {epoch + 1}/{config.epochs} ({time.perf_counter() - started:.2f}s) | "
                 f"train_acc={train_metrics['accuracy']:.4f} | val_acc={val_metrics['accuracy']:.4f} | "
-                f"best={best_accuracy:.4f}"
+                f"best={best_accuracy:.4f}",
+                flush=True,
             )
 
     save_checkpoint(paths.checkpoints / "final.pth", config.epochs - 1, model, optimizer, scheduler,
