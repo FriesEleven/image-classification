@@ -74,6 +74,14 @@ python scripts/launch_position_screening.py
 
 启动器会打印 PID 和日志路径，SSH 断开后实验仍会继续。
 
+一行后台启动 validation-only CSGHA middle 候选实验：
+
+```bash
+python scripts/launch_csgha_validation.py
+```
+
+启动前会校验 SE、Guided-CBAM、guidance block 和 `evaluate_test`，并拒绝覆盖已有实验目录。
+
 ## 输出约定
 
 每次实验写入独立目录：

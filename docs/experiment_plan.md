@@ -59,6 +59,14 @@ python scripts/launch_position_screening.py
 
 CSGHA 的引导描述取自 block 2 经 SE 增强后的特征：`g_s = GAP(F_2^SE) ∈ R^24`。对于 middle blocks 7--8，每个 Guided-CBAM 都有独立的两层投影 `P_t: R^24 → R^6 → R^64`。其通道门控为 `sigmoid(MLP(avg(F_t)) + MLP(max(F_t)) + P_t(g_s))`，随后继续使用标准 CBAM 空间注意力。代码只传递通道描述，不传递高分辨率浅层特征。
 
+位置筛选完成后，一行后台启动 CSGHA middle 候选的 validation-only 实验：
+
+```bash
+python scripts/launch_csgha_validation.py
+```
+
+可先追加 `--dry-run` 检查目标命令。CSGHA 至少需要超过相同 middle 位置的独立组合验证准确率，才能说明跨阶段引导带来额外增益；最终候选确定前仍不评估官方 test set。
+
 ## 结果整理
 
 ```bash
