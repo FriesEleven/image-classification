@@ -32,7 +32,9 @@ def summarize_guidance(model: torch.nn.Module, inputs: torch.Tensor) -> list[dic
 
     def capture(name: str):
         def hook(module, hook_inputs, _output):
-            deep_logits, raw_guidance, gated_guidance = module.attention_logits(*hook_inputs)
+            deep_logits, raw_guidance, bounded_guidance, gated_guidance = (
+                module.attention_logits(*hook_inputs)
+            )
             shallow_descriptor = hook_inputs[1]
             batch = shallow_descriptor.shape[0]
             legacy_guidance = module.guide_projection(shallow_descriptor).view(
@@ -40,6 +42,7 @@ def summarize_guidance(model: torch.nn.Module, inputs: torch.Tensor) -> list[dic
             )
             deep_magnitude = deep_logits.detach().abs().mean()
             raw_magnitude = raw_guidance.detach().abs().mean()
+            bounded_magnitude = bounded_guidance.detach().abs().mean()
             gated_magnitude = gated_guidance.detach().abs().mean()
             legacy_magnitude = legacy_guidance.detach().abs().mean()
             denominator = max(float(deep_magnitude.item()), torch.finfo(torch.float32).eps)
@@ -52,9 +55,16 @@ def summarize_guidance(model: torch.nn.Module, inputs: torch.Tensor) -> list[dic
                     ),
                     "deep_logits_abs_mean": float(deep_magnitude.item()),
                     "raw_guidance_logits_abs_mean": float(raw_magnitude.item()),
+                    "bounded_guidance_logits_abs_mean": float(bounded_magnitude.item()),
+                    "bounded_guidance_logits_abs_max": float(
+                        bounded_guidance.detach().abs().max().item()
+                    ),
                     "gated_guidance_logits_abs_mean": float(gated_magnitude.item()),
                     "legacy_guidance_logits_abs_mean": float(legacy_magnitude.item()),
                     "raw_guidance_to_deep_ratio": float(raw_magnitude.item()) / denominator,
+                    "bounded_guidance_to_deep_ratio": (
+                        float(bounded_magnitude.item()) / denominator
+                    ),
                     "gated_guidance_to_deep_ratio": float(gated_magnitude.item()) / denominator,
                     "legacy_guidance_to_deep_ratio": (
                         float(legacy_magnitude.item()) / denominator
@@ -99,12 +109,12 @@ def _load_checkpoint(model: torch.nn.Module, path: Path, device: torch.device) -
     ]
     if invalid_missing or incompatible.unexpected_keys:
         raise ValueError(
-            "Checkpoint is incompatible with CSGHA v2: "
+            "Checkpoint is incompatible with gated CSGHA: "
             f"missing={invalid_missing}, unexpected={list(incompatible.unexpected_keys)}"
         )
     return {
         "path": str(path),
-        "format": "csgha_v1" if incompatible.missing_keys else "csgha_v2",
+        "format": "csgha_v1" if incompatible.missing_keys else "csgha_v2_or_v3",
         "missing_keys": list(incompatible.missing_keys),
         "unexpected_keys": list(incompatible.unexpected_keys),
     }

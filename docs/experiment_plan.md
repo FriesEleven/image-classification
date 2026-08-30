@@ -59,9 +59,11 @@ python scripts/launch_position_screening.py
 
 CSGHA 的引导描述取自 block 2 经 SE 增强后的特征：`g_s = GAP(F_2^SE) ∈ R^24`。对于 middle blocks 7--8，每个 Guided-CBAM 都有独立的两层投影 `P_t: R^24 → R^6 → R^64`。v1 直接将投影结果与 CBAM logits 相加；seed 42 的最佳 validation accuracy 为 87.50%，低于相同位置的独立组合 88.46%，因此不能作为最终方法。
 
-v2 先对 `g_s` 使用 LayerNorm，再通过可学习门控融合：`sigmoid(MLP(avg(F_t)) + MLP(max(F_t)) + tanh(alpha_t) P_t(LN(g_s)))`。每个目标 block 的 `alpha_t` 独立且初始化为 0，使训练初始行为退化为普通 CBAM，然后逐步学习是否以及多强地使用引导。随后仍使用标准 CBAM 空间注意力。代码只传递通道描述，不传递高分辨率浅层特征。
+v2 先对 `g_s` 使用 LayerNorm，再通过可学习门控融合：`sigmoid(MLP(avg(F_t)) + MLP(max(F_t)) + tanh(alpha_t) P_t(LN(g_s)))`。它在 seed 42 上达到 88.20%，较 v1 提升 0.70 个百分点，但仍低于相同位置独立组合的 88.46%。最佳 checkpoint 的两个投影输出平均幅度达到 19.58 和 57.66，即使经过标量门控，通道门饱和率仍为 20.3% 和 62.5%。
 
-位置筛选完成后，一行后台启动 gated CSGHA v2 middle 候选的 validation-only 实验：
+v3 对投影输出再使用 `tanh`，将引导 logits 严格限制到 `[-1, 1]`：`sigmoid(MLP(avg(F_t)) + MLP(max(F_t)) + tanh(alpha_t) tanh(P_t(LN(g_s))))`。每个目标 block 的 `alpha_t` 独立且初始化为 0，使训练初始行为退化为普通 CBAM，然后逐步学习是否以及多强地使用有界引导。随后仍使用标准 CBAM 空间注意力。代码只传递通道描述，不传递高分辨率浅层特征。
+
+位置筛选完成后，一行后台启动 bounded CSGHA v3 middle 候选的 validation-only 实验：
 
 ```bash
 python scripts/launch_csgha_validation.py
@@ -69,7 +71,7 @@ python scripts/launch_csgha_validation.py
 
 可先追加 `--dry-run` 检查目标命令。CSGHA 至少需要超过相同 middle 位置的独立组合验证准确率，才能说明跨阶段引导带来额外增益；最终候选确定前仍不评估官方 test set。
 
-引导分支诊断命令会报告 deep logits、未门控/已门控 guidance logits 的平均幅度，以及旧式直接相加和 v2 门控方式的 sigmoid 饱和比例：
+引导分支诊断命令会报告 deep logits、原始/有界/门控后 guidance logits 的平均幅度与最大值，以及旧式直接相加和当前有界门控方式的 sigmoid 饱和比例：
 
 ```bash
 python scripts/diagnostics/check_csgha_guidance.py --checkpoint <checkpoint> --output artifacts/diagnostics/csgha_guidance.json

@@ -74,13 +74,13 @@ python scripts/launch_position_screening.py
 
 启动器会打印 PID 和日志路径，SSH 断开后实验仍会继续。
 
-一行后台启动 validation-only gated CSGHA v2 middle 候选实验：
+一行后台启动 validation-only bounded CSGHA v3 middle 候选实验：
 
 ```bash
 python scripts/launch_csgha_validation.py
 ```
 
-启动前会校验 SE、Guided-CBAM、guidance block 和 `evaluate_test`，并拒绝覆盖已有实验目录。v2 对浅层描述使用 LayerNorm，并通过从 0 开始学习的 `tanh(alpha)` 门控逐步启用跨阶段引导。
+启动前会校验 SE、Guided-CBAM、guidance block 和 `evaluate_test`，并拒绝覆盖已有实验目录。v3 对投影前后的张量分别使用 LayerNorm 和 `tanh`，再通过从 0 开始学习的 `tanh(alpha)` 门控逐步启用有界跨阶段引导。
 
 ## 输出约定
 

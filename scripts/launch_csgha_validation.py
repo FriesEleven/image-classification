@@ -1,4 +1,4 @@
-"""Validate and launch the validation-only gated CSGHA v2 experiment."""
+"""Validate and launch the validation-only bounded CSGHA v3 experiment."""
 
 import argparse
 import os
@@ -16,7 +16,7 @@ from image_classification.paths import RunPaths
 CONFIG_PATH = ROOT / "configs/experiments/csgha_se_shallow_cbam_middle.yaml"
 TRAIN_PATH = ROOT / "scripts/train.py"
 LOG_DIRECTORY = ROOT / "artifacts/launcher_logs"
-PID_PATH = ROOT / "artifacts/csgha_v2_validation_launcher.pid"
+PID_PATH = ROOT / "artifacts/csgha_v3_validation_launcher.pid"
 
 
 def build_command() -> list[str]:
@@ -26,7 +26,7 @@ def build_command() -> list[str]:
 def load_target_config() -> ExperimentConfig:
     config = load_config(["--config", str(CONFIG_PATH)])
     expected = {
-        "experiment_name": "csgha_v2_se1-2_cbam7-8",
+        "experiment_name": "csgha_v3_se1-2_cbam7-8",
         "model_type": "csgha",
         "dataset": "cifar10",
         "evaluate_test": False,
@@ -82,7 +82,7 @@ def main() -> int:
 
     active_pid = _read_active_pid()
     if active_pid is not None:
-        raise RuntimeError(f"CSGHA v2 validation is already running with PID {active_pid}")
+        raise RuntimeError(f"CSGHA v3 validation is already running with PID {active_pid}")
     if run_directory.exists():
         raise RuntimeError(
             "CSGHA output already exists. Inspect and move it before restarting: "
@@ -94,7 +94,7 @@ def main() -> int:
 
     LOG_DIRECTORY.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now().astimezone().strftime("%Y%m%d_%H%M%S")
-    log_path = LOG_DIRECTORY / f"csgha_v2_validation_{timestamp}.log"
+    log_path = LOG_DIRECTORY / f"csgha_v3_validation_{timestamp}.log"
     with log_path.open("w", encoding="utf-8") as log:
         log.write(f"Command: {' '.join(command)}\n")
         log.flush()
@@ -107,7 +107,7 @@ def main() -> int:
         )
     PID_PATH.parent.mkdir(parents=True, exist_ok=True)
     PID_PATH.write_text(f"{process.pid}\n", encoding="utf-8")
-    print(f"CSGHA v2 validation started with PID {process.pid}")
+    print(f"CSGHA v3 validation started with PID {process.pid}")
     print(f"Log: {log_path}")
     print(f"Monitor: tail -f {log_path}")
     return 0

@@ -77,6 +77,7 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
         "guidance_source_channels": getattr(model, "guide_channels", None),
         "guidance_target_channels": getattr(model, "guided_target_channels", {}),
         "guidance_scale_initialization": 0.0,
+        "guidance_projection_activation": "tanh",
         "flops_note": "FLOPs are an analytical estimate, not profiler output.",
     }
 

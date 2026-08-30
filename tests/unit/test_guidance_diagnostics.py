@@ -18,5 +18,6 @@ def test_guidance_diagnostic_reports_both_targets_and_zero_initial_gate():
 
     assert len(reports) == 2
     assert all(report["raw_guidance_to_deep_ratio"] >= 0 for report in reports)
+    assert all(report["bounded_guidance_logits_abs_max"] <= 1 for report in reports)
     assert all(report["guidance_scale_parameter"] == 0 for report in reports)
     assert all(report["gated_guidance_logits_abs_mean"] == 0 for report in reports)

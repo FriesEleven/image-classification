@@ -45,7 +45,7 @@ class CBAM(nn.Module):
 
 
 class CrossStageChannelAttention(nn.Module):
-    """CBAM channel attention with normalized, gradually enabled guidance."""
+    """CBAM channel attention with normalized, bounded, gated guidance."""
 
     def __init__(
         self,
@@ -79,7 +79,7 @@ class CrossStageChannelAttention(nn.Module):
         self,
         inputs: torch.Tensor,
         shallow_descriptor: torch.Tensor,
-    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         expected_shape = (inputs.shape[0], self.guide_channels)
         if tuple(shallow_descriptor.shape) != expected_shape:
             raise ValueError(
@@ -89,12 +89,13 @@ class CrossStageChannelAttention(nn.Module):
         batch = inputs.shape[0]
         normalized = self.guide_normalization(shallow_descriptor)
         guidance = self.guide_projection(normalized).view(batch, self.channels, 1, 1)
+        bounded_guidance = torch.tanh(guidance)
         deep_attention = self.fc(self.avg_pool(inputs)) + self.fc(self.max_pool(inputs))
-        gated_guidance = torch.tanh(self.guidance_scale) * guidance
-        return deep_attention, guidance, gated_guidance
+        gated_guidance = torch.tanh(self.guidance_scale) * bounded_guidance
+        return deep_attention, guidance, bounded_guidance, gated_guidance
 
     def forward(self, inputs: torch.Tensor, shallow_descriptor: torch.Tensor) -> torch.Tensor:
-        deep_attention, _guidance, gated_guidance = self.attention_logits(
+        deep_attention, _guidance, _bounded_guidance, gated_guidance = self.attention_logits(
             inputs, shallow_descriptor,
         )
         return self.sigmoid(deep_attention + gated_guidance)

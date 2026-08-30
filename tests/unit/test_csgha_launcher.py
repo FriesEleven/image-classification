@@ -10,7 +10,7 @@ def test_csgha_launcher_targets_validation_only_middle_candidate():
     config = load_target_config()
 
     assert build_command()[-2:] == ["--config", str(CONFIG_PATH)]
-    assert config.experiment_name == "csgha_v2_se1-2_cbam7-8"
+    assert config.experiment_name == "csgha_v3_se1-2_cbam7-8"
     assert config.model_type == "csgha"
     assert config.evaluate_test is False
     assert config.se_positions == (1, 2)

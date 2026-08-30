@@ -31,14 +31,33 @@ def test_cross_stage_gate_starts_as_deep_only_attention():
     with torch.no_grad():
         first_gate = attention(inputs, first_guidance)
         second_gate = attention(inputs, second_guidance)
-        deep_logits, _raw_guidance, gated_guidance = attention.attention_logits(
-            inputs, first_guidance,
+        deep_logits, _raw_guidance, bounded_guidance, gated_guidance = (
+            attention.attention_logits(inputs, first_guidance)
         )
 
     assert attention.guidance_scale.item() == 0.0
     assert torch.count_nonzero(gated_guidance) == 0
+    assert bounded_guidance.abs().max().item() <= 1.0
     assert torch.allclose(first_gate, torch.sigmoid(deep_logits))
     assert torch.allclose(first_gate, second_gate)
+
+
+def test_cross_stage_projection_is_bounded_before_scaling():
+    attention = CrossStageChannelAttention(channels=16, guide_channels=8).eval()
+    inputs = torch.randn(2, 16, 8, 8)
+    guidance = torch.randn(2, 8)
+
+    with torch.no_grad():
+        for parameter in attention.guide_projection.parameters():
+            parameter.mul_(100)
+        attention.guidance_scale.fill_(100)
+        _deep, raw_guidance, bounded_guidance, gated_guidance = (
+            attention.attention_logits(inputs, guidance)
+        )
+
+    assert raw_guidance.abs().max().item() > 1.0
+    assert bounded_guidance.abs().max().item() <= 1.0
+    assert gated_guidance.abs().max().item() <= 1.0
 
 
 def test_cross_stage_scale_then_projection_receive_gradients():
