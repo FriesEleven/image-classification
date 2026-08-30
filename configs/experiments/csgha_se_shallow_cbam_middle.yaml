@@ -1,4 +1,4 @@
-experiment_name: csgha_se1-2_cbam7-8
+experiment_name: csgha_v2_se1-2_cbam7-8
 model_type: csgha
 dataset: cifar10
 validation_size: 5000

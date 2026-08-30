@@ -57,15 +57,23 @@ python scripts/launch_position_screening.py
 
 筛选配置固定浅层 SE 在 blocks 1--2，分别比较 CBAM 位于 shallow 1--2、middle 7--8 和 deep 15--16。三者均设置 `evaluate_test: false`。确定最佳位置后，再将对应位置用于 CSGHA；当前 `configs/experiments/csgha_se_shallow_cbam_middle.yaml` 是 middle 位置的可运行候选配置。
 
-CSGHA 的引导描述取自 block 2 经 SE 增强后的特征：`g_s = GAP(F_2^SE) ∈ R^24`。对于 middle blocks 7--8，每个 Guided-CBAM 都有独立的两层投影 `P_t: R^24 → R^6 → R^64`。其通道门控为 `sigmoid(MLP(avg(F_t)) + MLP(max(F_t)) + P_t(g_s))`，随后继续使用标准 CBAM 空间注意力。代码只传递通道描述，不传递高分辨率浅层特征。
+CSGHA 的引导描述取自 block 2 经 SE 增强后的特征：`g_s = GAP(F_2^SE) ∈ R^24`。对于 middle blocks 7--8，每个 Guided-CBAM 都有独立的两层投影 `P_t: R^24 → R^6 → R^64`。v1 直接将投影结果与 CBAM logits 相加；seed 42 的最佳 validation accuracy 为 87.50%，低于相同位置的独立组合 88.46%，因此不能作为最终方法。
 
-位置筛选完成后，一行后台启动 CSGHA middle 候选的 validation-only 实验：
+v2 先对 `g_s` 使用 LayerNorm，再通过可学习门控融合：`sigmoid(MLP(avg(F_t)) + MLP(max(F_t)) + tanh(alpha_t) P_t(LN(g_s)))`。每个目标 block 的 `alpha_t` 独立且初始化为 0，使训练初始行为退化为普通 CBAM，然后逐步学习是否以及多强地使用引导。随后仍使用标准 CBAM 空间注意力。代码只传递通道描述，不传递高分辨率浅层特征。
+
+位置筛选完成后，一行后台启动 gated CSGHA v2 middle 候选的 validation-only 实验：
 
 ```bash
 python scripts/launch_csgha_validation.py
 ```
 
 可先追加 `--dry-run` 检查目标命令。CSGHA 至少需要超过相同 middle 位置的独立组合验证准确率，才能说明跨阶段引导带来额外增益；最终候选确定前仍不评估官方 test set。
+
+引导分支诊断命令会报告 deep logits、未门控/已门控 guidance logits 的平均幅度，以及旧式直接相加和 v2 门控方式的 sigmoid 饱和比例：
+
+```bash
+python scripts/diagnostics/check_csgha_guidance.py --checkpoint <checkpoint> --output artifacts/diagnostics/csgha_guidance.json
+```
 
 ## 结果整理
 

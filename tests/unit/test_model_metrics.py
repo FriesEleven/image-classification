@@ -16,6 +16,13 @@ def test_csgha_metrics_separate_guided_attention_and_projection_parameters():
     assert metrics["num_guided_cbam_modules"] == 2
     assert metrics["parameters_guided_cbam"] > 0
     assert metrics["parameters_cross_stage_projection"] > 0
+    assert metrics["parameters_cross_stage_normalization"] == 48 * 2
+    assert metrics["parameters_cross_stage_scale"] == 2
+    assert metrics["parameters_cross_stage_guidance"] == (
+        metrics["parameters_cross_stage_projection"]
+        + metrics["parameters_cross_stage_normalization"]
+        + metrics["parameters_cross_stage_scale"]
+    )
     assert metrics["guidance_source_channels"] == 24
     assert metrics["guidance_target_channels"] == {7: 64, 8: 64}
     assert metrics["parameters_total"] == (

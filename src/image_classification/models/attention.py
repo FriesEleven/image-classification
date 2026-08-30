@@ -45,7 +45,7 @@ class CBAM(nn.Module):
 
 
 class CrossStageChannelAttention(nn.Module):
-    """CBAM channel attention augmented by a projected shallow descriptor."""
+    """CBAM channel attention with normalized, gradually enabled guidance."""
 
     def __init__(
         self,
@@ -66,14 +66,20 @@ class CrossStageChannelAttention(nn.Module):
             nn.ReLU(),
             nn.Conv2d(hidden, channels, 1, bias=False),
         )
+        self.guide_normalization = nn.LayerNorm(guide_channels)
         self.guide_projection = nn.Sequential(
             nn.Linear(guide_channels, guidance_hidden, bias=False),
             nn.ReLU(inplace=True),
             nn.Linear(guidance_hidden, channels, bias=False),
         )
+        self.guidance_scale = nn.Parameter(torch.zeros(()))
         self.sigmoid = nn.Sigmoid()
 
-    def forward(self, inputs: torch.Tensor, shallow_descriptor: torch.Tensor) -> torch.Tensor:
+    def attention_logits(
+        self,
+        inputs: torch.Tensor,
+        shallow_descriptor: torch.Tensor,
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         expected_shape = (inputs.shape[0], self.guide_channels)
         if tuple(shallow_descriptor.shape) != expected_shape:
             raise ValueError(
@@ -81,9 +87,17 @@ class CrossStageChannelAttention(nn.Module):
                 f"got {tuple(shallow_descriptor.shape)}"
             )
         batch = inputs.shape[0]
-        guidance = self.guide_projection(shallow_descriptor).view(batch, self.channels, 1, 1)
+        normalized = self.guide_normalization(shallow_descriptor)
+        guidance = self.guide_projection(normalized).view(batch, self.channels, 1, 1)
         deep_attention = self.fc(self.avg_pool(inputs)) + self.fc(self.max_pool(inputs))
-        return self.sigmoid(deep_attention + guidance)
+        gated_guidance = torch.tanh(self.guidance_scale) * guidance
+        return deep_attention, guidance, gated_guidance
+
+    def forward(self, inputs: torch.Tensor, shallow_descriptor: torch.Tensor) -> torch.Tensor:
+        deep_attention, _guidance, gated_guidance = self.attention_logits(
+            inputs, shallow_descriptor,
+        )
+        return self.sigmoid(deep_attention + gated_guidance)
 
 
 class CrossStageGuidedCBAM(nn.Module):

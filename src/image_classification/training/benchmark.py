@@ -22,6 +22,14 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
         sum(parameter.numel() for parameter in module.channel_attention.guide_projection.parameters())
         for module in guided_modules
     )
+    guidance_normalization = sum(
+        sum(parameter.numel() for parameter in module.channel_attention.guide_normalization.parameters())
+        for module in guided_modules
+    )
+    guidance_scale = sum(
+        module.channel_attention.guidance_scale.numel() for module in guided_modules
+    )
+    cross_stage_guidance = guidance_projection + guidance_normalization + guidance_scale
     se = sum(sum(parameter.numel() for parameter in module.parameters()) for module in model.modules() if isinstance(module, SEBlock))
     classifier = sum(parameter.numel() for name, parameter in model.named_parameters() if "classifier" in name)
     eca_count = sum(isinstance(module, ECALayer) for module in model.modules())
@@ -33,7 +41,7 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
         eca_count * 0.01e6
         + cbam_count * 0.8e6
         + guided_cbam_count * 0.8e6
-        + guidance_projection
+        + cross_stage_guidance
         + se_count * 0.2e6
     )
     return {
@@ -45,6 +53,9 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
         "parameters_cbam": cbam,
         "parameters_guided_cbam": guided_cbam,
         "parameters_cross_stage_projection": guidance_projection,
+        "parameters_cross_stage_normalization": guidance_normalization,
+        "parameters_cross_stage_scale": guidance_scale,
+        "parameters_cross_stage_guidance": cross_stage_guidance,
         "parameters_se": se,
         "parameters_main_attention": (
             cbam + guided_cbam if config.model_type in {"hybrid", "csgha"} else eca + cbam + se
@@ -65,6 +76,7 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
         "guidance_reduction": config.guidance_reduction,
         "guidance_source_channels": getattr(model, "guide_channels", None),
         "guidance_target_channels": getattr(model, "guided_target_channels", {}),
+        "guidance_scale_initialization": 0.0,
         "flops_note": "FLOPs are an analytical estimate, not profiler output.",
     }
 
