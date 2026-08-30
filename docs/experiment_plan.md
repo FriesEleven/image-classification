@@ -49,9 +49,11 @@ python scripts/run_experiments.py
 位置选择只使用 CIFAR-10 validation set，不评估官方 test set：
 
 ```bash
-python scripts/run_experiments.py --sweep configs/sweeps/position_screening.yaml --dry-run
-python scripts/run_experiments.py --sweep configs/sweeps/position_screening.yaml
+python scripts/launch_position_screening.py --dry-run
+python scripts/launch_position_screening.py
 ```
+
+默认启动方式会在后台独立会话中运行，断开 SSH 后仍会继续；命令会打印 PID、精简日志路径和对应的 `tail -f` 监控命令。启动器会先验证三份配置，拒绝重复进程，并拒绝覆盖已有位置实验目录。
 
 筛选配置固定浅层 SE 在 blocks 1--2，分别比较 CBAM 位于 shallow 1--2、middle 7--8 和 deep 15--16。三者均设置 `evaluate_test: false`。确定最佳位置后，再将对应位置用于 CSGHA；当前 `configs/experiments/csgha_se_shallow_cbam_middle.yaml` 是 middle 位置的可运行候选配置。
 

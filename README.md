@@ -66,6 +66,14 @@ bash scripts/launch_baselines.sh
 
 该命令会在后台依次运行两个数据集的 seeds 42/43/44，断开 SSH 后仍会继续。终端会打印日志路径；后台日志只记录每个 epoch 的汇总、异常和最终结果，不记录逐 batch 进度条。批次级环境、配置、状态和最终结果记录在 `artifacts/sweeps/<launch_id>/manifest.json`。再次执行时，配置一致且已有 `summary.json` 的实验会自动跳过。
 
+一行后台启动三组 validation-only 位置筛选实验：
+
+```bash
+python scripts/launch_position_screening.py
+```
+
+启动器会打印 PID 和日志路径，SSH 断开后实验仍会继续。
+
 ## 输出约定
 
 每次实验写入独立目录：
