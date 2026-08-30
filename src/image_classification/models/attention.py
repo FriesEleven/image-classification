@@ -4,18 +4,30 @@ import torch
 from torch import nn
 
 
+def _channel_activation(kind: str) -> nn.Module:
+    if kind == "relu":
+        return nn.ReLU()
+    if kind == "leaky_relu":
+        return nn.LeakyReLU(negative_slope=0.1)
+    raise ValueError(f"Unsupported channel activation: {kind}")
+
+
 class ChannelAttention(nn.Module):
-    def __init__(self, channels: int, ratio: int = 16):
+    def __init__(self, channels: int, ratio: int = 16, deep_activation: str = "relu"):
         super().__init__()
         hidden = max(1, channels // ratio)
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
         self.max_pool = nn.AdaptiveMaxPool2d(1)
         self.fc = nn.Sequential(
             nn.Conv2d(channels, hidden, 1, bias=False),
-            nn.ReLU(),
+            _channel_activation(deep_activation),
             nn.Conv2d(hidden, channels, 1, bias=False),
         )
         self.sigmoid = nn.Sigmoid()
+        if deep_activation != "relu":
+            # A parameter-free activation change must still fail strict loading
+            # into the old architecture, instead of silently changing semantics.
+            self.register_buffer("deep_activation_version", torch.tensor(1, dtype=torch.int64))
 
     def forward(self, inputs: torch.Tensor) -> torch.Tensor:
         return self.sigmoid(self.fc(self.avg_pool(inputs)) + self.fc(self.max_pool(inputs)))
@@ -34,9 +46,9 @@ class SpatialAttention(nn.Module):
 
 
 class CBAM(nn.Module):
-    def __init__(self, channels: int):
+    def __init__(self, channels: int, deep_activation: str = "relu"):
         super().__init__()
-        self.channel_attention = ChannelAttention(channels)
+        self.channel_attention = ChannelAttention(channels, deep_activation=deep_activation)
         self.spatial_attention = SpatialAttention()
 
     def forward(self, inputs: torch.Tensor) -> torch.Tensor:
@@ -53,6 +65,7 @@ class CrossStageChannelAttention(nn.Module):
         guide_channels: int,
         ratio: int = 16,
         guidance_reduction: int = 4,
+        deep_activation: str = "relu",
     ):
         super().__init__()
         hidden = max(1, channels // ratio)
@@ -63,7 +76,7 @@ class CrossStageChannelAttention(nn.Module):
         self.max_pool = nn.AdaptiveMaxPool2d(1)
         self.fc = nn.Sequential(
             nn.Conv2d(channels, hidden, 1, bias=False),
-            nn.ReLU(),
+            _channel_activation(deep_activation),
             nn.Conv2d(hidden, channels, 1, bias=False),
         )
         self.guide_normalization = nn.LayerNorm(guide_channels)
@@ -74,6 +87,8 @@ class CrossStageChannelAttention(nn.Module):
         )
         self.guidance_scale = nn.Parameter(torch.zeros(()))
         self.sigmoid = nn.Sigmoid()
+        if deep_activation != "relu":
+            self.register_buffer("deep_activation_version", torch.tensor(1, dtype=torch.int64))
 
     def attention_logits(
         self,
@@ -104,12 +119,14 @@ class CrossStageChannelAttention(nn.Module):
 class CrossStageGuidedCBAM(nn.Module):
     """CBAM whose channel gate receives a compact shallow-stage descriptor."""
 
-    def __init__(self, channels: int, guide_channels: int, guidance_reduction: int = 4):
+    def __init__(self, channels: int, guide_channels: int, guidance_reduction: int = 4,
+                 deep_activation: str = "relu"):
         super().__init__()
         self.channel_attention = CrossStageChannelAttention(
             channels,
             guide_channels,
             guidance_reduction=guidance_reduction,
+            deep_activation=deep_activation,
         )
         self.spatial_attention = SpatialAttention()
 

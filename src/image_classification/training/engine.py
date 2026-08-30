@@ -6,10 +6,8 @@ import sys
 import time
 from pathlib import Path
 
-import numpy as np
 import torch
 import yaml
-from sklearn.metrics import classification_report
 from torch import nn, optim
 from torch.amp import GradScaler, autocast
 from torch.utils.tensorboard import SummaryWriter
@@ -21,7 +19,10 @@ from image_classification.models import build_model
 from image_classification.paths import RunPaths
 from image_classification.training.benchmark import benchmark_inference, model_metrics
 from image_classification.training.checkpoint import append_training_log, save_checkpoint
-from image_classification.training.evaluate import save_evaluation_data, validate
+from image_classification.training.cuda_graph import prepare_training_graph
+from image_classification.training.evaluate import EpochAccumulator, save_evaluation_data, validate
+from image_classification.training.optimizer_step import OptimizerStepTracker
+from image_classification.training.provenance import file_sha256, runtime_provenance
 from image_classification.utils import seed_everything
 
 
@@ -47,13 +48,17 @@ def optimizer_updates_per_epoch(num_batches: int, accumulation_steps: int) -> in
     return math.ceil(num_batches / accumulation_steps)
 
 
-def _step_optimizer_and_scheduler(optimizer, scheduler, scaler) -> bool:
+def _step_optimizer_and_scheduler(optimizer, scheduler, scaler, tracker=None) -> bool:
     """Advance the scheduler only when AMP did not skip the optimizer update."""
-    scale_before = scaler.get_scale()
+    tracked = tracker is not None and tracker.supported
+    if tracked:
+        tracker.did_step = False
+    else:
+        scale_before = scaler.get_scale()
     scaler.step(optimizer)
     scaler.update()
     optimizer.zero_grad()
-    optimizer_was_run = scaler.get_scale() >= scale_before
+    optimizer_was_run = tracker.did_step if tracked else scaler.get_scale() >= scale_before
     if optimizer_was_run:
         scheduler.step()
     return optimizer_was_run
@@ -62,46 +67,69 @@ def _step_optimizer_and_scheduler(optimizer, scheduler, scaler) -> bool:
 def _train_epoch(model, loader, criterion, optimizer, scheduler, scaler, config, device) -> dict:
     model.train()
     optimizer.zero_grad()
-    accumulated_loss = 0.0
-    predictions: list[int] = []
-    labels: list[int] = []
+    accumulator = EpochAccumulator()
     amp_enabled = config.amp and device.type == "cuda"
-    with tqdm(loader, desc="Training", unit="batch", disable=not sys.stderr.isatty()) as progress:
+    interactive = sys.stderr.isatty()
+    with OptimizerStepTracker(optimizer) as tracker, tqdm(
+        loader, desc="Training", unit="batch", disable=not interactive,
+    ) as progress:
         for step, (inputs, targets) in enumerate(progress, start=1):
+            host_targets = targets
             inputs = inputs.to(device, non_blocking=True)
             targets = targets.to(device, non_blocking=True)
             group_start = ((step - 1) // config.accumulation_steps) * config.accumulation_steps
             group_size = min(config.accumulation_steps, len(loader) - group_start)
-            with autocast(device_type=device.type, enabled=amp_enabled):
+            with autocast(device_type=device.type, enabled=amp_enabled, cache_enabled=not config.cuda_graph):
                 outputs = model(inputs)
                 batch_loss = criterion(outputs, targets)
                 loss = batch_loss / group_size
             scaler.scale(loss).backward()
-            accumulated_loss += batch_loss.item()
-            predictions.extend(outputs.argmax(dim=1).detach().cpu().numpy())
-            labels.extend(targets.cpu().numpy())
-            progress.set_postfix(loss=f"{batch_loss.item():.4f}")
+            accumulator.update(outputs, host_targets, batch_loss)
+            if interactive and step % 50 == 0:
+                progress.set_postfix(loss=f"{batch_loss.item():.4f}")
             if step % config.accumulation_steps == 0 or step == len(loader):
-                _step_optimizer_and_scheduler(optimizer, scheduler, scaler)
-    report = classification_report(labels, predictions, output_dict=True, zero_division=0)
-    return {
-        "loss": accumulated_loss / len(loader),
-        "accuracy": float(np.mean(np.asarray(predictions) == np.asarray(labels))),
-        "precision": float(report["macro avg"]["precision"]),
-        "recall": float(report["macro avg"]["recall"]),
-        "f1": float(report["macro avg"]["f1-score"]),
-        "learning_rate": optimizer.param_groups[0]["lr"],
-    }
+                _step_optimizer_and_scheduler(optimizer, scheduler, scaler, tracker)
+    metrics, _labels, _predictions, _probabilities = accumulator.finish()
+    metrics["learning_rate"] = optimizer.param_groups[0]["lr"]
+    return metrics
 
 
 def train(config: ExperimentConfig) -> dict:
+    if config.torch_num_threads:
+        torch.set_num_threads(config.torch_num_threads)
     seed_everything(config.seed)
     paths = RunPaths(config.experiment_id).create()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = build_model(config).to(device)
     _save_resolved_config(paths.root / "config.yaml", config, device)
+    provenance = {
+        **runtime_provenance(), "architecture_version": config.architecture_version,
+        "command": sys.argv, "split_seed": config.seed, "training_seed": config.seed,
+        "seed_protocol": "split and training seeds are intentionally coupled; historical protocol unchanged",
+        "training_implementation": "deferred_metrics_post_step_hook_v1",
+        "execution_backend": "cuda_graph_training_v1" if config.cuda_graph else "eager",
+        "amp_cache_enabled": not config.cuda_graph,
+        "inference_benchmark_enabled": config.measure_inference,
+    }
+    _write_json(paths.root / "provenance.json", provenance)
     _write_json(paths.root / "metrics.json", model_metrics(model, config))
-    _write_json(paths.root / "benchmark.json", benchmark_inference(model, device))
+    if config.measure_inference:
+        benchmark = benchmark_inference(model, device)
+    else:
+        # Shared-GPU training latency is not a valid isolated inference result.
+        # Null values are intentionally distinct from a measured zero latency.
+        benchmark = {
+            "measurement_status": "skipped",
+            "reason": "Inference timing disabled for this throughput/concurrent-training configuration; remeasure alone",
+            "inference_latency_mean": None, "inference_latency_std": None,
+            "throughput_fps": None, "num_runs": 0,
+        }
+    _write_json(paths.root / "benchmark.json", benchmark)
+    if config.cuda_graph:
+        capture = prepare_training_graph(model, config.batch_size, device, config.amp)
+        provenance["graph_capture"] = capture
+        _write_json(paths.root / "provenance.json", provenance)
+        print(f"Training graph prepared in {capture['capture_seconds']:.2f}s", flush=True)
 
     loaders = build_dataloaders(
         dataset=config.dataset,
@@ -111,6 +139,12 @@ def train(config: ExperimentConfig) -> dict:
         validation_size=config.validation_size,
         split_seed=config.seed,
     )
+    split_path = paths.root / "split_indices.json"
+    _write_json(split_path, {
+        "dataset": config.dataset, "split_seed": config.seed,
+        "train_indices": getattr(loaders.train.dataset, "indices", None),
+        "validation_indices": getattr(loaders.validation.dataset, "indices", None),
+    })
     optimizer = optim.AdamW(model.parameters(), lr=config.lr, weight_decay=1e-4, betas=(0.9, 0.999))
     criterion = nn.CrossEntropyLoss()
     scaler = GradScaler("cuda", enabled=config.amp and device.type == "cuda")
@@ -168,6 +202,9 @@ def train(config: ExperimentConfig) -> dict:
         "test_evaluated": config.evaluate_test,
         "best_validation_accuracy": best_accuracy,
         "best_epoch": best_epoch,
+        "architecture_version": config.architecture_version,
+        "best_checkpoint_sha256": file_sha256(paths.checkpoints / "model_best.pth"),
+        "split_indices_sha256": file_sha256(split_path),
         "run_directory": str(paths.root),
     }
     if config.evaluate_test:

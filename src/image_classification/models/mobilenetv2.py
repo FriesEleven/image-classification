@@ -77,7 +77,8 @@ class SEMobileNetV2(_SparseAttentionMobileNetV2):
 
 class HybridAttentionMobileNetV2(nn.Module):
     def __init__(self, num_classes: int = 10, width_mult: float = 1.0,
-                 se_positions: tuple[int, ...] = (), cbam_positions: tuple[int, ...] = ()):
+                 se_positions: tuple[int, ...] = (), cbam_positions: tuple[int, ...] = (),
+                 deep_activation: str = "relu"):
         super().__init__()
         self.model = mobilenet_v2(weights=None, width_mult=width_mult)
         self.se_positions = tuple(se_positions)
@@ -92,7 +93,7 @@ class HybridAttentionMobileNetV2(nn.Module):
             if index in self.se_positions:
                 module.se = SEBlock(channels)
             if index in self.cbam_positions:
-                module.cbam = CBAM(channels)
+                module.cbam = CBAM(channels, deep_activation=deep_activation)
 
     def forward(self, inputs: torch.Tensor) -> torch.Tensor:
         outputs = inputs
@@ -117,6 +118,7 @@ class CSGHAMobileNetV2(nn.Module):
         cbam_positions: tuple[int, ...] = (),
         guidance_position: int = 2,
         guidance_reduction: int = 4,
+        deep_activation: str = "relu",
     ):
         super().__init__()
         self.model = mobilenet_v2(weights=None, width_mult=width_mult)
@@ -152,6 +154,7 @@ class CSGHAMobileNetV2(nn.Module):
                     channels,
                     guide_channels,
                     guidance_reduction=guidance_reduction,
+                    deep_activation=deep_activation,
                 )
 
     def forward(self, inputs: torch.Tensor) -> torch.Tensor:

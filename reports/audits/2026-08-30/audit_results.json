@@ -1,0 +1,1619 @@
+{
+  "schema_version": 1,
+  "runs": [
+    {
+      "id": "E01",
+      "run_id": "baseline_mobilenetv2_seed42_mobilenetv2_cifar10",
+      "dataset": "cifar10",
+      "variant": "Baseline",
+      "seed": 42,
+      "epochs_logged": 200,
+      "best_epoch": 190,
+      "best_validation_percent": 87.86,
+      "final_validation_percent": 87.46000000000001,
+      "final_train_percent": 91.81555555555555,
+      "test_evaluated": true,
+      "test_evaluated_source": "legacy_saved_test_metrics",
+      "test_accuracy_percent": 87.22,
+      "parameters_total": 2236682,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 4.058667719364166,
+        "inference_latency_std": 0.13046403562629433,
+        "throughput_fps": 246.3862698660783,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "baseline_mobilenetv2_seed42",
+        "model_type": "mobilenetv2",
+        "dataset": "cifar10",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [],
+        "cbam_positions": [],
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 42,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-29_16-21-15"
+        }
+      },
+      "summary_source": "artifacts/runs/baseline_mobilenetv2_seed42_mobilenetv2_cifar10/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/baseline_mobilenetv2_seed42_mobilenetv2_cifar10/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9195531,
+        "sha256": "f5897673a4e136ded0edc2633ee618cd1581fd9560d6071fd3c5966bc9827409"
+      },
+      "provenance": [
+        {
+          "path": "artifacts/sweeps/mobilenetv2_baselines_20260829_162111/manifest.json",
+          "sha256": "167d07e7b811be9786588a454151988b7251069300c5221a48571e497ec5668c",
+          "git_commit": "a99a701418abf025ffaaf37d9392d16b58aa104f",
+          "config_equal": true,
+          "runtime": {
+            "hostname": "autodl-container-0c4b4cae70-9431dc67",
+            "platform": "Linux-5.4.0-162-generic-x86_64-with-glibc2.35",
+            "python": "3.12.3",
+            "executable": "/root/miniconda3/bin/python",
+            "torch": "2.8.0+cu128",
+            "cuda_runtime": "12.8",
+            "cuda_available": true,
+            "gpu": "NVIDIA GeForce RTX 3080 Ti",
+            "git_commit": "a99a701418abf025ffaaf37d9392d16b58aa104f",
+            "git_status": ""
+          }
+        }
+      ],
+      "issues": [],
+      "warnings": [
+        "legacy_test_flag_absent_inferred_from_saved_test_metrics"
+      ]
+    },
+    {
+      "id": "E02",
+      "run_id": "baseline_mobilenetv2_seed42_mobilenetv2_cifar100",
+      "dataset": "cifar100",
+      "variant": "Baseline",
+      "seed": 42,
+      "epochs_logged": 200,
+      "best_epoch": 177,
+      "best_validation_percent": 56.84,
+      "final_validation_percent": 56.52,
+      "final_train_percent": 75.49333333333334,
+      "test_evaluated": true,
+      "test_evaluated_source": "legacy_saved_test_metrics",
+      "test_accuracy_percent": 56.76,
+      "parameters_total": 2351972,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 4.179650768637657,
+        "inference_latency_std": 0.7892757302757072,
+        "throughput_fps": 239.2544390319832,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "baseline_mobilenetv2_seed42",
+        "model_type": "mobilenetv2",
+        "dataset": "cifar100",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [],
+        "cbam_positions": [],
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 42,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-29_18-14-38"
+        }
+      },
+      "summary_source": "artifacts/runs/baseline_mobilenetv2_seed42_mobilenetv2_cifar100/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/baseline_mobilenetv2_seed42_mobilenetv2_cifar100/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9656715,
+        "sha256": "8f58c175b8492e1e7d1e7888cb5eab3a2f7738f7a41e33450cf575eb3c4bc2d3"
+      },
+      "provenance": [
+        {
+          "path": "artifacts/sweeps/mobilenetv2_baselines_20260829_162111/manifest.json",
+          "sha256": "167d07e7b811be9786588a454151988b7251069300c5221a48571e497ec5668c",
+          "git_commit": "a99a701418abf025ffaaf37d9392d16b58aa104f",
+          "config_equal": true,
+          "runtime": {
+            "hostname": "autodl-container-0c4b4cae70-9431dc67",
+            "platform": "Linux-5.4.0-162-generic-x86_64-with-glibc2.35",
+            "python": "3.12.3",
+            "executable": "/root/miniconda3/bin/python",
+            "torch": "2.8.0+cu128",
+            "cuda_runtime": "12.8",
+            "cuda_available": true,
+            "gpu": "NVIDIA GeForce RTX 3080 Ti",
+            "git_commit": "a99a701418abf025ffaaf37d9392d16b58aa104f",
+            "git_status": ""
+          }
+        }
+      ],
+      "issues": [],
+      "warnings": [
+        "legacy_test_flag_absent_inferred_from_saved_test_metrics"
+      ]
+    },
+    {
+      "id": "E03",
+      "run_id": "baseline_mobilenetv2_seed43_mobilenetv2_cifar10",
+      "dataset": "cifar10",
+      "variant": "Baseline",
+      "seed": 43,
+      "epochs_logged": 200,
+      "best_epoch": 192,
+      "best_validation_percent": 87.68,
+      "final_validation_percent": 87.46000000000001,
+      "final_train_percent": 91.94222222222223,
+      "test_evaluated": true,
+      "test_evaluated_source": "legacy_saved_test_metrics",
+      "test_accuracy_percent": 87.62,
+      "parameters_total": 2236682,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 4.057337902486324,
+        "inference_latency_std": 0.2504856683107098,
+        "throughput_fps": 246.46702444654733,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "baseline_mobilenetv2_seed43",
+        "model_type": "mobilenetv2",
+        "dataset": "cifar10",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [],
+        "cbam_positions": [],
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 43,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-29_16-58-58"
+        }
+      },
+      "summary_source": "artifacts/runs/baseline_mobilenetv2_seed43_mobilenetv2_cifar10/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/baseline_mobilenetv2_seed43_mobilenetv2_cifar10/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9195531,
+        "sha256": "8ee3ff08982d0c532f7d9c327501e5612868c33d3bd3575e174f5633b6a75b08"
+      },
+      "provenance": [
+        {
+          "path": "artifacts/sweeps/mobilenetv2_baselines_20260829_162111/manifest.json",
+          "sha256": "167d07e7b811be9786588a454151988b7251069300c5221a48571e497ec5668c",
+          "git_commit": "a99a701418abf025ffaaf37d9392d16b58aa104f",
+          "config_equal": true,
+          "runtime": {
+            "hostname": "autodl-container-0c4b4cae70-9431dc67",
+            "platform": "Linux-5.4.0-162-generic-x86_64-with-glibc2.35",
+            "python": "3.12.3",
+            "executable": "/root/miniconda3/bin/python",
+            "torch": "2.8.0+cu128",
+            "cuda_runtime": "12.8",
+            "cuda_available": true,
+            "gpu": "NVIDIA GeForce RTX 3080 Ti",
+            "git_commit": "a99a701418abf025ffaaf37d9392d16b58aa104f",
+            "git_status": ""
+          }
+        }
+      ],
+      "issues": [],
+      "warnings": [
+        "legacy_test_flag_absent_inferred_from_saved_test_metrics"
+      ]
+    },
+    {
+      "id": "E04",
+      "run_id": "baseline_mobilenetv2_seed43_mobilenetv2_cifar100",
+      "dataset": "cifar100",
+      "variant": "Baseline",
+      "seed": 43,
+      "epochs_logged": 200,
+      "best_epoch": 188,
+      "best_validation_percent": 57.599999999999994,
+      "final_validation_percent": 57.36,
+      "final_train_percent": 75.51777777777777,
+      "test_evaluated": true,
+      "test_evaluated_source": "legacy_saved_test_metrics",
+      "test_accuracy_percent": 56.879999999999995,
+      "parameters_total": 2351972,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 4.064742363989353,
+        "inference_latency_std": 0.22530883158332154,
+        "throughput_fps": 246.01805242547945,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "baseline_mobilenetv2_seed43",
+        "model_type": "mobilenetv2",
+        "dataset": "cifar100",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [],
+        "cbam_positions": [],
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 43,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-29_18-53-33"
+        }
+      },
+      "summary_source": "artifacts/runs/baseline_mobilenetv2_seed43_mobilenetv2_cifar100/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/baseline_mobilenetv2_seed43_mobilenetv2_cifar100/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9656715,
+        "sha256": "9359e38f97e6642676b9c8fff6fc38cc153abdbb48a790ca03076c5388e26761"
+      },
+      "provenance": [
+        {
+          "path": "artifacts/sweeps/mobilenetv2_baselines_20260829_162111/manifest.json",
+          "sha256": "167d07e7b811be9786588a454151988b7251069300c5221a48571e497ec5668c",
+          "git_commit": "a99a701418abf025ffaaf37d9392d16b58aa104f",
+          "config_equal": true,
+          "runtime": {
+            "hostname": "autodl-container-0c4b4cae70-9431dc67",
+            "platform": "Linux-5.4.0-162-generic-x86_64-with-glibc2.35",
+            "python": "3.12.3",
+            "executable": "/root/miniconda3/bin/python",
+            "torch": "2.8.0+cu128",
+            "cuda_runtime": "12.8",
+            "cuda_available": true,
+            "gpu": "NVIDIA GeForce RTX 3080 Ti",
+            "git_commit": "a99a701418abf025ffaaf37d9392d16b58aa104f",
+            "git_status": ""
+          }
+        }
+      ],
+      "issues": [],
+      "warnings": [
+        "legacy_test_flag_absent_inferred_from_saved_test_metrics"
+      ]
+    },
+    {
+      "id": "E05",
+      "run_id": "baseline_mobilenetv2_seed44_mobilenetv2_cifar10",
+      "dataset": "cifar10",
+      "variant": "Baseline",
+      "seed": 44,
+      "epochs_logged": 200,
+      "best_epoch": 193,
+      "best_validation_percent": 87.53999999999999,
+      "final_validation_percent": 87.28,
+      "final_train_percent": 92.36222222222223,
+      "test_evaluated": true,
+      "test_evaluated_source": "legacy_saved_test_metrics",
+      "test_accuracy_percent": 87.61,
+      "parameters_total": 2236682,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 4.14503313601017,
+        "inference_latency_std": 0.0997995781949336,
+        "throughput_fps": 241.25259489784364,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "baseline_mobilenetv2_seed44",
+        "model_type": "mobilenetv2",
+        "dataset": "cifar10",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [],
+        "cbam_positions": [],
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 44,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-29_17-37-03"
+        }
+      },
+      "summary_source": "artifacts/runs/baseline_mobilenetv2_seed44_mobilenetv2_cifar10/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/baseline_mobilenetv2_seed44_mobilenetv2_cifar10/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9195531,
+        "sha256": "6c0b0ab4204f806679fd7b62e8af6a398a28481933c1308a1896c4e490410256"
+      },
+      "provenance": [
+        {
+          "path": "artifacts/sweeps/mobilenetv2_baselines_20260829_162111/manifest.json",
+          "sha256": "167d07e7b811be9786588a454151988b7251069300c5221a48571e497ec5668c",
+          "git_commit": "a99a701418abf025ffaaf37d9392d16b58aa104f",
+          "config_equal": true,
+          "runtime": {
+            "hostname": "autodl-container-0c4b4cae70-9431dc67",
+            "platform": "Linux-5.4.0-162-generic-x86_64-with-glibc2.35",
+            "python": "3.12.3",
+            "executable": "/root/miniconda3/bin/python",
+            "torch": "2.8.0+cu128",
+            "cuda_runtime": "12.8",
+            "cuda_available": true,
+            "gpu": "NVIDIA GeForce RTX 3080 Ti",
+            "git_commit": "a99a701418abf025ffaaf37d9392d16b58aa104f",
+            "git_status": ""
+          }
+        }
+      ],
+      "issues": [],
+      "warnings": [
+        "legacy_test_flag_absent_inferred_from_saved_test_metrics"
+      ]
+    },
+    {
+      "id": "E06",
+      "run_id": "baseline_mobilenetv2_seed44_mobilenetv2_cifar100",
+      "dataset": "cifar100",
+      "variant": "Baseline",
+      "seed": 44,
+      "epochs_logged": 200,
+      "best_epoch": 167,
+      "best_validation_percent": 56.379999999999995,
+      "final_validation_percent": 56.06,
+      "final_train_percent": 75.0111111111111,
+      "test_evaluated": true,
+      "test_evaluated_source": "legacy_saved_test_metrics",
+      "test_accuracy_percent": 56.410000000000004,
+      "parameters_total": 2351972,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 4.364442154765129,
+        "inference_latency_std": 0.38097676573482125,
+        "throughput_fps": 229.1243564560004,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "baseline_mobilenetv2_seed44",
+        "model_type": "mobilenetv2",
+        "dataset": "cifar100",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [],
+        "cbam_positions": [],
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 44,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-29_19-31-18"
+        }
+      },
+      "summary_source": "artifacts/runs/baseline_mobilenetv2_seed44_mobilenetv2_cifar100/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/baseline_mobilenetv2_seed44_mobilenetv2_cifar100/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9656715,
+        "sha256": "77fb974f5f974f3242f95b862512e660ac457ef4d6b52669455085c56b126a7a"
+      },
+      "provenance": [
+        {
+          "path": "artifacts/sweeps/mobilenetv2_baselines_20260829_162111/manifest.json",
+          "sha256": "167d07e7b811be9786588a454151988b7251069300c5221a48571e497ec5668c",
+          "git_commit": "a99a701418abf025ffaaf37d9392d16b58aa104f",
+          "config_equal": true,
+          "runtime": {
+            "hostname": "autodl-container-0c4b4cae70-9431dc67",
+            "platform": "Linux-5.4.0-162-generic-x86_64-with-glibc2.35",
+            "python": "3.12.3",
+            "executable": "/root/miniconda3/bin/python",
+            "torch": "2.8.0+cu128",
+            "cuda_runtime": "12.8",
+            "cuda_available": true,
+            "gpu": "NVIDIA GeForce RTX 3080 Ti",
+            "git_commit": "a99a701418abf025ffaaf37d9392d16b58aa104f",
+            "git_status": ""
+          }
+        }
+      ],
+      "issues": [],
+      "warnings": [
+        "legacy_test_flag_absent_inferred_from_saved_test_metrics"
+      ]
+    },
+    {
+      "id": "E07",
+      "run_id": "csgha_se1-2_cbam7-8_csgha_se1-2_guide2_cbam7-8_cifar10",
+      "dataset": "cifar10",
+      "variant": "CSGHA v1",
+      "seed": 42,
+      "epochs_logged": 200,
+      "best_epoch": 178,
+      "best_validation_percent": 87.5,
+      "final_validation_percent": 87.14,
+      "final_train_percent": 92.45777777777778,
+      "test_evaluated": false,
+      "test_evaluated_source": "summary_flag",
+      "test_accuracy_percent": null,
+      "parameters_total": 2239080,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 5.510545186698437,
+        "inference_latency_std": 0.19617986471888085,
+        "throughput_fps": 181.470247701414,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "csgha_se1-2_cbam7-8",
+        "model_type": "csgha",
+        "dataset": "cifar10",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "evaluate_test": false,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [
+          1,
+          2
+        ],
+        "cbam_positions": [
+          7,
+          8
+        ],
+        "guidance_position": 2,
+        "guidance_reduction": 4,
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 42,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-30_12-05-22"
+        }
+      },
+      "summary_source": "artifacts/runs/csgha_se1-2_cbam7-8_csgha_se1-2_guide2_cbam7-8_cifar10/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/csgha_se1-2_cbam7-8_csgha_se1-2_guide2_cbam7-8_cifar10/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9214301,
+        "sha256": "a2c5c7894249d0b4cdec387760b6bb2d47b4013db658fa08105eea7aaf6ac5c0"
+      },
+      "provenance": [],
+      "issues": [],
+      "warnings": [
+        "run_time_git_commit_not_recorded"
+      ]
+    },
+    {
+      "id": "E08",
+      "run_id": "csgha_v2_se1-2_cbam7-8_csgha_se1-2_guide2_cbam7-8_cifar10",
+      "dataset": "cifar10",
+      "variant": "CSGHA v2",
+      "seed": 42,
+      "epochs_logged": 200,
+      "best_epoch": 193,
+      "best_validation_percent": 88.2,
+      "final_validation_percent": 88.1,
+      "final_train_percent": 92.41333333333334,
+      "test_evaluated": false,
+      "test_evaluated_source": "summary_flag",
+      "test_accuracy_percent": null,
+      "parameters_total": 2239178,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 5.624508000910282,
+        "inference_latency_std": 0.21491092620175092,
+        "throughput_fps": 177.7933287388262,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "csgha_v2_se1-2_cbam7-8",
+        "model_type": "csgha",
+        "dataset": "cifar10",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "evaluate_test": false,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [
+          1,
+          2
+        ],
+        "cbam_positions": [
+          7,
+          8
+        ],
+        "guidance_position": 2,
+        "guidance_reduction": 4,
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 42,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-30_13-12-18"
+        }
+      },
+      "summary_source": "artifacts/runs/csgha_v2_se1-2_cbam7-8_csgha_se1-2_guide2_cbam7-8_cifar10/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/csgha_v2_se1-2_cbam7-8_csgha_se1-2_guide2_cbam7-8_cifar10/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9216867,
+        "sha256": "8cc19728b5c2de64ef8cf338d28759711c19012ec152d99289a8b2486bcb5662"
+      },
+      "provenance": [],
+      "issues": [],
+      "warnings": [
+        "run_time_git_commit_not_recorded"
+      ]
+    },
+    {
+      "id": "E09",
+      "run_id": "csgha_v3_se1-2_cbam7-8_csgha_se1-2_guide2_cbam7-8_cifar10",
+      "dataset": "cifar10",
+      "variant": "CSGHA v3",
+      "seed": 42,
+      "epochs_logged": 200,
+      "best_epoch": 180,
+      "best_validation_percent": 88.68,
+      "final_validation_percent": 88.34,
+      "final_train_percent": 91.54444444444444,
+      "test_evaluated": false,
+      "test_evaluated_source": "summary_flag",
+      "test_accuracy_percent": null,
+      "parameters_total": 2239178,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 5.839926786720753,
+        "inference_latency_std": 0.569490387503903,
+        "throughput_fps": 171.23502340369612,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "csgha_v3_se1-2_cbam7-8",
+        "model_type": "csgha",
+        "dataset": "cifar10",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "evaluate_test": false,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [
+          1,
+          2
+        ],
+        "cbam_positions": [
+          7,
+          8
+        ],
+        "guidance_position": 2,
+        "guidance_reduction": 4,
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 42,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-30_14-17-04"
+        }
+      },
+      "summary_source": "artifacts/runs/csgha_v3_se1-2_cbam7-8_csgha_se1-2_guide2_cbam7-8_cifar10/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/csgha_v3_se1-2_cbam7-8_csgha_se1-2_guide2_cbam7-8_cifar10/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9216867,
+        "sha256": "60bca2fb3f63fe74c46be5d0a60ed49fdf70a849995e9027373103280e6d49b7"
+      },
+      "provenance": [],
+      "issues": [],
+      "warnings": [
+        "run_time_git_commit_not_recorded"
+      ]
+    },
+    {
+      "id": "E10",
+      "run_id": "csgha_v3_se1-2_cbam7-8_seed43_csgha_se1-2_guide2_cbam7-8_cifar10",
+      "dataset": "cifar10",
+      "variant": "CSGHA v3",
+      "seed": 43,
+      "epochs_logged": 200,
+      "best_epoch": 200,
+      "best_validation_percent": 87.62,
+      "final_validation_percent": 87.62,
+      "final_train_percent": 91.45333333333333,
+      "test_evaluated": false,
+      "test_evaluated_source": "summary_flag",
+      "test_accuracy_percent": null,
+      "parameters_total": 2239178,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 5.804169401526451,
+        "inference_latency_std": 0.37993545915339627,
+        "throughput_fps": 172.28994035511917,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "csgha_v3_se1-2_cbam7-8_seed43",
+        "model_type": "csgha",
+        "dataset": "cifar10",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "evaluate_test": false,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [
+          1,
+          2
+        ],
+        "cbam_positions": [
+          7,
+          8
+        ],
+        "guidance_position": 2,
+        "guidance_reduction": 4,
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 43,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-30_18-11-25"
+        }
+      },
+      "summary_source": "artifacts/runs/csgha_v3_se1-2_cbam7-8_seed43_csgha_se1-2_guide2_cbam7-8_cifar10/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/csgha_v3_se1-2_cbam7-8_seed43_csgha_se1-2_guide2_cbam7-8_cifar10/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9216867,
+        "sha256": "6610571e33dadbe63d3eb6076fede84479ae38c192bebadaf53ca68d99f5cba4"
+      },
+      "provenance": [
+        {
+          "path": "artifacts/sweeps/cifar10_attention_stability_20260830_151514/manifest.json",
+          "sha256": "aedadc27b0f23486a5724e4bb9395d2254fbf20e954652f5a844752d48c7bc22",
+          "git_commit": "64b79160b6a582086443eb45533311bfc1aaf1f0",
+          "config_equal": true,
+          "runtime": {
+            "hostname": "autodl-container-aa6147b8a1-2d528863",
+            "platform": "Linux-5.4.0-162-generic-x86_64-with-glibc2.35",
+            "python": "3.12.3",
+            "executable": "/root/miniconda3/bin/python",
+            "torch": "2.8.0+cu128",
+            "cuda_runtime": "12.8",
+            "cuda_available": true,
+            "gpu": "NVIDIA GeForce RTX 3080 Ti",
+            "git_commit": "64b79160b6a582086443eb45533311bfc1aaf1f0",
+            "git_status": ""
+          }
+        }
+      ],
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "id": "E11",
+      "run_id": "csgha_v3_se1-2_cbam7-8_seed44_csgha_se1-2_guide2_cbam7-8_cifar10",
+      "dataset": "cifar10",
+      "variant": "CSGHA v3",
+      "seed": 44,
+      "epochs_logged": 200,
+      "best_epoch": 197,
+      "best_validation_percent": 87.74,
+      "final_validation_percent": 87.44,
+      "final_train_percent": 91.39333333333333,
+      "test_evaluated": false,
+      "test_evaluated_source": "summary_flag",
+      "test_accuracy_percent": null,
+      "parameters_total": 2239178,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 5.730961821973324,
+        "inference_latency_std": 0.2857504556740419,
+        "throughput_fps": 174.49078026760841,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "csgha_v3_se1-2_cbam7-8_seed44",
+        "model_type": "csgha",
+        "dataset": "cifar10",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "evaluate_test": false,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [
+          1,
+          2
+        ],
+        "cbam_positions": [
+          7,
+          8
+        ],
+        "guidance_position": 2,
+        "guidance_reduction": 4,
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 44,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-30_18-57-39"
+        }
+      },
+      "summary_source": "artifacts/runs/csgha_v3_se1-2_cbam7-8_seed44_csgha_se1-2_guide2_cbam7-8_cifar10/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/csgha_v3_se1-2_cbam7-8_seed44_csgha_se1-2_guide2_cbam7-8_cifar10/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9216867,
+        "sha256": "a3fa3970fe865a20b08422390ab5968775b7a5ef9e4e581e09ab20ffda31eea7"
+      },
+      "provenance": [
+        {
+          "path": "artifacts/sweeps/cifar10_attention_stability_20260830_151514/manifest.json",
+          "sha256": "aedadc27b0f23486a5724e4bb9395d2254fbf20e954652f5a844752d48c7bc22",
+          "git_commit": "64b79160b6a582086443eb45533311bfc1aaf1f0",
+          "config_equal": true,
+          "runtime": {
+            "hostname": "autodl-container-aa6147b8a1-2d528863",
+            "platform": "Linux-5.4.0-162-generic-x86_64-with-glibc2.35",
+            "python": "3.12.3",
+            "executable": "/root/miniconda3/bin/python",
+            "torch": "2.8.0+cu128",
+            "cuda_runtime": "12.8",
+            "cuda_available": true,
+            "gpu": "NVIDIA GeForce RTX 3080 Ti",
+            "git_commit": "64b79160b6a582086443eb45533311bfc1aaf1f0",
+            "git_status": ""
+          }
+        }
+      ],
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "id": "E12",
+      "run_id": "position_se1-2_cbam1-2_hybrid_se1-2_cbam1-2_cifar10",
+      "dataset": "cifar10",
+      "variant": "Independent shallow",
+      "seed": 42,
+      "epochs_logged": 200,
+      "best_epoch": 170,
+      "best_validation_percent": 88.78,
+      "final_validation_percent": 88.52,
+      "final_train_percent": 92.00888888888889,
+      "test_evaluated": false,
+      "test_evaluated_source": "summary_flag",
+      "test_accuracy_percent": null,
+      "parameters_total": 2237080,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 5.1256245374679565,
+        "inference_latency_std": 0.22410168946457346,
+        "throughput_fps": 195.0981763666203,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "position_se1-2_cbam1-2",
+        "model_type": "hybrid",
+        "dataset": "cifar10",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "evaluate_test": false,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [
+          1,
+          2
+        ],
+        "cbam_positions": [
+          1,
+          2
+        ],
+        "guidance_position": 2,
+        "guidance_reduction": 4,
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 42,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-30_09-31-58"
+        }
+      },
+      "summary_source": "artifacts/runs/position_se1-2_cbam1-2_hybrid_se1-2_cbam1-2_cifar10/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/position_se1-2_cbam1-2_hybrid_se1-2_cbam1-2_cifar10/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9203865,
+        "sha256": "c561c76ab7f78a81c988ed379ad337682e0d76aaeebb17524e4550286e2f4cb5"
+      },
+      "provenance": [],
+      "issues": [],
+      "warnings": [
+        "run_time_git_commit_not_recorded"
+      ]
+    },
+    {
+      "id": "E13",
+      "run_id": "position_se1-2_cbam1-2_seed43_hybrid_se1-2_cbam1-2_cifar10",
+      "dataset": "cifar10",
+      "variant": "Independent shallow",
+      "seed": 43,
+      "epochs_logged": 200,
+      "best_epoch": 170,
+      "best_validation_percent": 88.16000000000001,
+      "final_validation_percent": 87.74,
+      "final_train_percent": 91.62444444444444,
+      "test_evaluated": false,
+      "test_evaluated_source": "summary_flag",
+      "test_accuracy_percent": null,
+      "parameters_total": 2237080,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 5.254116095602512,
+        "inference_latency_std": 0.23092963500958347,
+        "throughput_fps": 190.32697066533427,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "position_se1-2_cbam1-2_seed43",
+        "model_type": "hybrid",
+        "dataset": "cifar10",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "evaluate_test": false,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [
+          1,
+          2
+        ],
+        "cbam_positions": [
+          1,
+          2
+        ],
+        "guidance_position": 2,
+        "guidance_reduction": 4,
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 43,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-30_15-15-19"
+        }
+      },
+      "summary_source": "artifacts/runs/position_se1-2_cbam1-2_seed43_hybrid_se1-2_cbam1-2_cifar10/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/position_se1-2_cbam1-2_seed43_hybrid_se1-2_cbam1-2_cifar10/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9203865,
+        "sha256": "c6b2350a123c5adec7e4ab42745915bab2a82d1285133e4234759859854708d6"
+      },
+      "provenance": [
+        {
+          "path": "artifacts/sweeps/cifar10_attention_stability_20260830_151514/manifest.json",
+          "sha256": "aedadc27b0f23486a5724e4bb9395d2254fbf20e954652f5a844752d48c7bc22",
+          "git_commit": "64b79160b6a582086443eb45533311bfc1aaf1f0",
+          "config_equal": true,
+          "runtime": {
+            "hostname": "autodl-container-aa6147b8a1-2d528863",
+            "platform": "Linux-5.4.0-162-generic-x86_64-with-glibc2.35",
+            "python": "3.12.3",
+            "executable": "/root/miniconda3/bin/python",
+            "torch": "2.8.0+cu128",
+            "cuda_runtime": "12.8",
+            "cuda_available": true,
+            "gpu": "NVIDIA GeForce RTX 3080 Ti",
+            "git_commit": "64b79160b6a582086443eb45533311bfc1aaf1f0",
+            "git_status": ""
+          }
+        }
+      ],
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "id": "E14",
+      "run_id": "position_se1-2_cbam1-2_seed44_hybrid_se1-2_cbam1-2_cifar10",
+      "dataset": "cifar10",
+      "variant": "Independent shallow",
+      "seed": 44,
+      "epochs_logged": 200,
+      "best_epoch": 170,
+      "best_validation_percent": 87.88,
+      "final_validation_percent": 87.5,
+      "final_train_percent": 91.85333333333332,
+      "test_evaluated": false,
+      "test_evaluated_source": "summary_flag",
+      "test_accuracy_percent": null,
+      "parameters_total": 2237080,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 5.234425514936447,
+        "inference_latency_std": 0.14908932014161472,
+        "throughput_fps": 191.04293243766625,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "position_se1-2_cbam1-2_seed44",
+        "model_type": "hybrid",
+        "dataset": "cifar10",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "evaluate_test": false,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [
+          1,
+          2
+        ],
+        "cbam_positions": [
+          1,
+          2
+        ],
+        "guidance_position": 2,
+        "guidance_reduction": 4,
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 44,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-30_15-59-36"
+        }
+      },
+      "summary_source": "artifacts/runs/position_se1-2_cbam1-2_seed44_hybrid_se1-2_cbam1-2_cifar10/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/position_se1-2_cbam1-2_seed44_hybrid_se1-2_cbam1-2_cifar10/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9203865,
+        "sha256": "05592b6f976f8e5ec3d0c4e3989c07743e096e581c7b67f8acfa5b925757459c"
+      },
+      "provenance": [
+        {
+          "path": "artifacts/sweeps/cifar10_attention_stability_20260830_151514/manifest.json",
+          "sha256": "aedadc27b0f23486a5724e4bb9395d2254fbf20e954652f5a844752d48c7bc22",
+          "git_commit": "64b79160b6a582086443eb45533311bfc1aaf1f0",
+          "config_equal": true,
+          "runtime": {
+            "hostname": "autodl-container-aa6147b8a1-2d528863",
+            "platform": "Linux-5.4.0-162-generic-x86_64-with-glibc2.35",
+            "python": "3.12.3",
+            "executable": "/root/miniconda3/bin/python",
+            "torch": "2.8.0+cu128",
+            "cuda_runtime": "12.8",
+            "cuda_available": true,
+            "gpu": "NVIDIA GeForce RTX 3080 Ti",
+            "git_commit": "64b79160b6a582086443eb45533311bfc1aaf1f0",
+            "git_status": ""
+          }
+        }
+      ],
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "id": "E15",
+      "run_id": "position_se1-2_cbam15-16_hybrid_se1-2_cbam15-16_cifar10",
+      "dataset": "cifar10",
+      "variant": "Independent deep",
+      "seed": 42,
+      "epochs_logged": 200,
+      "best_epoch": 198,
+      "best_validation_percent": 88.36,
+      "final_validation_percent": 88.26,
+      "final_train_percent": 91.93111111111111,
+      "test_evaluated": false,
+      "test_evaluated_source": "summary_flag",
+      "test_accuracy_percent": null,
+      "parameters_total": 2243400,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 5.4696400463581085,
+        "inference_latency_std": 0.36199243194938324,
+        "throughput_fps": 182.82738745593278,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "position_se1-2_cbam15-16",
+        "model_type": "hybrid",
+        "dataset": "cifar10",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "evaluate_test": false,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [
+          1,
+          2
+        ],
+        "cbam_positions": [
+          15,
+          16
+        ],
+        "guidance_position": 2,
+        "guidance_reduction": 4,
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 42,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-30_10-59-13"
+        }
+      },
+      "summary_source": "artifacts/runs/position_se1-2_cbam15-16_hybrid_se1-2_cbam15-16_cifar10/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/position_se1-2_cbam15-16_hybrid_se1-2_cbam15-16_cifar10/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9229273,
+        "sha256": "fb60a8ba63ad0e32f42d4dfe5a78998e9542f5acd009f6f312fdebd38fdb2447"
+      },
+      "provenance": [],
+      "issues": [],
+      "warnings": [
+        "run_time_git_commit_not_recorded"
+      ]
+    },
+    {
+      "id": "E16",
+      "run_id": "position_se1-2_cbam7-8_hybrid_se1-2_cbam7-8_cifar10",
+      "dataset": "cifar10",
+      "variant": "Independent middle",
+      "seed": 42,
+      "epochs_logged": 200,
+      "best_epoch": 170,
+      "best_validation_percent": 88.46000000000001,
+      "final_validation_percent": 88.08,
+      "final_train_percent": 91.5,
+      "test_evaluated": false,
+      "test_evaluated_source": "summary_flag",
+      "test_accuracy_percent": null,
+      "parameters_total": 2238024,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 5.417954623699188,
+        "inference_latency_std": 0.44837495657194526,
+        "throughput_fps": 184.57149781687085,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "position_se1-2_cbam7-8",
+        "model_type": "hybrid",
+        "dataset": "cifar10",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "evaluate_test": false,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [
+          1,
+          2
+        ],
+        "cbam_positions": [
+          7,
+          8
+        ],
+        "guidance_position": 2,
+        "guidance_reduction": 4,
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 42,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-30_10-15-24"
+        }
+      },
+      "summary_source": "artifacts/runs/position_se1-2_cbam7-8_hybrid_se1-2_cbam7-8_cifar10/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/position_se1-2_cbam7-8_hybrid_se1-2_cbam7-8_cifar10/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9207705,
+        "sha256": "a37703cdc1fcd7ffc3816e1aa1cc0c71607955e2fee34141e58853d483370c22"
+      },
+      "provenance": [],
+      "issues": [],
+      "warnings": [
+        "run_time_git_commit_not_recorded"
+      ]
+    },
+    {
+      "id": "E17",
+      "run_id": "position_se1-2_cbam7-8_seed43_hybrid_se1-2_cbam7-8_cifar10",
+      "dataset": "cifar10",
+      "variant": "Independent middle",
+      "seed": 43,
+      "epochs_logged": 200,
+      "best_epoch": 196,
+      "best_validation_percent": 87.96000000000001,
+      "final_validation_percent": 87.83999999999999,
+      "final_train_percent": 91.39333333333333,
+      "test_evaluated": false,
+      "test_evaluated_source": "summary_flag",
+      "test_accuracy_percent": null,
+      "parameters_total": 2238024,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 5.253819562494755,
+        "inference_latency_std": 0.11713716948783624,
+        "throughput_fps": 190.3377129924032,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "position_se1-2_cbam7-8_seed43",
+        "model_type": "hybrid",
+        "dataset": "cifar10",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "evaluate_test": false,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [
+          1,
+          2
+        ],
+        "cbam_positions": [
+          7,
+          8
+        ],
+        "guidance_position": 2,
+        "guidance_reduction": 4,
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 43,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-30_16-43-27"
+        }
+      },
+      "summary_source": "artifacts/runs/position_se1-2_cbam7-8_seed43_hybrid_se1-2_cbam7-8_cifar10/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/position_se1-2_cbam7-8_seed43_hybrid_se1-2_cbam7-8_cifar10/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9207705,
+        "sha256": "fb8c89dd0d5685401925d385952e8d74d0a6fba12f86764e24fdd6a789477c77"
+      },
+      "provenance": [
+        {
+          "path": "artifacts/sweeps/cifar10_attention_stability_20260830_151514/manifest.json",
+          "sha256": "aedadc27b0f23486a5724e4bb9395d2254fbf20e954652f5a844752d48c7bc22",
+          "git_commit": "64b79160b6a582086443eb45533311bfc1aaf1f0",
+          "config_equal": true,
+          "runtime": {
+            "hostname": "autodl-container-aa6147b8a1-2d528863",
+            "platform": "Linux-5.4.0-162-generic-x86_64-with-glibc2.35",
+            "python": "3.12.3",
+            "executable": "/root/miniconda3/bin/python",
+            "torch": "2.8.0+cu128",
+            "cuda_runtime": "12.8",
+            "cuda_available": true,
+            "gpu": "NVIDIA GeForce RTX 3080 Ti",
+            "git_commit": "64b79160b6a582086443eb45533311bfc1aaf1f0",
+            "git_status": ""
+          }
+        }
+      ],
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "id": "E18",
+      "run_id": "position_se1-2_cbam7-8_seed44_hybrid_se1-2_cbam7-8_cifar10",
+      "dataset": "cifar10",
+      "variant": "Independent middle",
+      "seed": 44,
+      "epochs_logged": 200,
+      "best_epoch": 179,
+      "best_validation_percent": 87.4,
+      "final_validation_percent": 87.0,
+      "final_train_percent": 91.24888888888889,
+      "test_evaluated": false,
+      "test_evaluated_source": "summary_flag",
+      "test_accuracy_percent": null,
+      "parameters_total": 2238024,
+      "benchmark": {
+        "device_name": "NVIDIA GeForce RTX 3080 Ti",
+        "batch_size": 1,
+        "input_resolution": "32x32",
+        "inference_latency_mean": 5.229467712342739,
+        "inference_latency_std": 0.14323311668311153,
+        "throughput_fps": 191.2240508990564,
+        "num_runs": 100
+      },
+      "config": {
+        "experiment_name": "position_se1-2_cbam7-8_seed44",
+        "model_type": "hybrid",
+        "dataset": "cifar10",
+        "validation_size": 5000,
+        "batch_size": 128,
+        "epochs": 200,
+        "lr": 0.01,
+        "amp": true,
+        "evaluate_test": false,
+        "accumulation_steps": 1,
+        "aux_positions": [],
+        "se_positions": [
+          1,
+          2
+        ],
+        "cbam_positions": [
+          7,
+          8
+        ],
+        "guidance_position": 2,
+        "guidance_reduction": 4,
+        "num_workers": 8,
+        "prefetch_factor": 4,
+        "seed": 44,
+        "runtime": {
+          "device": "cuda",
+          "device_name": "NVIDIA GeForce RTX 3080 Ti",
+          "timestamp": "2026-08-30_17-27-25"
+        }
+      },
+      "summary_source": "artifacts/runs/position_se1-2_cbam7-8_seed44_hybrid_se1-2_cbam7-8_cifar10/summary.json",
+      "best_checkpoint": {
+        "path": "artifacts/runs/position_se1-2_cbam7-8_seed44_hybrid_se1-2_cbam7-8_cifar10/checkpoints/model_best.pth",
+        "exists": true,
+        "size_bytes": 9207705,
+        "sha256": "e204c90b6fd271680fb82af18d8f2d465165df79081fd990ae379e171788097d"
+      },
+      "provenance": [
+        {
+          "path": "artifacts/sweeps/cifar10_attention_stability_20260830_151514/manifest.json",
+          "sha256": "aedadc27b0f23486a5724e4bb9395d2254fbf20e954652f5a844752d48c7bc22",
+          "git_commit": "64b79160b6a582086443eb45533311bfc1aaf1f0",
+          "config_equal": true,
+          "runtime": {
+            "hostname": "autodl-container-aa6147b8a1-2d528863",
+            "platform": "Linux-5.4.0-162-generic-x86_64-with-glibc2.35",
+            "python": "3.12.3",
+            "executable": "/root/miniconda3/bin/python",
+            "torch": "2.8.0+cu128",
+            "cuda_runtime": "12.8",
+            "cuda_available": true,
+            "gpu": "NVIDIA GeForce RTX 3080 Ti",
+            "git_commit": "64b79160b6a582086443eb45533311bfc1aaf1f0",
+            "git_status": ""
+          }
+        }
+      ],
+      "issues": [],
+      "warnings": []
+    }
+  ],
+  "groups": [
+    {
+      "dataset": "cifar10",
+      "variant": "Baseline",
+      "run_ids": [
+        "E01",
+        "E03",
+        "E05"
+      ],
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "validation": {
+        "n": 3,
+        "mean_percent": 87.69333333333333,
+        "sample_sd_percent": 0.1604161255402161
+      },
+      "test": {
+        "n": 3,
+        "mean_percent": 87.48333333333333,
+        "sample_sd_percent": 0.22810816147901017
+      }
+    },
+    {
+      "dataset": "cifar10",
+      "variant": "CSGHA v1",
+      "run_ids": [
+        "E07"
+      ],
+      "seeds": [
+        42
+      ],
+      "validation": {
+        "n": 1,
+        "mean_percent": 87.5,
+        "sample_sd_percent": null
+      },
+      "test": null
+    },
+    {
+      "dataset": "cifar10",
+      "variant": "CSGHA v2",
+      "run_ids": [
+        "E08"
+      ],
+      "seeds": [
+        42
+      ],
+      "validation": {
+        "n": 1,
+        "mean_percent": 88.2,
+        "sample_sd_percent": null
+      },
+      "test": null
+    },
+    {
+      "dataset": "cifar10",
+      "variant": "CSGHA v3",
+      "run_ids": [
+        "E09",
+        "E10",
+        "E11"
+      ],
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "validation": {
+        "n": 3,
+        "mean_percent": 88.01333333333334,
+        "sample_sd_percent": 0.5804595880277433
+      },
+      "test": null
+    },
+    {
+      "dataset": "cifar10",
+      "variant": "Independent deep",
+      "run_ids": [
+        "E15"
+      ],
+      "seeds": [
+        42
+      ],
+      "validation": {
+        "n": 1,
+        "mean_percent": 88.36,
+        "sample_sd_percent": null
+      },
+      "test": null
+    },
+    {
+      "dataset": "cifar10",
+      "variant": "Independent middle",
+      "run_ids": [
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "validation": {
+        "n": 3,
+        "mean_percent": 87.94000000000001,
+        "sample_sd_percent": 0.5302829433425152
+      },
+      "test": null
+    },
+    {
+      "dataset": "cifar10",
+      "variant": "Independent shallow",
+      "run_ids": [
+        "E12",
+        "E13",
+        "E14"
+      ],
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "validation": {
+        "n": 3,
+        "mean_percent": 88.27333333333333,
+        "sample_sd_percent": 0.4605793453177579
+      },
+      "test": null
+    },
+    {
+      "dataset": "cifar100",
+      "variant": "Baseline",
+      "run_ids": [
+        "E02",
+        "E04",
+        "E06"
+      ],
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "validation": {
+        "n": 3,
+        "mean_percent": 56.94,
+        "sample_sd_percent": 0.6161168720299732
+      },
+      "test": {
+        "n": 3,
+        "mean_percent": 56.68333333333334,
+        "sample_sd_percent": 0.24419937209856063
+      }
+    }
+  ],
+  "paired": [
+    {
+      "comparison": "CSGHA v3 - Baseline",
+      "unit": "percentage_points",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "deltas": [
+        0.8200000000000074,
+        -0.060000000000002274,
+        0.20000000000000284
+      ],
+      "mean_delta": 0.32000000000000267,
+      "sample_sd_delta": 0.45210618221829724,
+      "wins": 2
+    },
+    {
+      "comparison": "CSGHA v3 - Independent shallow",
+      "unit": "percentage_points",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "deltas": [
+        -0.09999999999999432,
+        -0.5400000000000063,
+        -0.14000000000000057
+      ],
+      "mean_delta": -0.2600000000000004,
+      "sample_sd_delta": 0.24331050121193412,
+      "wins": 0
+    },
+    {
+      "comparison": "CSGHA v3 - Independent middle",
+      "unit": "percentage_points",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "deltas": [
+        0.21999999999999886,
+        -0.3400000000000034,
+        0.3399999999999892
+      ],
+      "mean_delta": 0.07333333333332821,
+      "sample_sd_delta": 0.3629508690350964,
+      "wins": 2
+    },
+    {
+      "comparison": "Independent shallow - Baseline",
+      "unit": "percentage_points",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "deltas": [
+        0.9200000000000017,
+        0.480000000000004,
+        0.3400000000000034
+      ],
+      "mean_delta": 0.5800000000000031,
+      "sample_sd_delta": 0.30265491900843006,
+      "wins": 3
+    }
+  ]
+}

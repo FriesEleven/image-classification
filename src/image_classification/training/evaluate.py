@@ -22,27 +22,51 @@ def classification_metrics(labels, predictions, loss: float) -> dict:
     }
 
 
+class EpochAccumulator:
+    """Buffer tiny detached metrics and synchronize once at the epoch boundary."""
+
+    def __init__(self, probabilities: bool = False):
+        self.keep_probabilities = probabilities
+        self.losses = []
+        self.predictions = []
+        self.labels = []
+        self.probabilities = []
+
+    def update(self, outputs, labels, loss) -> None:
+        outputs = outputs.detach()
+        self.losses.append(loss.detach())
+        self.predictions.append(outputs.argmax(dim=1))
+        self.labels.append(labels.detach())
+        if self.keep_probabilities:
+            self.probabilities.append(torch.softmax(outputs, dim=1))
+
+    def finish(self):
+        if not self.losses:
+            raise ValueError("Cannot summarize an empty epoch")
+        # Preserve the existing mean-of-batch-means loss definition, including
+        # the smaller last batch. Float64 mirrors the old Python-float sum.
+        loss = torch.stack(self.losses).double().mean().item()
+        predictions = torch.cat(self.predictions).cpu().numpy()
+        labels = torch.cat(self.labels).cpu().numpy()
+        probabilities = torch.cat(self.probabilities).cpu().numpy() if self.keep_probabilities else None
+        return classification_metrics(labels, predictions, loss), labels, predictions, probabilities
+
+
 def validate(
     model, loader, criterion, device: torch.device, description: str = "Validation",
 ) -> tuple[dict, np.ndarray, np.ndarray, np.ndarray]:
     model.eval()
-    predictions: list[int] = []
-    labels: list[int] = []
-    probabilities: list[np.ndarray] = []
-    total_loss = 0.0
+    accumulator = EpochAccumulator(probabilities=True)
     with torch.no_grad(), tqdm(
         loader, desc=description, unit="batch", disable=not sys.stderr.isatty(),
     ) as progress:
         for inputs, targets in progress:
+            host_targets = targets
             inputs = inputs.to(device, non_blocking=True)
             targets = targets.to(device, non_blocking=True)
             outputs = model(inputs)
-            total_loss += criterion(outputs, targets).item()
-            probabilities.extend(torch.softmax(outputs, dim=1).cpu().numpy())
-            predictions.extend(outputs.argmax(dim=1).cpu().numpy())
-            labels.extend(targets.cpu().numpy())
-    metrics = classification_metrics(labels, predictions, total_loss / len(loader))
-    return metrics, np.asarray(labels), np.asarray(predictions), np.asarray(probabilities)
+            accumulator.update(outputs, host_targets, criterion(outputs, targets))
+    return accumulator.finish()
 
 
 def save_evaluation_data(

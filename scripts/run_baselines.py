@@ -18,6 +18,8 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from image_classification.config import load_config
 from image_classification.paths import RunPaths
+from image_classification.training.provenance import runtime_provenance, snapshot_sources, source_fingerprint
+from image_classification.training.sweep import run_parallel_queue
 
 DEFAULT_SWEEP = ROOT / "configs/sweeps/baselines.yaml"
 
@@ -36,6 +38,7 @@ def _git_output(*args: str) -> str:
 def _runtime_record() -> dict:
     cuda_available = torch.cuda.is_available()
     return {
+        **runtime_provenance(),
         "hostname": socket.gethostname(),
         "platform": platform.platform(),
         "python": sys.version.split()[0],
@@ -131,6 +134,7 @@ def main() -> int:
     parser.add_argument("--sweep", type=Path, default=DEFAULT_SWEEP)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--continue-on-error", action="store_true")
+    parser.add_argument("--jobs", type=int, choices=(1, 2, 3), default=1)
     args = parser.parse_args()
 
     sweep_path = args.sweep.resolve()
@@ -146,16 +150,32 @@ def main() -> int:
         "finished_at": None,
         "runtime": _runtime_record(),
         "runs": build_plan(sweep),
+        "concurrent_jobs": args.jobs,
     }
     _write_manifest(manifest_path, manifest)
     print(f"Manifest: {manifest_path}", flush=True)
 
     failures = 0
     try:
-        for run in manifest["runs"]:
+        if not args.dry_run:
+            snapshot_sources(manifest_path.parent / "source_snapshot", manifest["runtime"]["source_sha256"])
+
+        def check_source():
+            if source_fingerprint() != manifest["runtime"]["source_sha256"]:
+                raise RuntimeError("Source/config files changed since this sweep started; refusing mixed-version runs")
+
+        if args.jobs > 1 and not args.dry_run:
+            failures = run_parallel_queue(
+                manifest["runs"], args.jobs, ROOT, manifest_path.parent / "run_logs",
+                lambda: _write_manifest(manifest_path, manifest), check_source,
+                _completed_summary, args.continue_on_error,
+            )
+        for run in manifest["runs"] if args.jobs == 1 or args.dry_run else []:
             print(" ".join(run["command"]), flush=True)
             if args.dry_run:
                 continue
+            if source_fingerprint() != manifest["runtime"]["source_sha256"]:
+                raise RuntimeError("Source/config files changed since this sweep started; refusing mixed-version runs")
             completed_summary = _completed_summary(run)
             if completed_summary is not None:
                 run.update(
@@ -170,6 +190,8 @@ def main() -> int:
             run.update(status="running", started_at=_timestamp())
             _write_manifest(manifest_path, manifest)
             completed = subprocess.run(run["command"], cwd=ROOT, check=False)
+            if source_fingerprint() != manifest["runtime"]["source_sha256"]:
+                raise RuntimeError("Source/config files changed during training; inspect the run before reuse")
             run.update(
                 status="completed" if completed.returncode == 0 else "failed",
                 finished_at=_timestamp(),
@@ -185,6 +207,9 @@ def main() -> int:
     except (KeyboardInterrupt, Exception):
         manifest["status"] = "interrupted"
         manifest["finished_at"] = _timestamp()
+        for run in manifest["runs"]:
+            if run["status"] == "running":
+                run.update(status="interrupted", finished_at=manifest["finished_at"])
         _write_manifest(manifest_path, manifest)
         raise
 

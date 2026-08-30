@@ -58,9 +58,10 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
         "parameters_cross_stage_guidance": cross_stage_guidance,
         "parameters_se": se,
         "parameters_main_attention": (
-            cbam + guided_cbam if config.model_type in {"hybrid", "csgha"} else eca + cbam + se
+            cbam + guided_cbam if config.model_type in {"hybrid", "csgha", "hybrid_leaky", "csgha_v4"}
+            else eca + cbam + se
         ),
-        "parameters_aux_attention": se if config.model_type in {"hybrid", "csgha"} else 0,
+        "parameters_aux_attention": se if config.model_type in {"hybrid", "csgha", "hybrid_leaky", "csgha_v4"} else 0,
         "num_eca_modules": eca_count,
         "num_cbam_modules": cbam_count,
         "num_guided_cbam_modules": guided_cbam_count,
@@ -69,6 +70,7 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
         "flops_base": base_flops,
         "flops_attention_adjustment": estimated_attention_flops,
         "model_type": config.model_type,
+        "architecture_version": config.architecture_version,
         "aux_positions": list(config.aux_positions),
         "se_positions": list(config.se_positions),
         "cbam_positions": list(config.cbam_positions),

@@ -1,0 +1,15 @@
+name: cifar10_csgha_v4_matched_perf2
+description: >-
+  One controlled hypothesis: replace only the deep channel MLP ReLU with
+  LeakyReLU(0.1). Compare bounded CSGHA v4 against an identically modified
+  independent middle control. All runs are from scratch and validation-only;
+  Keep the v3 guidance branch, positions, batch/lr recipe and seed-bound splits.
+  Both variants use training-only CUDA Graphs with AMP weight caching disabled.
+  This is a new execution batch, not a bitwise continuation of historical eager
+  AMP runs; prior outputs are retained and never overwritten. Perf2 runs two
+  independent jobs on one GPU, with one PyTorch CPU thread per job and unchanged
+  eight data workers. Contended inference timing is explicitly disabled.
+seeds: [42, 43, 44]
+experiments:
+  - configs/experiments/independent_leaky_middle.yaml
+  - configs/experiments/csgha_v4_leaky_middle.yaml

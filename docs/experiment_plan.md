@@ -1,5 +1,21 @@
 # 实验执行计划
 
+## 当前状态（2026-08-30 审计后）
+
+三组候选补充 seeds 43/44 的六组实验已全部完成。CIFAR-10 三 seed best validation：baseline `87.69 ± 0.16%`、independent shallow `88.27 ± 0.46%`、independent middle `87.94 ± 0.53%`、CSGHA v3 `88.01 ± 0.58%`。v3 对 matched middle 的平均提升仅 0.073 个百分点，对 shallow 三次均落后，当前不满足稳定优于独立组合的推进条件。
+
+后续用户已确认坚持新机制路线。五个版本匹配 checkpoint 的完整 validation 干预已完成，guidance 利用了输入相关信息，但 deep 分支存在大量 ReLU 截断；已实现只改 deep 激活的 v4 和同激活独立控制。旧v4批次在控制组seed42完成epoch100后按用户要求中断，其他五组未开始，旧产物保留。详见 [诊断结果与 v4 假设](../reports/diagnostics/2026-08-30-guidance/findings.md)。不默认进入 CIFAR-100。
+
+最新吞吐配置为 **perf2两路并行**：两份v4匹配配置均启用训练CUDA Graph，每进程1个PyTorch CPU线程，保持batch128和8个data workers，使用新 `_perf2` 实验编号，从头运行六组。真实队列短测每组稳定epoch约9.5–9.9秒、同时推进两组；同配置串行约5.3–5.5秒/组，混合双模型稳定吞吐约提升11%。串并行3轮复验权重逐参数、训练CSV字节一致。正式新批次尚未启动。服务器项目根目录一行命令：`/root/miniconda3/bin/python scripts/launch_csgha_v4.py`。见 [perf2测量与安全说明](../reports/diagnostics/2026-08-30-throughput/perf2_parallel.md)。
+
+并行时明确禁用推理延迟测量，避免混入共享GPU竞争耗时；论文效率数据后续独占GPU统一测量。Graph要求关闭AMP权重缓存，不能视为旧eager轨迹的逐位等价续训；控制组与v4必须使用相同后端。前版perf1约5.3–5.8秒/epoch、旧eager控制约13.3秒的记录保留在 [前版优化报告](../reports/diagnostics/2026-08-30-throughput/findings.md)，不据此夸大本次并发增益。
+
+可追溯数据与此前判断见 [实验审计入口](../reports/audits/2026-08-30/README.md) 与 [方法路线复评](../reports/audits/2026-08-30/method_route_assessment.md)。当前 seed 同时控制划分和训练，不能将三 seed 标准差解释为固定划分下的纯初始化方差。
+
+以下保留配置说明与历史执行过程；已有启动命令不代表现在需要重跑。特别是单 batch 诊断和跨版本 checkpoint replay，不足以证明原模型失败的因果机制。
+
+## 配置与历史执行记录
+
 项目比较 MobileNetV2、全局 ECA、不同位置的 CBAM/SE，以及两种 SE+CBAM 混合放置策略。正式配置统一存放在 `configs/experiments/`。
 
 正式对比统一使用 200 epochs、batch size 128、梯度累积 1、8 个持久化 data-loader workers、AdamW 和 OneCycleLR。OneCycleLR 在每次实际 optimizer update 后推进一次；与原来的 batch size 64、梯度累积 2 相比，有效 batch size 和每 epoch optimizer 更新次数保持不变。

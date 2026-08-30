@@ -33,6 +33,16 @@ def test_validation_only_flag_is_parsed():
     assert config.evaluate_test is False
 
 
+def test_shared_gpu_runtime_options_are_explicit_and_validated():
+    config = load_config(["--torch_num_threads", "1", "--measure_inference", "false"])
+    assert config.torch_num_threads == 1
+    assert config.measure_inference is False
+    assert ExperimentConfig().torch_num_threads == 0
+    assert ExperimentConfig().measure_inference is True
+    with pytest.raises(ValueError, match="torch_num_threads"):
+        ExperimentConfig(torch_num_threads=-1)
+
+
 def test_csgha_config_records_guidance_in_experiment_id():
     config = ExperimentConfig(
         experiment_name="guided",

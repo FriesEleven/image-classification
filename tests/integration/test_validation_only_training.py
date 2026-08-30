@@ -1,6 +1,7 @@
 import json
 from types import SimpleNamespace
 
+import pytest
 import torch
 from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
@@ -11,7 +12,8 @@ from image_classification.training import engine
 from image_classification.training.evaluate import validate as real_validate
 
 
-def test_validation_only_run_never_iterates_test_loader(monkeypatch, tmp_path):
+@pytest.mark.parametrize("measure_inference", [True, False])
+def test_validation_only_run_never_iterates_test_loader(monkeypatch, tmp_path, measure_inference):
     dataset = TensorDataset(
         torch.randn(4, 3, 2, 2),
         torch.tensor([0, 1, 0, 1]),
@@ -35,7 +37,11 @@ def test_validation_only_run_never_iterates_test_loader(monkeypatch, tmp_path):
     monkeypatch.setattr(engine, "build_model", lambda _config: nn.Sequential(nn.Flatten(), nn.Linear(12, 10)))
     monkeypatch.setattr(engine, "build_dataloaders", lambda **_kwargs: loaders)
     monkeypatch.setattr(engine, "model_metrics", lambda _model, _config: {})
-    monkeypatch.setattr(engine, "benchmark_inference", lambda _model, _device: {})
+    def inference(_model, _device):
+        assert measure_inference, "Shared-GPU training must not measure contended inference latency"
+        return {}
+
+    monkeypatch.setattr(engine, "benchmark_inference", inference)
     monkeypatch.setattr(engine, "validate", tracking_validate)
     monkeypatch.setattr(
         engine,
@@ -52,6 +58,7 @@ def test_validation_only_run_never_iterates_test_loader(monkeypatch, tmp_path):
         num_workers=0,
         amp=False,
         evaluate_test=False,
+        measure_inference=measure_inference,
     )
 
     summary = engine.train(config)
@@ -65,3 +72,8 @@ def test_validation_only_run_never_iterates_test_loader(monkeypatch, tmp_path):
     assert summary["test_evaluated"] is False
     assert "test_accuracy" not in summary
     assert not (run_directory / "predictions/test.npz").exists()
+    if not measure_inference:
+        benchmark = json.loads((run_directory / "benchmark.json").read_text())
+        assert benchmark["measurement_status"] == "skipped"
+        assert benchmark["inference_latency_mean"] is None
+        assert benchmark["throughput_fps"] is None

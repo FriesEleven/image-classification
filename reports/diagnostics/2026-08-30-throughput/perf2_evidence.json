@@ -1,0 +1,587 @@
+{
+  "date": "2026-08-30",
+  "chosen": {
+    "jobs": 2,
+    "workers_per_job": 8,
+    "torch_cpu_threads_per_job": 1,
+    "batch_size_per_job": 128,
+    "fused_optimizer": false,
+    "measure_inference": false
+  },
+  "comparisons": [
+    {
+      "label": "single_t1_w8",
+      "processes": [
+        {
+          "seed": 42,
+          "warm_epoch_seconds": 5.37149484269321,
+          "epoch_timings": [
+            {
+              "epoch": 1,
+              "train_seconds": 8.909199208021164,
+              "loader_wait_seconds": 1.9175196923315525,
+              "validation_seconds": 0.9419855065643787,
+              "total_seconds": 9.851184714585543
+            },
+            {
+              "epoch": 2,
+              "train_seconds": 5.028364185243845,
+              "loader_wait_seconds": 1.1934373639523983,
+              "validation_seconds": 0.35304661095142365,
+              "total_seconds": 5.381410796195269
+            },
+            {
+              "epoch": 3,
+              "train_seconds": 5.000234171748161,
+              "loader_wait_seconds": 1.2978949956595898,
+              "validation_seconds": 0.36134471744298935,
+              "total_seconds": 5.361578889191151
+            }
+          ]
+        }
+      ],
+      "phase_wall_seconds": 33.47725824639201,
+      "gpu_mean_all_samples": 18.34375,
+      "gpu_mean_samples_at_least_20_percent": 38.8,
+      "gpu_peak": 60,
+      "vram_peak_mib": 709
+    },
+    {
+      "label": "single_t1_w12",
+      "processes": [
+        {
+          "seed": 42,
+          "warm_epoch_seconds": 4.679260307922959,
+          "epoch_timings": [
+            {
+              "epoch": 1,
+              "train_seconds": 7.976077251136303,
+              "loader_wait_seconds": 0.9439818188548088,
+              "validation_seconds": 1.1980144008994102,
+              "total_seconds": 9.174091652035713
+            },
+            {
+              "epoch": 2,
+              "train_seconds": 4.278594199568033,
+              "loader_wait_seconds": 0.1768949180841446,
+              "validation_seconds": 0.3435848504304886,
+              "total_seconds": 4.622179049998522
+            },
+            {
+              "epoch": 3,
+              "train_seconds": 4.388999562710524,
+              "loader_wait_seconds": 0.19711662456393242,
+              "validation_seconds": 0.34734200313687325,
+              "total_seconds": 4.736341565847397
+            }
+          ]
+        }
+      ],
+      "phase_wall_seconds": 31.39469464495778,
+      "gpu_mean_all_samples": 20.633333333333333,
+      "gpu_mean_samples_at_least_20_percent": 46.30769230769231,
+      "gpu_peak": 59,
+      "vram_peak_mib": 709
+    },
+    {
+      "label": "dual_t1_w8",
+      "processes": [
+        {
+          "seed": 42,
+          "warm_epoch_seconds": 8.621199678629637,
+          "epoch_timings": [
+            {
+              "epoch": 1,
+              "train_seconds": 11.67775597795844,
+              "loader_wait_seconds": 1.7537104189395905,
+              "validation_seconds": 0.9407760426402092,
+              "total_seconds": 12.61853202059865
+            },
+            {
+              "epoch": 2,
+              "train_seconds": 8.250780377537012,
+              "loader_wait_seconds": 1.4516620934009552,
+              "validation_seconds": 0.4360797517001629,
+              "total_seconds": 8.686860129237175
+            },
+            {
+              "epoch": 3,
+              "train_seconds": 8.1990812048316,
+              "loader_wait_seconds": 1.6951971799135208,
+              "validation_seconds": 0.35645802319049835,
+              "total_seconds": 8.555539228022099
+            }
+          ]
+        },
+        {
+          "seed": 43,
+          "warm_epoch_seconds": 8.344571139663458,
+          "epoch_timings": [
+            {
+              "epoch": 1,
+              "train_seconds": 11.752077508717775,
+              "loader_wait_seconds": 1.5178208015859127,
+              "validation_seconds": 0.999382309615612,
+              "total_seconds": 12.751459818333387
+            },
+            {
+              "epoch": 2,
+              "train_seconds": 7.9609189704060555,
+              "loader_wait_seconds": 1.3006837405264378,
+              "validation_seconds": 0.4224517159163952,
+              "total_seconds": 8.38337068632245
+            },
+            {
+              "epoch": 3,
+              "train_seconds": 7.957611709833145,
+              "loader_wait_seconds": 1.500909648835659,
+              "validation_seconds": 0.34815988317131996,
+              "total_seconds": 8.305771593004465
+            }
+          ]
+        }
+      ],
+      "phase_wall_seconds": 42.37742289155722,
+      "gpu_mean_all_samples": 31.425,
+      "gpu_mean_samples_at_least_20_percent": 54.130434782608695,
+      "gpu_peak": 96,
+      "vram_peak_mib": 1414
+    },
+    {
+      "label": "dual_t1_w6",
+      "processes": [
+        {
+          "seed": 42,
+          "warm_epoch_seconds": 8.286603961139917,
+          "epoch_timings": [
+            {
+              "epoch": 1,
+              "train_seconds": 11.492555655539036,
+              "loader_wait_seconds": 3.240211721509695,
+              "validation_seconds": 0.8047002553939819,
+              "total_seconds": 12.297255910933018
+            },
+            {
+              "epoch": 2,
+              "train_seconds": 7.86419465765357,
+              "loader_wait_seconds": 2.6511574648320675,
+              "validation_seconds": 0.46656982973217964,
+              "total_seconds": 8.33076448738575
+            },
+            {
+              "epoch": 3,
+              "train_seconds": 7.833144132047892,
+              "loader_wait_seconds": 2.5295730344951153,
+              "validation_seconds": 0.4092993028461933,
+              "total_seconds": 8.242443434894085
+            }
+          ]
+        },
+        {
+          "seed": 43,
+          "warm_epoch_seconds": 8.44233226776123,
+          "epoch_timings": [
+            {
+              "epoch": 1,
+              "train_seconds": 11.407957654446363,
+              "loader_wait_seconds": 2.9183269664645195,
+              "validation_seconds": 0.843890193849802,
+              "total_seconds": 12.251847848296165
+            },
+            {
+              "epoch": 2,
+              "train_seconds": 7.919259153306484,
+              "loader_wait_seconds": 2.6020258739590645,
+              "validation_seconds": 0.42802147194743156,
+              "total_seconds": 8.347280625253916
+            },
+            {
+              "epoch": 3,
+              "train_seconds": 8.163533382117748,
+              "loader_wait_seconds": 2.895738899707794,
+              "validation_seconds": 0.3738505281507969,
+              "total_seconds": 8.537383910268545
+            }
+          ]
+        }
+      ],
+      "phase_wall_seconds": 42.02371707931161,
+      "gpu_mean_all_samples": 29.725,
+      "gpu_mean_samples_at_least_20_percent": 47.32,
+      "gpu_peak": 68,
+      "vram_peak_mib": 1414
+    },
+    {
+      "label": "triple_t1_w6",
+      "processes": [
+        {
+          "seed": 42,
+          "warm_epoch_seconds": 12.867207016795874,
+          "epoch_timings": [
+            {
+              "epoch": 1,
+              "train_seconds": 16.719376623630524,
+              "loader_wait_seconds": 5.499917525798082,
+              "validation_seconds": 1.0302395150065422,
+              "total_seconds": 17.749616138637066
+            },
+            {
+              "epoch": 2,
+              "train_seconds": 13.547908831387758,
+              "loader_wait_seconds": 4.468467261642218,
+              "validation_seconds": 0.5044429153203964,
+              "total_seconds": 14.052351746708155
+            },
+            {
+              "epoch": 3,
+              "train_seconds": 11.311489678919315,
+              "loader_wait_seconds": 4.0183179676532745,
+              "validation_seconds": 0.37057260796427727,
+              "total_seconds": 11.682062286883593
+            }
+          ]
+        },
+        {
+          "seed": 43,
+          "warm_epoch_seconds": 12.814026579260826,
+          "epoch_timings": [
+            {
+              "epoch": 1,
+              "train_seconds": 16.396603848785162,
+              "loader_wait_seconds": 5.110504765063524,
+              "validation_seconds": 0.9521196074783802,
+              "total_seconds": 17.348723456263542
+            },
+            {
+              "epoch": 2,
+              "train_seconds": 13.531739678233862,
+              "loader_wait_seconds": 4.1641454473137856,
+              "validation_seconds": 0.6203806363046169,
+              "total_seconds": 14.152120314538479
+            },
+            {
+              "epoch": 3,
+              "train_seconds": 11.114318460226059,
+              "loader_wait_seconds": 4.014752998948097,
+              "validation_seconds": 0.3616143837571144,
+              "total_seconds": 11.475932843983173
+            }
+          ]
+        },
+        {
+          "seed": 44,
+          "warm_epoch_seconds": 11.396521057933569,
+          "epoch_timings": [
+            {
+              "epoch": 1,
+              "train_seconds": 15.01851824298501,
+              "loader_wait_seconds": 3.255896285176277,
+              "validation_seconds": 0.821396742016077,
+              "total_seconds": 15.839914985001087
+            },
+            {
+              "epoch": 2,
+              "train_seconds": 10.499574698507786,
+              "loader_wait_seconds": 2.7146283984184265,
+              "validation_seconds": 0.6680202893912792,
+              "total_seconds": 11.167594987899065
+            },
+            {
+              "epoch": 3,
+              "train_seconds": 11.08274769037962,
+              "loader_wait_seconds": 3.090071529150009,
+              "validation_seconds": 0.5426994375884533,
+              "total_seconds": 11.625447127968073
+            }
+          ]
+        }
+      ],
+      "phase_wall_seconds": 56.42051327228546,
+      "gpu_mean_all_samples": 36.37735849056604,
+      "gpu_mean_samples_at_least_20_percent": 51.54054054054054,
+      "gpu_peak": 85,
+      "vram_peak_mib": 2119
+    }
+  ],
+  "original_files_sha256": {
+    "artifacts/diagnostics/perf2_scheduling_receipt.json": "c70d4a21b64cd31bb1cdd6889ad2df1ff075a42f8fd5de698318ffee7b853ef7",
+    "artifacts/diagnostics/perf2_single_t1_w8_seed42.json": "6c33b93c72c8fb5df76ef675862ebef8d3df967db3e84e90768260c98766f868",
+    "artifacts/diagnostics/perf2_single_t1_w12_seed42.json": "99752c6fd46ad77d5c9b11c2c915431716941075856097e632cab051b28451f2",
+    "artifacts/diagnostics/perf2_dual_t1_w8_seed42.json": "853900ad5384b0cfa8afa90985355ee8f4482d267b752bc46f400632d60ee0a8",
+    "artifacts/diagnostics/perf2_dual_t1_w8_seed43.json": "c49ec4d71308522c31489dd6bdf3e0585460faf9830d725eb5d04dc2da69920d",
+    "artifacts/diagnostics/perf2_scheduling_extra_receipt.json": "6a56ad594f28e1fec1d39be2c99274a924e46f564f360f28ea4493d02be21d85",
+    "artifacts/diagnostics/perf2_dual_t1_w6_seed42.json": "bbdf839ba844109760a88cdbabf048c86208726fb84a992f6b6d359cee50781c",
+    "artifacts/diagnostics/perf2_dual_t1_w6_seed43.json": "93abf9dd3bde236a9bf7263219135b1163262e8cd8c5921c47c2c3594788ae5d",
+    "artifacts/diagnostics/perf2_triple_t1_w6_seed42.json": "b2654aa58d0bd0aff7c26e7ab6ff49f308729daced725232ce546606c0191203",
+    "artifacts/diagnostics/perf2_triple_t1_w6_seed43.json": "b79159ca26c241958e7fe0969a5ab67a5c1a04fecae2ddd9ba09266fcb18b851",
+    "artifacts/diagnostics/perf2_triple_t1_w6_seed44.json": "88b6abf8f295f1609b0f5959d54975afc3ebab7dd3fa20c796d7db6dbee63531",
+    "artifacts/diagnostics/perf2_cached_default.json": "dc626f910aefe598c65f03508944a1de676627114fdbb116860aea91fd087198",
+    "artifacts/diagnostics/perf2_cached_fused.json": "13ddba3a8764d4bb059b9d08a9c98ebafd44c703debffd349349894f57d74788",
+    "artifacts/diagnostics/perf2_full_fused_threads1_workers8.json": "b7e14e84a84ee38796444c480b25ef8f67a9a038f42ccc09cc2f1b72fcb23cce",
+    "artifacts/diagnostics/perf2_serial_parallel_equality.json": "96496b44d48d11ba014bdcb573e8218fc226fa7e1090315fbdf105b1c3e1d22b",
+    "artifacts/diagnostics/perf2_queue_smoke_receipt/manifest.json": "8cd218a47a2fcc58a3609e12e6c1b4e7b45dc2c20d6bd59ea3d25da3b4037581",
+    "artifacts/diagnostics/perf2_serial_control.log": "39d1555c6e5ad672f65dfad9f1d39f3a1ad131d59b80aa3d703c32726e663c0e",
+    "artifacts/diagnostics/perf2_serial_v4.log": "2e2d3e86a8b8ffeb16f65a7f4fd1e02a6e2f6ef36bd5fe5ecb1f2b74a04a8a9a",
+    "artifacts/diagnostics/perf2_queue_smoke_receipt/run_logs/smoke_perf2_queue_control_20260830_seed42_hybrid_leaky_se1-2_cbam7-8_cifar10.log": "0d4ba072f056050ed98e0bd6193fbfe9b774f8b00167081f9943e17b45a523a7",
+    "artifacts/diagnostics/perf2_queue_smoke_receipt/run_logs/smoke_perf2_queue_v4_20260830_seed42_csgha_v4_se1-2_guide2_cbam7-8_cifar10.log": "c479d04748a79ea1a0e9ee7c49a94056851fdf12bfb15533ed55ca7fd64b284d"
+  },
+  "serial_parallel_equality": [
+    {
+      "label": "control",
+      "parallel_run": "artifacts/runs/smoke_perf2_queue_control_20260830_seed42_hybrid_leaky_se1-2_cbam7-8_cifar10",
+      "serial_run": "artifacts/runs/smoke_perf2_serial_control_20260830_hybrid_leaky_se1-2_cbam7-8_cifar10",
+      "serial_process_seconds": 31.781203150749207,
+      "max_state_difference": 0,
+      "training_csv_identical": true,
+      "serial_log": "artifacts/diagnostics/perf2_serial_control.log",
+      "observed_epoch_seconds": [
+        8.89,
+        5.33,
+        5.35
+      ]
+    },
+    {
+      "label": "v4",
+      "parallel_run": "artifacts/runs/smoke_perf2_queue_v4_20260830_seed42_csgha_v4_se1-2_guide2_cbam7-8_cifar10",
+      "serial_run": "artifacts/runs/smoke_perf2_serial_v4_20260830_csgha_v4_se1-2_guide2_cbam7-8_cifar10",
+      "serial_process_seconds": 32.900636184960604,
+      "max_state_difference": 0,
+      "training_csv_identical": true,
+      "serial_log": "artifacts/diagnostics/perf2_serial_v4.log",
+      "observed_epoch_seconds": [
+        9.85,
+        5.38,
+        5.54
+      ]
+    }
+  ],
+  "production_queue_smoke": {
+    "manifest_status": "completed",
+    "started_at": "2026-08-30T21:47:03+08:00",
+    "finished_at": "2026-08-30T21:47:49+08:00",
+    "concurrent_jobs": 2,
+    "runs": [
+      {
+        "config_path": "artifacts/diagnostics/perf2_smoke_control.yaml",
+        "seed": 42,
+        "experiment_id": "smoke_perf2_queue_control_20260830_seed42_hybrid_leaky_se1-2_cbam7-8_cifar10",
+        "resolved_config": {
+          "experiment_name": "smoke_perf2_queue_control_20260830_seed42",
+          "model_type": "hybrid_leaky",
+          "dataset": "cifar10",
+          "validation_size": 5000,
+          "batch_size": 128,
+          "epochs": 3,
+          "lr": 0.01,
+          "amp": true,
+          "cuda_graph": true,
+          "torch_num_threads": 1,
+          "measure_inference": false,
+          "evaluate_test": false,
+          "accumulation_steps": 1,
+          "aux_positions": [],
+          "se_positions": [
+            1,
+            2
+          ],
+          "cbam_positions": [
+            7,
+            8
+          ],
+          "guidance_position": 2,
+          "guidance_reduction": 4,
+          "num_workers": 8,
+          "prefetch_factor": 4,
+          "seed": 42
+        },
+        "command": [
+          "/root/miniconda3/bin/python",
+          "/root/autodl-tmp/image-classification/scripts/train.py",
+          "--config",
+          "/root/autodl-tmp/image-classification/artifacts/diagnostics/perf2_smoke_control.yaml",
+          "--seed",
+          "42",
+          "--experiment_name",
+          "smoke_perf2_queue_control_20260830_seed42"
+        ],
+        "status": "completed",
+        "started_at": "2026-08-30T21:47:03+08:00",
+        "finished_at": "2026-08-30T21:47:48+08:00",
+        "return_code": 0,
+        "summary": {
+          "experiment_id": "smoke_perf2_queue_control_20260830_seed42_hybrid_leaky_se1-2_cbam7-8_cifar10",
+          "dataset": "cifar10",
+          "num_classes": 10,
+          "train_samples": 45000,
+          "validation_samples": 5000,
+          "test_samples": 10000,
+          "test_evaluated": false,
+          "best_validation_accuracy": 0.3594,
+          "best_epoch": 3,
+          "architecture_version": "independent_hybrid_deep_leaky_relu_0.1",
+          "best_checkpoint_sha256": "a08f305cc76be35cc8911328cbaeebd355b755a695a2c6f42806c708b0db77d1",
+          "split_indices_sha256": "25d918f697c7902c53b19a033fb1f9be2ab4b277abcc0dad7d6fd11dc73f3be4",
+          "run_directory": "/root/autodl-tmp/image-classification/artifacts/runs/smoke_perf2_queue_control_20260830_seed42_hybrid_leaky_se1-2_cbam7-8_cifar10"
+        },
+        "pid": 51779,
+        "process_group": 51779,
+        "log_path": "/root/autodl-tmp/image-classification/artifacts/sweeps/smoke_perf2_queue_20260830_214703/run_logs/smoke_perf2_queue_control_20260830_seed42_hybrid_leaky_se1-2_cbam7-8_cifar10.log",
+        "observed_epoch_seconds": [
+          13.66,
+          9.53,
+          9.53
+        ]
+      },
+      {
+        "config_path": "artifacts/diagnostics/perf2_smoke_v4.yaml",
+        "seed": 42,
+        "experiment_id": "smoke_perf2_queue_v4_20260830_seed42_csgha_v4_se1-2_guide2_cbam7-8_cifar10",
+        "resolved_config": {
+          "experiment_name": "smoke_perf2_queue_v4_20260830_seed42",
+          "model_type": "csgha_v4",
+          "dataset": "cifar10",
+          "validation_size": 5000,
+          "batch_size": 128,
+          "epochs": 3,
+          "lr": 0.01,
+          "amp": true,
+          "cuda_graph": true,
+          "torch_num_threads": 1,
+          "measure_inference": false,
+          "evaluate_test": false,
+          "accumulation_steps": 1,
+          "aux_positions": [],
+          "se_positions": [
+            1,
+            2
+          ],
+          "cbam_positions": [
+            7,
+            8
+          ],
+          "guidance_position": 2,
+          "guidance_reduction": 4,
+          "num_workers": 8,
+          "prefetch_factor": 4,
+          "seed": 42
+        },
+        "command": [
+          "/root/miniconda3/bin/python",
+          "/root/autodl-tmp/image-classification/scripts/train.py",
+          "--config",
+          "/root/autodl-tmp/image-classification/artifacts/diagnostics/perf2_smoke_v4.yaml",
+          "--seed",
+          "42",
+          "--experiment_name",
+          "smoke_perf2_queue_v4_20260830_seed42"
+        ],
+        "status": "completed",
+        "started_at": "2026-08-30T21:47:03+08:00",
+        "finished_at": "2026-08-30T21:47:49+08:00",
+        "return_code": 0,
+        "summary": {
+          "experiment_id": "smoke_perf2_queue_v4_20260830_seed42_csgha_v4_se1-2_guide2_cbam7-8_cifar10",
+          "dataset": "cifar10",
+          "num_classes": 10,
+          "train_samples": 45000,
+          "validation_samples": 5000,
+          "test_samples": 10000,
+          "test_evaluated": false,
+          "best_validation_accuracy": 0.2982,
+          "best_epoch": 3,
+          "architecture_version": "csgha_v4_bounded_deep_leaky_relu_0.1",
+          "best_checkpoint_sha256": "030e608ee530fbb2e8a587d0d721a51b9f5f7a4cb6e0ede9e44efef5065ab2b6",
+          "split_indices_sha256": "25d918f697c7902c53b19a033fb1f9be2ab4b277abcc0dad7d6fd11dc73f3be4",
+          "run_directory": "/root/autodl-tmp/image-classification/artifacts/runs/smoke_perf2_queue_v4_20260830_seed42_csgha_v4_se1-2_guide2_cbam7-8_cifar10"
+        },
+        "pid": 51780,
+        "process_group": 51780,
+        "log_path": "/root/autodl-tmp/image-classification/artifacts/sweeps/smoke_perf2_queue_20260830_214703/run_logs/smoke_perf2_queue_v4_20260830_seed42_csgha_v4_se1-2_guide2_cbam7-8_cifar10.log",
+        "observed_epoch_seconds": [
+          14,
+          9.9,
+          9.53
+        ]
+      }
+    ]
+  },
+  "deployment": {
+    "matching_source_files": 73,
+    "source_sha256": {
+      "pyproject.toml": "920f19c1cca4cfdb02de4b18f5dde9eefef84a145e67c5f9fbbd1e2e5fafadc0",
+      "src/image_classification/__init__.py": "68bba55df0f9c6b59dd9116d977c34935225e98e9b25dee0d23e6e0633fbd602",
+      "src/image_classification/cli/__init__.py": "6b3ca07563f59ac62e6b66bd29ae8d89472a3a3dbe5b1faa8dc88600d9c3cf66",
+      "src/image_classification/cli/train.py": "045e5467b7a1603480537a276e555be340d0e6653e44805b7898df88dac67689",
+      "src/image_classification/config.py": "b2609162c0aeebca50e5c3a0221e051c07ffe9114d9f5d60e9fc5a4f714e187e",
+      "src/image_classification/data/__init__.py": "3f6940ec940b324d5e2e54ebee5a5a40a333606c538f70a042e4bd3608b6b617",
+      "src/image_classification/data/cifar.py": "0ea599eb3ed879e701ea41241adcbe0bc8e4f9106eaac933e3af2a10da1a6992",
+      "src/image_classification/data/cifar10.py": "66aa34ecc834fdb0290f3d979209268f3b0b97e6256a7e279e3a708b164294b5",
+      "src/image_classification/diagnostics/__init__.py": "5903baead6b9415a4a3f67a194cf30c1afd887985a95c9e2ce335069a616200d",
+      "src/image_classification/diagnostics/guidance.py": "ac20850c5a3065d4b5e112e2cbbc7ad962534962536e41f2aa4cd1d21c73fb00",
+      "src/image_classification/models/__init__.py": "5b7911514cc7a4e1939ce65ac5e2a18002294fc9153fa6e8f7793305a7bf46c6",
+      "src/image_classification/models/attention.py": "cdb164927eee1e5bb072ad04e6bac8720c93bdec2f1da98e776b291de1a72eef",
+      "src/image_classification/models/eca.py": "31e946d0bfed46936581e792f257903b55e2064b63612c3933d7b21c695d438b",
+      "src/image_classification/models/factory.py": "3c4000173533b842c008a749f2092e6b3e9d05183682315050cc3ac73f47d010",
+      "src/image_classification/models/mobilenetv2.py": "a83cc08103216b7e81697472b6d7d9e24fe27b3c6afa848a3e817589f7be988c",
+      "src/image_classification/paths.py": "a4ed577d6aa1aeaa13f30192e286bce71dfa26884941e24be174ca0be97315d0",
+      "src/image_classification/training/__init__.py": "54d8562d219ac3121620e1f6facbe9729a419d40beaaf8632a3f17d59254cb5a",
+      "src/image_classification/training/benchmark.py": "1ca30e48422bd71079667d10653950e634f4ce14dcb36fdeeb7cccaac7834b89",
+      "src/image_classification/training/checkpoint.py": "c99028cfa5fd50a2dbfdff5ec701ed4afb8ffc7401d7831541ea3579dfbe8a4e",
+      "src/image_classification/training/cuda_graph.py": "c1a8b2bd8771f3c64e347978359b7d862954ea3000755c3884753856038a766a",
+      "src/image_classification/training/engine.py": "93ca2f91d5112e1d2c489b1459f68393164c49a936bda10ee3d9c3c574a6adab",
+      "src/image_classification/training/evaluate.py": "8faaba7f2110388ff03b982555205a025c21ad8b29e510b4237df425eaf9ca8a",
+      "src/image_classification/training/optimizer_step.py": "e863eae8364892d4a1d8d8034b016d2b5dc2d61884fc2b1541e6ea541c3cf8d3",
+      "src/image_classification/training/provenance.py": "18d7d87bb75daa0dcbd6c597d38365aa52223acf05f47f107c3c9391ec421fbe",
+      "src/image_classification/training/sweep.py": "9caffc4dc92cd65ca53ee1dcb4a6448af63a9ebbad829993c92a79f8eea440fc",
+      "src/image_classification/utils/__init__.py": "1cbffe4e7af83f8a6cbc10642e227fec0b1f6d7c25be102daaf1bea333082960",
+      "src/image_classification/utils/reproducibility.py": "796aa29bab07d27609cf2e60eca2f72871802008e8cd16fb952d3ffc14acb217",
+      "scripts/analysis/audit_experiments.py": "3c0d55fe56e56115e1ce7330545268c9badad40c18d0e48782fca78dacbcce77",
+      "scripts/analysis/generate_tables.py": "5f0b12c19a938dfa34acad1d372db0f7c7c5ece4b006690c45685f4cf9c2ad38",
+      "scripts/analysis/plot_performance.py": "f1d22a3d1a7cdcd5b0529b615a609268238be8e315820501deae34e4d23c8348",
+      "scripts/analysis/statistics.py": "d10ce5e20911a3e443b8aeb69f84f4dfd991a1525758df9784c26c6814815421",
+      "scripts/analysis/summarize_guidance_information.py": "ea53e035b0d1537574103851bddd050ed61d52f331eff6765b3cd9e87aeb2737",
+      "scripts/analysis/summarize_results.py": "903adede1ed65e578450ab28c811b604a18b57478d1569aa09f8232293e1dd43",
+      "scripts/diagnostics/audit_csgha_information.py": "f948fbc88485cf754e0de55da914f2c19e4dc0b91966fab284e48ee3d0016c1f",
+      "scripts/diagnostics/benchmark_gpu_pipeline.py": "1c15ffe6e6814ddd44ac40d9581f8e3fe9ae46c29881cd408de9e2055743f25f",
+      "scripts/diagnostics/benchmark_training_loop.py": "2d97a6c1d6f40fb56fdb04315e2d6ec6def0ed909844be7ca668e45c6e6d418e",
+      "scripts/diagnostics/check_csgha_guidance.py": "e75290ef86054590585c1c66f8705bc57fd6e3f6fb1264fb594bf0fe4312da5e",
+      "scripts/diagnostics/check_cuda.py": "fd59b75f92f89c5b0f6f07c6a9fdb349f6eb485c54e02cc14ba71e90f11d0d2d",
+      "scripts/diagnostics/check_data.py": "f025eadde4d6f83b480614acdd4ae260d970ca8c7d8be2ef43dce58152435e65",
+      "scripts/diagnostics/check_model.py": "08e62cef645b5334e6a109538119da83d31db6fc479836aa6b6daf20026f88ab",
+      "scripts/launch_cifar10_stability.py": "f196baf129ef3a0bec4fa3ea4b853c7bd1dd58b0df2ebafd87e88229961f23c3",
+      "scripts/launch_csgha_v4.py": "9d857eb03b9b2376d709122e312870987c1ca9fde304b4ff9e9de4502a0ed92d",
+      "scripts/launch_csgha_validation.py": "c033ed2127219272c06c74d1a330e01d89c009d6b0b67d77995503625872e425",
+      "scripts/launch_position_screening.py": "e2c8d9f3d4125b337df0b9b0b3851d418e0b1046dadcf94bcf0ea6918ed07c9a",
+      "scripts/run_baselines.py": "93cf0e0a6e01e7412684b1c09cd4405bc0bdec581c81574186f5cf8b36646f1d",
+      "scripts/run_experiments.py": "7240387e5b020faf9348514e20cc11dc8016a90e75b1011faf291733036512d3",
+      "scripts/train.py": "1760522b0bb3c7b4e8587f199f15e7c4e2af51e7ea1a40907b544da784e72be1",
+      "scripts/visualization/confusion_matrix.py": "ba0a8f93051926f410230b5019a517aaaa9ba963f05bbcd86bf0e0b15b5da315",
+      "scripts/visualization/gradcam.py": "e9bdadda15dcc7752960160d36f06a594270dc476fac55fd69a0cfe88898d740",
+      "scripts/visualization/roc_curve.py": "d3fec924b3222687eaf3c28fcc00c171a8871ca11467a1b05c7892089afb3e01",
+      "scripts/visualization/tsne.py": "e5a36c709103f0d2f39d5a2a2746f599afb0c2b45e6ff3200c8e51c694c341fe",
+      "configs/experiments/baseline.yaml": "470fa3fca7fb2ce20a3a28ebf780e58bba2102cb34843f0fffc52cb56bdf3290",
+      "configs/experiments/baseline_cifar100.yaml": "0f249d2f290084d0a679f4899a371676106c9249467e56fb88d89ecc8555adfe",
+      "configs/experiments/cbam_deep.yaml": "a8e0fbc89f6046ec3997976110136dde827cb313b86f97cd596e7e458dafac34",
+      "configs/experiments/cbam_middle.yaml": "0f1e4d44e5ae8f7b1e5a70a0c8c28b7ea9962dcf719bbfef860bb861045c21a6",
+      "configs/experiments/cbam_shallow.yaml": "d42e687ecc5620476d584fb5d1ca96d0b2126e9744306b462593c215da4b2e7a",
+      "configs/experiments/csgha_se_shallow_cbam_middle.yaml": "3f3aab4f8a09f9b2509db398356e3c8ee2f23049a34e31e314e049ba9bde51d9",
+      "configs/experiments/csgha_v4_leaky_middle.yaml": "94eecec593d1828d7e59187a1a2ac0fcb24cf02f0ac8ca1264e30a58be10b02f",
+      "configs/experiments/eca_global.yaml": "9d34763a75bc1d41ea5ec04b1d61c4985aac04ed1e2dc640907995554aad49e5",
+      "configs/experiments/hybrid_se_deep_cbam_shallow.yaml": "14f87644f2d614f991790c55b300c770e9a41c5f6f1a14f4b30e43e37462b817",
+      "configs/experiments/hybrid_se_shallow_cbam_deep.yaml": "c70881967f293e99f9d92cf03a77249801f637e83ffdb357a4b7b1bcdd703800",
+      "configs/experiments/independent_leaky_middle.yaml": "185be6871d31e8b4d8c51d16c1e8998fe4d6a8267fe5d5f0b5e50f17cbeb4254",
+      "configs/experiments/position_se_shallow_cbam_deep.yaml": "bb3d322b438fc63bb7547bfe25f9bfbdb5e78895734478e5b730b9a9627d0e27",
+      "configs/experiments/position_se_shallow_cbam_middle.yaml": "0a54c54f115357b396929e0b542492661ef95279d7bf5287945f5d48b4316839",
+      "configs/experiments/position_se_shallow_cbam_shallow.yaml": "21d302603499d34f5281eba19378635822e93980ae2a65e771021a8081916a72",
+      "configs/experiments/se_deep.yaml": "91de914d964f6fd459718bcef7b4b3d5e8fe29a34fc68a91ec8ba0744ae8974c",
+      "configs/experiments/se_middle.yaml": "b70c78d7d2bfb4626050c1e3e7f124d84b4b7c302407227f9f7b2d1c4eac93bd",
+      "configs/experiments/se_shallow.yaml": "453f8a9868a7b3a52e1cb75276ee0fef45885f7498dfb20e604c4f6f54ccba6a",
+      "configs/sweeps/all_experiments.yaml": "386d77e15b14e5296b34313f87743b8f6f35741ad51ecf8e736140bde85555cc",
+      "configs/sweeps/baselines.yaml": "eb54b18491e28a4ace317e9551a8437957d1925b3b3f52fc80342530f205d571",
+      "configs/sweeps/cifar10_stability.yaml": "a48dd10ee65549e7b834799457c089d5da9fbb29329e144c103deadd1b217d69",
+      "configs/sweeps/csgha_v4_matched.yaml": "35301932d893946924f242a204dbdb75d96f47b44bbbaeeef1bf0697b2c264f2",
+      "configs/sweeps/position_screening.yaml": "5b5971e7acd1aa39788491b3407e79b343a6cd16647d820987c7f79e92bee670"
+    },
+    "formal_sweep_started": false
+  }
+}
