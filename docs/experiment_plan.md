@@ -77,6 +77,14 @@ python scripts/launch_csgha_validation.py
 python scripts/diagnostics/check_csgha_guidance.py --checkpoint <checkpoint> --output artifacts/diagnostics/csgha_guidance.json
 ```
 
+v3 的 seed 42 validation accuracy 为 88.68%，超过相同 middle 位置独立组合的 88.46%，但略低于 shallow 独立组合的 88.78%。为避免用单次结果下结论，复用三者已有的 seed 42，并补跑 seeds 43/44：
+
+```bash
+python scripts/launch_cifar10_stability.py
+```
+
+该命令后台串行运行 3 个变体 × 2 个缺失 seeds，共 6 组 validation-only 实验。只有当 CSGHA v3 的三随机种子均值稳定超过 matched middle control，并与最强 shallow control 比较后仍有优势，才冻结结构并进入 CIFAR-100。
+
 ## 结果整理
 
 ```bash

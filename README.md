@@ -82,6 +82,14 @@ python scripts/launch_csgha_validation.py
 
 启动前会校验 SE、Guided-CBAM、guidance block 和 `evaluate_test`，并拒绝覆盖已有实验目录。v3 对投影前后的张量分别使用 LayerNorm 和 `tanh`，再通过从 0 开始学习的 `tanh(alpha)` 门控逐步启用有界跨阶段引导。
 
+一行后台启动 CIFAR-10 三变体的 seeds 43/44 稳定性验证：
+
+```bash
+python scripts/launch_cifar10_stability.py
+```
+
+该 sweep 共 6 组 validation-only 实验，依次运行 independent shallow、independent middle 和 CSGHA v3。每次启动都会记录 manifest、PID 和精简日志；配置一致的已完成实验会跳过，不完整目录会阻止启动。
+
 ## 输出约定
 
 每次实验写入独立目录：

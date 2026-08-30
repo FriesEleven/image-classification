@@ -1,0 +1,7 @@
+name: cifar10_attention_stability
+description: Validation-only seeds 43/44 for shallow hybrid, middle hybrid, and bounded CSGHA v3.
+seeds: [43, 44]
+experiments:
+  - configs/experiments/position_se_shallow_cbam_shallow.yaml
+  - configs/experiments/position_se_shallow_cbam_middle.yaml
+  - configs/experiments/csgha_se_shallow_cbam_middle.yaml

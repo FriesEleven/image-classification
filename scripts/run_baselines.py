@@ -1,4 +1,4 @@
-"""Run and record the multi-seed CIFAR baseline experiment batch."""
+"""Run and record a multi-seed CIFAR experiment batch."""
 
 import argparse
 import json
@@ -94,7 +94,7 @@ def build_plan(sweep: dict) -> list[dict]:
             )
     experiment_ids = [run["experiment_id"] for run in plan]
     if len(experiment_ids) != len(set(experiment_ids)):
-        raise ValueError("The baseline sweep contains duplicate experiment IDs")
+        raise ValueError("The seeded sweep contains duplicate experiment IDs")
     return plan
 
 
