@@ -2,15 +2,15 @@
 
 本项目在 CIFAR-10/100 上比较 MobileNetV2、ECA、CBAM、SE 及混合注意力模型，重点分析注意力模块类型和插入位置对精度、参数量、计算量与推理延迟的影响。
 
-当前实验交接与后续计划请先阅读 [docs/handoff.md](docs/handoff.md)。最新候选为CSGHA v4及同激活独立控制，使用perf2两路并行、validation-only配置；下文保留的baseline/v3/全矩阵入口不代表现在需要重新运行。
+当前实验交接与后续计划请先阅读 [docs/handoff.md](docs/handoff.md)。最新候选为CSGHA v6及同激活独立控制，使用单进程串行、validation-only配置；下文保留的baseline、v3/v4和全矩阵入口不代表现在需要重新运行。
 
 在已配置GPU环境的服务器项目根目录，一行启动当前六组实验：
 
 ```bash
-/root/miniconda3/bin/python scripts/launch_csgha_v4.py
+/root/miniconda3/bin/python scripts/launch_csgha_v6.py
 ```
 
-可追加`--dry-run`只校验计划。该命令拒绝已有运行目录和重复进程，使用新perf2编号，不覆盖历史结果；原始权重/数据/日志不随GitHub仓库备份。
+可追加`--dry-run`只校验计划。该命令拒绝已有运行目录和重复进程，固定`jobs=1`并使用全新v6s1编号，不覆盖历史结果；如果对应批次已运行或完成，不要重复启动。原始权重、数据和运行日志不随GitHub仓库备份。
 
 ## 项目结构
 

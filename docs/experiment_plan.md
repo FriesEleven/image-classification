@@ -1,18 +1,16 @@
 # 实验执行计划
 
-## 当前状态（2026-08-30 审计后）
+## 当前状态（2026-08-31 v6阶段）
 
-三组候选补充 seeds 43/44 的六组实验已全部完成。CIFAR-10 三 seed best validation：baseline `87.69 ± 0.16%`、independent shallow `88.27 ± 0.46%`、independent middle `87.94 ± 0.53%`、CSGHA v3 `88.01 ± 0.58%`。v3 对 matched middle 的平均提升仅 0.073 个百分点，对 shallow 三次均落后，当前不满足稳定优于独立组合的推进条件。
+CIFAR-10的正式比较统一使用seeds 42/43/44、45k/5k分层划分、200 epochs、validation-only和matched control。v4 retry1相对同激活独立control的配对差值为`+0.56/+0.08/−0.22`个百分点，均值`+0.140±0.393`，胜出2/3；结果较小且不完全稳定，不能声称guidance稳定提升。正式证据见 [v4审计](../reports/audits/2026-08-31-csgha-v4-retry1/experiment_summary.md)。
 
-后续用户已确认坚持新机制路线。五个版本匹配 checkpoint 的完整 validation 干预已完成，guidance 利用了输入相关信息，但 deep 分支存在大量 ReLU 截断；已实现只改 deep 激活的 v4 和同激活独立控制。旧v4批次在控制组seed42完成epoch100后按用户要求中断，其他五组未开始，旧产物保留。详见 [诊断结果与 v4 假设](../reports/diagnostics/2026-08-30-guidance/findings.md)。不默认进入 CIFAR-100。
+版本匹配诊断表明v4确实利用了输入相关浅层信息并消除了deep分支的hard-dead现象，但投影输出的`tanh`饱和率约96%–97%。v5只增加无参数RMS归一化，将饱和率降至约0.29%–1.76%，输入置换效应也增强；然而v5相对control的配对差值为`−0.26/−0.64/+0.02`个百分点，均值`−0.293±0.331`，胜出1/3，并且deep-zero效应进一步减弱。详见 [v5审计](../reports/audits/2026-08-31-csgha-v5-serial-s1/experiment_summary.md) 与 [v5机制诊断](../reports/diagnostics/2026-08-31-csgha-v5-serial-s1/findings.md)。
 
-最新吞吐配置为 **perf2两路并行**：两份v4匹配配置均启用训练CUDA Graph，每进程1个PyTorch CPU线程，保持batch128和8个data workers，使用新 `_perf2` 实验编号，从头运行六组。真实队列短测每组稳定epoch约9.5–9.9秒、同时推进两组；同配置串行约5.3–5.5秒/组，混合双模型稳定吞吐约提升11%。串并行3轮复验权重逐参数、训练CSV字节一致。正式新批次尚未启动。服务器项目根目录一行命令：`/root/miniconda3/bin/python scripts/launch_csgha_v4.py`。见 [perf2测量与安全说明](../reports/diagnostics/2026-08-30-throughput/perf2_parallel.md)。
+最新候选v6保持v5的投影、RMS、LeakyReLU deep分支、位置和训练协议，只把guidance的加性logit修正固定限制在`±0.25`，使其作为deep分支的小幅残差而非替代项。matched sweep固定`jobs=1`串行运行6组，原因是两次双进程CUDA Graph+AMP批次曾随机出现原生`SIGABRT`，而v5串行批次完整通过。服务器入口为`/root/miniconda3/bin/python scripts/launch_csgha_v6.py`；启动前必须查看 [handoff](handoff.md) 和现有manifest，已运行或完成时不得重复启动。
 
-并行时明确禁用推理延迟测量，避免混入共享GPU竞争耗时；论文效率数据后续独占GPU统一测量。Graph要求关闭AMP权重缓存，不能视为旧eager轨迹的逐位等价续训；控制组与v4必须使用相同后端。前版perf1约5.3–5.8秒/epoch、旧eager控制约13.3秒的记录保留在 [前版优化报告](../reports/diagnostics/2026-08-30-throughput/findings.md)，不据此夸大本次并发增益。
+所有候选选择仍只使用validation；未经v6正式审计和版本匹配诊断，不进入CIFAR-100或论文正结果表。论文效率数据后续应在独占GPU条件下统一测量，不能使用并发训练时的延迟。当前seed同时控制数据划分和训练，三seed标准差不能解释为固定划分下的纯初始化方差。
 
-可追溯数据与此前判断见 [实验审计入口](../reports/audits/2026-08-30/README.md) 与 [方法路线复评](../reports/audits/2026-08-30/method_route_assessment.md)。当前 seed 同时控制划分和训练，不能将三 seed 标准差解释为固定划分下的纯初始化方差。
-
-以下保留配置说明与历史执行过程；已有启动命令不代表现在需要重跑。特别是单 batch 诊断和跨版本 checkpoint replay，不足以证明原模型失败的因果机制。
+以下保留配置说明与历史执行过程；已有启动命令不代表现在需要重跑。单batch诊断和跨版本checkpoint replay也不足以证明原模型失败的因果机制。
 
 ## 配置与历史执行记录
 

@@ -1,8 +1,8 @@
-# 实验项目交接：CSGHA v4 / perf2（2026-08-30）
+# 实验项目交接：CSGHA v5 / perf2（更新至2026-08-31）
 
 本文用于让新的对话接续当前代码、GPU服务器实验和论文计划。**先读本文件，再检查实时状态；不要把历史建议、短测或旧清单的残留字段当成当前正式结果。**
 
-状态核实时间：北京时间 **2026-08-30 21:58**。本次交接只编写文档、同步代码并发布GitHub，不启动新的正式训练。
+最新状态见第15节；第1、7、9节保留v4阶段的历史计划，若与第15节冲突，以第15节为准。当前没有由Codex启动新的正式训练。
 
 ## 1. 一分钟了解当前进度
 
@@ -461,3 +461,164 @@ python3 scripts/analysis/summarize_guidance_information.py
 > 请先阅读`/root/autodl-tmp/image-classification/AGENTS.md`和`docs/handoff.md`，检查服务器实时进程、最新perf2 manifest、Git状态及六组目标目录。保持新机制路线、validation-only和可追溯协议。若正式六组未开始，给我现有一行启动命令；若已运行，先检查进度；若已完成，先审计六组结果，再扩展版本匹配的v4/control诊断并据结果规划下一步。不要混入smoke或旧epoch100中断结果，不要自动启动额外长实验。
 
 本文件是交接时的状态记录；后续对话应把新的完成状态、明确决策、运行ID和证据入口持续补充到本文或新的日期化报告中，避免再次只靠聊天记忆。
+
+## 13. 2026-08-31 perf2 首批失败与 retry1
+
+首批正式manifest：`artifacts/sweeps/cifar10_csgha_v4_matched_perf2_20260831_101828/manifest.json`，主日志：`artifacts/launcher_logs/csgha_v4_matched_perf2_20260831_101824_756003.log`。保留全部目录，不删除、不覆盖，也不把部分结果写成六组完成。
+
+- `independent` seed42、43完成，best validation分别为87.88%、87.82%。
+- `csgha_v4` seed42在epoch71正常摘要后以return code -6（SIGABRT）终止；子日志没有Python traceback或CUDA错误。
+- runner随后按fail-fast策略以SIGINT取消正在运行的`independent` seed44；`csgha_v4` seed43、44保持pending。
+- 诊断时GPU/磁盘正常，cgroup `memory.failcnt=0`，没有OOM、DataLoader或源码变化证据。容器没有journal、coredumpctl或`/var/crash`，无法从本批进一步区分底层运行时主动abort与外部SIGABRT。
+
+后续训练子进程强制启用：
+
+```text
+PYTHONFAULTHANDLER=1
+PYTHONUNBUFFERED=1
+TORCH_SHOW_CPP_STACKTRACES=1
+```
+
+runner同时将负退出码解析为manifest的`termination_signal`，以便后续原生崩溃留下全部Python线程栈、PyTorch C++异常上下文和明确的信号名称。
+
+retry1使用全新六组ID，命名包含`_perf2_retry1_seed{42,43,44}`，仍从头训练、两路并行、validation-only，不复用不完整checkpoint。启动命令：
+
+```bash
+/root/miniconda3/bin/python scripts/launch_csgha_v4.py --experiment-tag retry1
+```
+
+## 14. 2026-08-31 retry1完成、P1审计与P2入口
+
+retry1 manifest `artifacts/sweeps/cifar10_csgha_v4_matched_perf2_retry1_20260831_112717/manifest.json` 已于12:59完成。六组均completed/return_code=0并通过文件级审计。Control seeds42/43/44为87.88/87.82/88.12%，v4为88.44/87.90/87.90%；配对差值+0.56/+0.08/-0.22个百分点，均值+0.140±0.393，胜出2/3。结果很小且不完全稳定，不能声称guidance稳定提升。
+
+P1正式证据：`artifacts/audits/2026-08-31-csgha-v4-retry1/`；版本化报告：`reports/audits/2026-08-31-csgha-v4-retry1/`。该审计只选择retry1 manifest六组，未混入smoke、首批失败目录或test。
+
+P2已实现独立的v4/control版本匹配入口。dry-run已验证六个best checkpoint strict load，当前模型/数据源码与训练时source snapshot一致；control与v4均做deep统计和deep-zero，v4另做guidance置零、训练均值及三次全validation无自身配对置换。不打开官方test，不训练模型。
+
+P2一行后台启动命令（由用户启动，不要重复运行）：
+
+```bash
+/root/miniconda3/bin/python scripts/launch_csgha_v4_diagnostics.py
+```
+
+原始P2输出固定为`artifacts/diagnostics/csgha_v4_retry1_information_20260831_v1/`；该任务现已完成，后续结论与v5入口见第15节。
+
+## 15. 2026-08-31 P2完成、v5机制与下一批入口
+
+### 15.1 P2版本匹配诊断结论
+
+P2 manifest为`artifacts/diagnostics/csgha_v4_retry1_information_20260831_v1/manifest.json`，六组均completed，严格加载best checkpoint并在相同5,000张validation上精确复现；未训练、未读取官方test。manifest SHA-256为`abf1a62f4cf5b067c2f1248ebac73fefbbd34789d1414f48d183f774cc7d1e9d`。
+
+版本化结果位于`reports/diagnostics/2026-08-31-csgha-v4-retry1/`：`diagnostic_summary.json`、`results.md`、`findings.md`。主要证据：
+
+- v4三次全validation无自身配对guidance置换平均精度变化分别为−0.9333/−0.4867/−0.2600个百分点，跨seed平均−0.5600；说明最终checkpoint确实使用了与输入配对的浅层信息。
+- v4的guidance置零变化为−0.66/+0.02/−0.32个百分点，仍不是三个seed一致受益。
+- v4 deep-zero干预为−3.14/−2.74/−3.16个百分点，control为−16.40/−8.84/−6.16；deep logits及LeakyReLU后硬零比例均为0，说明v4已解决v3观察到的hard-dead分支。
+- v4 guidance的`tanh(raw)`饱和率约96.24%–97.15%，引导加项绝对均值约0.91–0.99。引导分支几乎退化成符号型信号，是下一步最直接的机制瓶颈。
+- v4相对matched control的三seed训练优势仍只有+0.56/+0.08/−0.22个百分点，均值+0.14；不能写成稳定任务收益。
+
+因此下一候选不再调整deep分支，也不增加损失或位置搜索，只处理已被P2直接观察到的guidance输出尺度饱和。
+
+### 15.2 CSGHA v5严格单变量定义
+
+令`z=P_t(LayerNorm(g_s))`，v5在原`tanh`前加入逐样本、跨目标通道的无参数RMS归一化：
+
+```text
+z_hat = z / sqrt(mean_c(z^2) + 1e-6)
+guidance = tanh(alpha_t) * tanh(z_hat)
+channel_gate = sigmoid(deep_leaky + guidance)
+```
+
+其余均保持v4不变：SE1–2、Guided-CBAM7–8、24→6→64投影及其内部ReLU、LeakyReLU(0.1) deep分支、alpha零初始化、空间注意力、参数量、loss、优化器、seed划分及perf2执行协议。RMS归一化对投影权重的整体正尺度近似不变，直接阻止仅靠放大投影权重重新进入`tanh`饱和区。RMS本身不是创新点；它只是根据P2证据修正跨阶段引导的信号整形。
+
+代码标识：`model_type=csgha_v5`，`architecture_version=csgha_v5_rms_normalized_guidance_deep_leaky_relu_0.1`。v5新增持久化`guidance_output_normalization_version` buffer；v4/v5严格交叉加载会失败，避免相同参数键被静默解释成不同公式。v4路径与历史初始化未改。
+
+实现与入口：
+
+- 模型：`src/image_classification/models/attention.py`、`mobilenetv2.py`、`factory.py`。
+- 配置：`configs/experiments/csgha_v5_rms_middle.yaml`。
+- matched sweep：`configs/sweeps/csgha_v5_matched.yaml`。
+- 唯一推荐启动器：`scripts/launch_csgha_v5.py`，固定`experiment_tag=rms1`、`jobs=2`。
+- 测试：`tests/unit/test_csgha_v5.py`；v5与v4均为2,239,178参数，control仍为2,238,024参数。
+
+### 15.3 验证记录与下一组实验
+
+2026-08-31在服务器Python/Torch环境完成：本次改动文件Ruff通过，`compileall`通过，`check_model.py`的10种配置均前向通过，完整测试为92 passed + 3 subtests passed；唯一警告是既有CUDA集成测试首次建立cuBLAS context。全仓库Ruff仍有22个早先存在、与v5无关的问题，没有借本次工作扩大修改范围。
+
+下一批固定为unchanged `hybrid_leaky` control与`csgha_v5`，各seeds42/43/44，共6次200epoch、validation-only、全部从头训练。六组均带`_perf2_rms1_seed{42,43,44}`新ID，不覆盖retry1或任何失败证据。dry-run已确认配置矩阵和命令，不会复用旧输出。
+
+正式训练前只需再次确认没有训练进程、GPU可用；启动器自身也会检查锁、进程和目标目录。不要在训练运行中修改`src/`、`scripts/`或`configs/`，否则runner的源码指纹保护会中止批次。Codex不自行启动长训练；需要实验时交给用户的一行命令为：
+
+```bash
+cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/launch_csgha_v5.py
+```
+
+批次完成后先做manifest驱动审计，按seed报告`v5 − hybrid_leaky`全部差值、mean±sample std及胜出数；然后用版本匹配诊断确认RMS确实降低饱和、输入置换效应仍存在，并检查任务收益是否比v4更稳定。未经这两步，不进入CIFAR-100或论文正结果表。
+
+### 15.4 并发原生崩溃与串行入口
+
+`rms1`与`rms3`两批均在两个`hybrid_leaky` control并发、CUDA Graph+AMP运行时发生PyTorch/CUDA原生`SIGABRT`；失败分别出现在不同seed和epoch，v5均尚未启动。另一进程可继续运行，且无OOM、磁盘、PID或非有限checkpoint证据。`rms2`是误用前台runner后由用户中断的短运行。三批证据全部保留，不覆盖、不续训。
+
+为隔离两进程并发这一共同条件，下一批改为`jobs=1`串行，其余科学配置不变；使用新配置`configs/experiments/*_serial.yaml`、新sweep `configs/sweeps/csgha_v5_matched_serial.yaml`和`_serial_s1_seed{42,43,44}`新ID。后台启动命令：
+
+```bash
+cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/launch_csgha_v5.py
+```
+
+若串行仍出现同类`SIGABRT`，不要继续盲目换ID；下一步应禁用CUDA Graph或启用同步CUDA诊断后再运行。
+
+## 16. 2026-08-31 v5串行完成、机制复核与v6入口
+
+### 16.1 v5串行正式审计
+
+串行s1 manifest为`artifacts/sweeps/cifar10_csgha_v5_rms_matched_serial_s1_20260831_150114/manifest.json`，六组均completed/return_code=0；串行执行未再出现此前双进程CUDA Graph+AMP条件下的随机`SIGABRT`。正式审计仅从该manifest选择六组，不混入并发失败批次、smoke、旧control或test。
+
+证据位于`artifacts/audits/2026-08-31-csgha-v5-serial-s1/`，版本化报告位于`reports/audits/2026-08-31-csgha-v5-serial-s1/`。manifest SHA-256为`6ea44ff9ce47fd8682667419ac279c993cfbe3801bbc977e0ddd396d3100fea2`，审计未发现文件级问题。matched control seeds42/43/44为87.88/87.82/88.12%，v5为87.62/87.18/88.14%；配对差值为−0.26/−0.64/+0.02个百分点，均值−0.293±0.331，胜出1/3。串行control的best checkpoint与v4 retry1对应seed逐文件哈希相同，证明协议和control结果可复现。v5未改善稳定任务收益，不能作为正结果。
+
+### 16.2 v5版本匹配诊断
+
+原始诊断输出为`artifacts/diagnostics/csgha_v5_serial_information_20260831_v1/`，manifest SHA-256为`7ac860f1a56d2ce96c8b9594fb515ff88bf8b3e02edb881598c85c6731f4aee3`；版本化结果位于`reports/diagnostics/2026-08-31-csgha-v5-serial-s1/`。六个best checkpoint均strict load并在相同5,000张validation上精确复现；没有训练，也没有打开官方test。主要结论：
+
+- RMS达到了直接目标：v5各模块/seed的`tanh`饱和率约0.29%–1.76%，显著低于v4约96%–97%。
+- 三次无自身配对guidance置换在三个seed均降低精度，跨seed平均为−1.72个百分点（v4为−0.56），说明输入相关浅层信息耦合更强。
+- guidance置零变化为−0.84/−0.70/−0.82个百分点，三个seed都表明v5 checkpoint内部使用了guidance。
+- v5 deep-zero变化为−1.28/−1.42/−1.60个百分点，平均−1.433；明显弱于v4约−3.013和matched control约−10.467，表明deep分支进一步被弱化。
+- guidance contribution绝对均值几乎等于其允许幅度，说明学习到的`abs(tanh(alpha))`接近1。RMS虽修复投影输出饱和，却让guidance长期使用最大允许加性logit幅度；更强的输入相关性没有转化成更高任务精度，且挤占了deep分支。
+
+因此v6不再改归一化、投影、位置、deep激活或训练目标，只限制guidance在channel-gate logit中的最大残差幅度。
+
+### 16.3 CSGHA v6严格单变量定义
+
+v6保持v5的RMS归一化，仅加入固定、无参数的0.25幅度上限：
+
+```text
+z_hat = RMSNorm(P_t(LayerNorm(g_s)))
+guidance = 0.25 * tanh(alpha_t) * tanh(z_hat)
+channel_gate = sigmoid(deep_leaky + guidance)
+```
+
+相对v5的唯一机制变量是`guidance_scale_cap=0.25`；其作用是把跨阶段guidance限制为小幅残差修正，避免取代deep分支。SE1–2、Guided-CBAM7–8、投影、RMS、LeakyReLU(0.1)、alpha零初始化、空间注意力、参数量、loss、优化器、数据划分、seed和串行协议均不变。0.25本身不作为创新声明，只是由v5干预证据驱动的信任区间。
+
+代码标识为`model_type=csgha_v6`，`architecture_version=csgha_v6_rms_guidance_cap_0.25_deep_leaky_relu_0.1`。v6新增持久化`guidance_scale_cap_version` buffer，使v5/v6严格交叉加载失败，避免相同参数键被静默解释成不同公式。v4、v5、v6均为2,239,178参数，control为2,238,024参数。
+
+入口文件：实验配置`configs/experiments/csgha_v6_capped_middle_serial.yaml`，matched sweep `configs/sweeps/csgha_v6_matched_serial.yaml`，启动器`scripts/launch_csgha_v6.py`，测试`tests/unit/test_csgha_v6.py`。启动器固定`experiment_tag=v6s1`、`jobs=1`，生成六个全新`_serial_v6s1_seed{42,43,44}` ID，不复用v5或历史control输出。
+
+### 16.4 验证记录与下一组实验
+
+服务器环境已完成本次改动文件Ruff、`compileall`、`git diff --check`；`scripts/diagnostics/check_model.py`的11种配置全部前向通过；完整测试为104 passed + 3 subtests passed。唯一警告仍是CUDA graph集成测试首次建立cuBLAS context。启动器dry-run已确认六组串行命令与全新目录，检查时没有创建v6训练目录，也没有启动训练。
+
+下一批只运行unchanged `hybrid_leaky` control与`csgha_v6`，各seeds42/43/44，共6次200epoch、validation-only、全部从头训练。训练期间不要修改`src/`、`scripts/`或`configs/`。Codex不自行启动长训练；需要实验时交给用户的一行后台启动命令为：
+
+```bash
+cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/launch_csgha_v6.py
+```
+
+批次完成后先做manifest驱动审计，按seed报告`v6 − hybrid_leaky`全部差值、mean±sample std和胜出数；再运行版本匹配诊断，重点检查guidance contribution是否确实被限制在±0.25、deep-zero效应是否从v5恢复，以及输入置换效应和任务收益能否同时保留。未经审计与诊断，不进入CIFAR-100或论文正结果表。
+
+## 17. 2026-08-31 论文资产清理记录
+
+为保留论文复现、绘图和机制诊断所需资产，同时释放服务器空间，已从32个完成且非v6的run中删除640个`checkpoints/epoch_*.pth`周期性优化器快照，合计约16.3GiB；另删除17个`__pycache__`/pytest/Ruff可再生缓存目录和`data/cifar-100-python/file.txt~`编辑器备份。清理后项目占用约5.0GB，`/root/autodl-tmp`可用约45GB。
+
+所有49个已完成、非当前v6 run的`model_best.pth`、`model_latest.pth`和`final.pth`共147个文件均已核验存在。训练曲线CSV、TensorBoard events、metrics、summary、config、split indices、provenance、sweep manifest、source snapshot、正式审计、版本匹配诊断、报告、图表及此前要求保留的失败/中断证据均未删除。因此论文绘图、best-checkpoint诊断、结果审计和从latest恢复的能力不受影响；正式审计代码本来也不依赖`epoch_*.pth`。
+
+正在运行的v6批次被明确排除，没有删除或修改其任何文件。v6完成并完成manifest审计后，可按同一规则只删除其`epoch_*.pth`，继续保留best/latest/final及全部论文证据；不要在训练进行中清理其目录或修改保存策略。

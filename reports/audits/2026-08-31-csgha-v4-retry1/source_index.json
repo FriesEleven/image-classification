@@ -1,0 +1,25 @@
+{
+  "snapshot_sha256": "b4ad69d8635402a4bf6017e4f4309db132e12368ef44dc61b9324b7972ef8c73",
+  "manifest": {
+    "path": "artifacts/sweeps/cifar10_csgha_v4_matched_perf2_retry1_20260831_112717/manifest.json",
+    "sha256": "020112beffbfef94cee7bafb0fc1a09b3b73f14988d3860edd25938cab1af988",
+    "size_bytes": 28107
+  },
+  "checkpoint_hashes": {
+    "independent_leaky_se1-2_cbam7-8_perf2_retry1_seed42_hybrid_leaky_se1-2_cbam7-8_cifar10": "8c73154b319381ca916a6c91d2bd422c989e1f5a27f426caebbbc02404ae5464",
+    "independent_leaky_se1-2_cbam7-8_perf2_retry1_seed43_hybrid_leaky_se1-2_cbam7-8_cifar10": "6c3c9bd32212ec83aaedddce10064bfda2f7a2c5b8751b6daf28d7c087e50af4",
+    "independent_leaky_se1-2_cbam7-8_perf2_retry1_seed44_hybrid_leaky_se1-2_cbam7-8_cifar10": "0a392d86be047f2c2b7b48d7164292ba0d42ef65eaeb1741cdbf570e56e087d1",
+    "csgha_v4_leaky_se1-2_cbam7-8_perf2_retry1_seed42_csgha_v4_se1-2_guide2_cbam7-8_cifar10": "9ea6f075e1729232dc8de20cde64f96a3878f2048d37ab576bd912ce3af0543f",
+    "csgha_v4_leaky_se1-2_cbam7-8_perf2_retry1_seed43_csgha_v4_se1-2_guide2_cbam7-8_cifar10": "d013e461f99a94ebd4a02d50027b22aad55ccb446790739db3613048bb79c7bd",
+    "csgha_v4_leaky_se1-2_cbam7-8_perf2_retry1_seed44_csgha_v4_se1-2_guide2_cbam7-8_cifar10": "eeabe894e8bf7033ae3f768d9f11c582e72b9027cbe21a2b9d41331b64c999f4"
+  },
+  "split_hashes": {
+    "independent_leaky_se1-2_cbam7-8_perf2_retry1_seed42_hybrid_leaky_se1-2_cbam7-8_cifar10": "25d918f697c7902c53b19a033fb1f9be2ab4b277abcc0dad7d6fd11dc73f3be4",
+    "independent_leaky_se1-2_cbam7-8_perf2_retry1_seed43_hybrid_leaky_se1-2_cbam7-8_cifar10": "0ca8209c9411d6264d6f3c5199d498ace2c2903d8f793f5c67d94404f3d1fae2",
+    "independent_leaky_se1-2_cbam7-8_perf2_retry1_seed44_hybrid_leaky_se1-2_cbam7-8_cifar10": "703fa65351c77dffeb81f64538f61b17f64352728fcce9121de18026c32d7b92",
+    "csgha_v4_leaky_se1-2_cbam7-8_perf2_retry1_seed42_csgha_v4_se1-2_guide2_cbam7-8_cifar10": "25d918f697c7902c53b19a033fb1f9be2ab4b277abcc0dad7d6fd11dc73f3be4",
+    "csgha_v4_leaky_se1-2_cbam7-8_perf2_retry1_seed43_csgha_v4_se1-2_guide2_cbam7-8_cifar10": "0ca8209c9411d6264d6f3c5199d498ace2c2903d8f793f5c67d94404f3d1fae2",
+    "csgha_v4_leaky_se1-2_cbam7-8_perf2_retry1_seed44_csgha_v4_se1-2_guide2_cbam7-8_cifar10": "703fa65351c77dffeb81f64538f61b17f64352728fcce9121de18026c32d7b92"
+  },
+  "scope": "Exact retry1 manifest only; no smoke, failed first batch, training, or test evaluation."
+}
