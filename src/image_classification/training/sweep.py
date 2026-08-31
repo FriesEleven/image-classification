@@ -7,9 +7,33 @@ import time
 from collections import deque
 from datetime import datetime
 
+NATIVE_DIAGNOSTIC_ENVIRONMENT = {
+    "PYTHONFAULTHANDLER": "1",
+    "PYTHONUNBUFFERED": "1",
+    "TORCH_SHOW_CPP_STACKTRACES": "1",
+}
+
 
 def _timestamp():
     return datetime.now().astimezone().isoformat(timespec="seconds")
+
+
+def native_diagnostic_environment():
+    """Return a child environment that emits Python/C++ fatal-error context."""
+    environment = os.environ.copy()
+    environment.update(NATIVE_DIAGNOSTIC_ENVIRONMENT)
+    return environment
+
+
+def exit_record(return_code):
+    """Describe both subprocess return codes and signal-based termination."""
+    termination_signal = None
+    if return_code is not None and return_code < 0:
+        try:
+            termination_signal = signal.Signals(-return_code).name
+        except ValueError:
+            termination_signal = f"SIGNAL_{-return_code}"
+    return {"return_code": return_code, "termination_signal": termination_signal}
 
 
 def _stop_owned(active, status, on_change):
@@ -27,7 +51,7 @@ def _stop_owned(active, status, on_change):
             time.sleep(0.1)
     for item in active.values():
         process, run = item["process"], item["run"]
-        run.update(status=status, finished_at=_timestamp(), return_code=process.poll())
+        run.update(status=status, finished_at=_timestamp(), **exit_record(process.poll()))
         item["reader"].close()
         item["log"].close()
     active.clear()
@@ -65,7 +89,8 @@ def run_parallel_queue(runs, jobs, cwd, log_directory, on_change, check_source, 
                 try:
                     reader = log_path.open()
                     process = subprocess.Popen(run["command"], cwd=cwd, stdout=log, stderr=subprocess.STDOUT,
-                                               start_new_session=True)
+                                               start_new_session=True,
+                                               env=native_diagnostic_environment())
                 except BaseException:
                     if reader is not None:
                         reader.close()
@@ -94,7 +119,7 @@ def run_parallel_queue(runs, jobs, cwd, log_directory, on_change, check_source, 
                         raise RuntimeError(f"Process exited successfully without summary: {run['experiment_id']}")
                     run["summary"] = summary
                 run.update(status="completed" if return_code == 0 else "failed",
-                           finished_at=_timestamp(), return_code=return_code)
+                           finished_at=_timestamp(), **exit_record(return_code))
                 item["reader"].close()
                 item["log"].close()
                 del active[pid]

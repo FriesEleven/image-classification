@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import platform
+import re
 import socket
 import subprocess
 import sys
@@ -19,7 +20,12 @@ sys.path.insert(0, str(ROOT / "src"))
 from image_classification.config import load_config
 from image_classification.paths import RunPaths
 from image_classification.training.provenance import runtime_provenance, snapshot_sources, source_fingerprint
-from image_classification.training.sweep import run_parallel_queue
+from image_classification.training.sweep import (
+    NATIVE_DIAGNOSTIC_ENVIRONMENT,
+    exit_record,
+    native_diagnostic_environment,
+    run_parallel_queue,
+)
 
 DEFAULT_SWEEP = ROOT / "configs/sweeps/baselines.yaml"
 
@@ -64,7 +70,11 @@ def load_sweep(path: Path) -> dict:
     return sweep
 
 
-def build_plan(sweep: dict) -> list[dict]:
+def build_plan(sweep: dict, experiment_tag: str | None = None) -> list[dict]:
+    if experiment_tag is not None and not re.fullmatch(r"[a-z0-9]+(?:_[a-z0-9]+)*", experiment_tag):
+        raise ValueError(
+            "Experiment tag must be lowercase alphanumeric words separated by underscores"
+        )
     plan = []
     for config_value in sweep["experiments"]:
         config_path = (ROOT / config_value).resolve()
@@ -72,6 +82,8 @@ def build_plan(sweep: dict) -> list[dict]:
             raise FileNotFoundError(config_path)
         with config_path.open(encoding="utf-8") as handle:
             experiment_name = (yaml.safe_load(handle) or {}).get("experiment_name", config_path.stem)
+        if experiment_tag:
+            experiment_name = f"{experiment_name}_{experiment_tag}"
         for seed_value in sweep["seeds"]:
             seed = int(seed_value)
             seeded_name = f"{experiment_name}_seed{seed}"
@@ -92,6 +104,7 @@ def build_plan(sweep: dict) -> list[dict]:
                     "started_at": None,
                     "finished_at": None,
                     "return_code": None,
+                    "termination_signal": None,
                     "summary": None,
                 }
             )
@@ -135,23 +148,28 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--continue-on-error", action="store_true")
     parser.add_argument("--jobs", type=int, choices=(1, 2, 3), default=1)
+    parser.add_argument("--experiment-tag")
     args = parser.parse_args()
 
     sweep_path = args.sweep.resolve()
     sweep = load_sweep(sweep_path)
+    tagged_sweep_name = sweep["name"]
+    if args.experiment_tag:
+        tagged_sweep_name = f"{tagged_sweep_name}_{args.experiment_tag}"
     launch_stamp = datetime.now().astimezone().strftime("%Y%m%d_%H%M%S")
-    manifest_path = ROOT / "artifacts/sweeps" / f"{sweep['name']}_{launch_stamp}" / "manifest.json"
+    manifest_path = ROOT / "artifacts/sweeps" / f"{tagged_sweep_name}_{launch_stamp}" / "manifest.json"
     manifest = {
-        "sweep_name": sweep["name"],
+        "sweep_name": tagged_sweep_name,
         "description": sweep.get("description", ""),
         "sweep_config": str(sweep_path.relative_to(ROOT)),
         "status": "dry_run" if args.dry_run else "running",
         "created_at": _timestamp(),
         "finished_at": None,
         "runtime": _runtime_record(),
-        "runs": build_plan(sweep),
+        "runs": build_plan(sweep, args.experiment_tag),
         "concurrent_jobs": args.jobs,
     }
+    manifest["runtime"]["native_crash_diagnostics"] = NATIVE_DIAGNOSTIC_ENVIRONMENT
     _write_manifest(manifest_path, manifest)
     print(f"Manifest: {manifest_path}", flush=True)
 
@@ -189,13 +207,15 @@ def main() -> int:
                 continue
             run.update(status="running", started_at=_timestamp())
             _write_manifest(manifest_path, manifest)
-            completed = subprocess.run(run["command"], cwd=ROOT, check=False)
+            completed = subprocess.run(
+                run["command"], cwd=ROOT, check=False, env=native_diagnostic_environment(),
+            )
             if source_fingerprint() != manifest["runtime"]["source_sha256"]:
                 raise RuntimeError("Source/config files changed during training; inspect the run before reuse")
             run.update(
                 status="completed" if completed.returncode == 0 else "failed",
                 finished_at=_timestamp(),
-                return_code=completed.returncode,
+                **exit_record(completed.returncode),
             )
             if completed.returncode == 0:
                 run["summary"] = _completed_summary(run)

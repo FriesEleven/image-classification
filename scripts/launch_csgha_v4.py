@@ -19,8 +19,8 @@ SWEEP = PROJECT_ROOT / "configs/sweeps/csgha_v4_matched.yaml"
 JOBS = 2
 
 
-def validated_plan():
-    plan = build_plan(load_sweep(SWEEP))
+def validated_plan(experiment_tag: str | None = None):
+    plan = build_plan(load_sweep(SWEEP), experiment_tag)
     counts = Counter((run["resolved_config"]["model_type"], run["seed"]) for run in plan)
     expected = Counter({(variant, seed): 1 for variant in ("hybrid_leaky", "csgha_v4") for seed in (42, 43, 44)})
     if counts != expected:
@@ -35,7 +35,8 @@ def validated_plan():
         config = run["resolved_config"]
         if any(config[key] != value for key, value in protocol.items()) or config["seed"] != run["seed"]:
             raise ValueError(f"Unexpected protocol: {run['experiment_id']}")
-        if not config["experiment_name"].endswith(f"_perf2_seed{run['seed']}"):
+        tag_part = f"_{experiment_tag}" if experiment_tag else ""
+        if not config["experiment_name"].endswith(f"_perf2{tag_part}_seed{run['seed']}"):
             raise ValueError("Concurrent GPU training requires new perf2 run IDs; do not mix old outputs")
     return plan
 
@@ -44,8 +45,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--foreground", action="store_true")
+    parser.add_argument("--experiment-tag")
     args = parser.parse_args()
-    plan = validated_plan()
+    plan = validated_plan(args.experiment_tag)
     for run in plan:
         print(shlex.join(run["command"]), flush=True)
     if args.dry_run:
@@ -66,6 +68,8 @@ def main():
                 raise RuntimeError(f"Existing output will not be overwritten: {target}")
         command = [sys.executable, str(PROJECT_ROOT / "scripts/run_baselines.py"), "--sweep", str(SWEEP),
                    "--jobs", str(JOBS)]
+        if args.experiment_tag:
+            command.extend(["--experiment-tag", args.experiment_tag])
         if args.foreground:
             return subprocess.run(command, cwd=PROJECT_ROOT, check=False).returncode
         log_directory = ARTIFACTS_DIR / "launcher_logs"

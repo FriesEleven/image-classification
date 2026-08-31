@@ -1,4 +1,5 @@
 import json
+import signal
 import sys
 from pathlib import Path
 
@@ -52,6 +53,23 @@ def test_parallel_failure_stops_owned_siblings_and_leaves_unstarted_pending(tmp_
     assert runs[1]["return_code"] is not None
     assert not Path(runs[1]["summary_path"]).exists()
     assert "pid" not in runs[2]
+
+
+def test_native_abort_records_signal_and_faulthandler_stack(tmp_path):
+    runs = plan(tmp_path, delays=(0.1, 10, 0.1))
+    runs[0]["command"] = [
+        sys.executable,
+        "-c",
+        "import os,signal; os.kill(os.getpid(), signal.SIGABRT)",
+    ]
+    assert run_parallel_queue(
+        runs, 2, tmp_path, tmp_path / "logs", lambda: None,
+        lambda: None, summary, poll_seconds=0.01,
+    ) == 1
+    assert runs[0]["status"] == "failed"
+    assert runs[0]["return_code"] == -signal.SIGABRT
+    assert runs[0]["termination_signal"] == "SIGABRT"
+    assert "Fatal Python error: Aborted" in Path(runs[0]["log_path"]).read_text()
 
 
 def test_source_change_interrupts_active_children(tmp_path):
