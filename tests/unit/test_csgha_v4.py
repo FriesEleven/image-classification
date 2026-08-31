@@ -20,6 +20,13 @@ def test_v4_plan_is_six_matched_validation_only_runs():
     assert all(not run["resolved_config"]["measure_inference"] for run in plan)
 
 
+def test_v4_retry_plan_uses_six_new_matched_ids():
+    plan = validated_plan("retry1")
+    assert len(plan) == 6
+    assert len({run["experiment_id"] for run in plan}) == 6
+    assert all("_perf2_retry1_seed" in run["experiment_id"] for run in plan)
+
+
 @pytest.mark.parametrize("model_type", ["hybrid_leaky", "csgha_v4"])
 def test_new_architectures_preserve_shapes_and_record_versions(model_type):
     config = ExperimentConfig(model_type=model_type, se_positions=(1, 2), cbam_positions=(7, 8))

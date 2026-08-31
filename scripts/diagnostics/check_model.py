@@ -26,6 +26,8 @@ CONFIGS = (
     ),
     ExperimentConfig(model_type="hybrid_leaky", se_positions=(1, 2), cbam_positions=(7, 8)),
     ExperimentConfig(model_type="csgha_v4", se_positions=(1, 2), cbam_positions=(7, 8)),
+    ExperimentConfig(model_type="csgha_v5", se_positions=(1, 2), cbam_positions=(7, 8)),
+    ExperimentConfig(model_type="csgha_v6", se_positions=(1, 2), cbam_positions=(7, 8)),
 )
 
 

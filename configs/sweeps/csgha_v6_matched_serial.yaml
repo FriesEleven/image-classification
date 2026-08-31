@@ -1,0 +1,15 @@
+name: cifar10_csgha_v6_capped_matched_serial
+description: >-
+  One controlled hypothesis from the completed v5 checkpoint diagnostic: keep
+  RMS-normalized input-related guidance but cap its additive logit correction at
+  plus or minus 0.25, so it remains a residual correction instead of replacing
+  the deep channel branch. Compare CSGHA v6 against the unchanged hybrid_leaky
+  control using seeds 42/43/44. Preserve positions, projection, LeakyReLU deep
+  branch, loss, optimizer, batch size, AMP, CUDA Graph and validation-only
+  protocol. Run one training process at a time because repeated native SIGABRT
+  failures occurred in two-job concurrent batches. All runs start from scratch
+  with new v6s1 IDs; prior evidence is immutable and inference timing is skipped.
+seeds: [42, 43, 44]
+experiments:
+  - configs/experiments/independent_leaky_middle_serial.yaml
+  - configs/experiments/csgha_v6_capped_middle_serial.yaml

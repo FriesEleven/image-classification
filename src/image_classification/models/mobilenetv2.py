@@ -119,6 +119,8 @@ class CSGHAMobileNetV2(nn.Module):
         guidance_position: int = 2,
         guidance_reduction: int = 4,
         deep_activation: str = "relu",
+        guidance_output_normalization: str = "none",
+        guidance_scale_cap: float = 1.0,
     ):
         super().__init__()
         self.model = mobilenet_v2(weights=None, width_mult=width_mult)
@@ -155,6 +157,8 @@ class CSGHAMobileNetV2(nn.Module):
                     guide_channels,
                     guidance_reduction=guidance_reduction,
                     deep_activation=deep_activation,
+                    guidance_output_normalization=guidance_output_normalization,
+                    guidance_scale_cap=guidance_scale_cap,
                 )
 
     def forward(self, inputs: torch.Tensor) -> torch.Tensor:

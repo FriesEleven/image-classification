@@ -12,6 +12,12 @@ def _channel_activation(kind: str) -> nn.Module:
     raise ValueError(f"Unsupported channel activation: {kind}")
 
 
+def _rms_normalize_channels(values: torch.Tensor, epsilon: float = 1e-6) -> torch.Tensor:
+    """Normalize each sample across channels without adding trainable parameters."""
+    inverse_rms = torch.rsqrt(values.square().mean(dim=1, keepdim=True) + epsilon)
+    return values * inverse_rms
+
+
 class ChannelAttention(nn.Module):
     def __init__(self, channels: int, ratio: int = 16, deep_activation: str = "relu"):
         super().__init__()
@@ -66,6 +72,8 @@ class CrossStageChannelAttention(nn.Module):
         ratio: int = 16,
         guidance_reduction: int = 4,
         deep_activation: str = "relu",
+        guidance_output_normalization: str = "none",
+        guidance_scale_cap: float = 1.0,
     ):
         super().__init__()
         hidden = max(1, channels // ratio)
@@ -87,8 +95,18 @@ class CrossStageChannelAttention(nn.Module):
         )
         self.guidance_scale = nn.Parameter(torch.zeros(()))
         self.sigmoid = nn.Sigmoid()
+        if guidance_output_normalization not in {"none", "rms"}:
+            raise ValueError(f"Unsupported guidance output normalization: {guidance_output_normalization}")
+        self.guidance_output_normalization = guidance_output_normalization
+        if not 0.0 < guidance_scale_cap <= 1.0:
+            raise ValueError("guidance_scale_cap must be in (0, 1]")
+        self.guidance_scale_cap = guidance_scale_cap
         if deep_activation != "relu":
             self.register_buffer("deep_activation_version", torch.tensor(1, dtype=torch.int64))
+        if guidance_output_normalization != "none":
+            self.register_buffer("guidance_output_normalization_version", torch.tensor(1, dtype=torch.int64))
+        if guidance_scale_cap != 1.0:
+            self.register_buffer("guidance_scale_cap_version", torch.tensor(1, dtype=torch.int64))
 
     def attention_logits(
         self,
@@ -104,9 +122,12 @@ class CrossStageChannelAttention(nn.Module):
         batch = inputs.shape[0]
         normalized = self.guide_normalization(shallow_descriptor)
         guidance = self.guide_projection(normalized).view(batch, self.channels, 1, 1)
-        bounded_guidance = torch.tanh(guidance)
+        guidance_for_bounding = guidance
+        if self.guidance_output_normalization == "rms":
+            guidance_for_bounding = _rms_normalize_channels(guidance)
+        bounded_guidance = torch.tanh(guidance_for_bounding)
         deep_attention = self.fc(self.avg_pool(inputs)) + self.fc(self.max_pool(inputs))
-        gated_guidance = torch.tanh(self.guidance_scale) * bounded_guidance
+        gated_guidance = self.guidance_scale_cap * torch.tanh(self.guidance_scale) * bounded_guidance
         return deep_attention, guidance, bounded_guidance, gated_guidance
 
     def forward(self, inputs: torch.Tensor, shallow_descriptor: torch.Tensor) -> torch.Tensor:
@@ -119,14 +140,23 @@ class CrossStageChannelAttention(nn.Module):
 class CrossStageGuidedCBAM(nn.Module):
     """CBAM whose channel gate receives a compact shallow-stage descriptor."""
 
-    def __init__(self, channels: int, guide_channels: int, guidance_reduction: int = 4,
-                 deep_activation: str = "relu"):
+    def __init__(
+        self,
+        channels: int,
+        guide_channels: int,
+        guidance_reduction: int = 4,
+        deep_activation: str = "relu",
+        guidance_output_normalization: str = "none",
+        guidance_scale_cap: float = 1.0,
+    ):
         super().__init__()
         self.channel_attention = CrossStageChannelAttention(
             channels,
             guide_channels,
             guidance_reduction=guidance_reduction,
             deep_activation=deep_activation,
+            guidance_output_normalization=guidance_output_normalization,
+            guidance_scale_cap=guidance_scale_cap,
         )
         self.spatial_attention = SpatialAttention()
 

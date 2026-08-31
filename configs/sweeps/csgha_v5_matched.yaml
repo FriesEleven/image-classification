@@ -1,0 +1,17 @@
+name: cifar10_csgha_v5_rms_matched_perf2
+description: >-
+  One controlled hypothesis from the completed v4 information diagnostic:
+  normalize each sample's projected guidance across output channels by its RMS
+  immediately before tanh. Compare CSGHA v5 against the unchanged matched
+  hybrid_leaky control. Preserve v4's LeakyReLU(0.1) deep branch, guidance
+  projection, zero-initialized bounded scale, attention positions, optimizer,
+  seed-bound splits and all runtime settings. All runs train from scratch and
+  are validation-only. Training uses CUDA Graphs with AMP weight caching
+  disabled. Perf2 runs two independent jobs on one GPU, with one PyTorch CPU
+  thread and eight data workers per job; contended inference timing is disabled.
+  The fixed rms1 experiment tag gives all six runs new IDs, so prior evidence is
+  retained and outputs are never overwritten.
+seeds: [42, 43, 44]
+experiments:
+  - configs/experiments/independent_leaky_middle.yaml
+  - configs/experiments/csgha_v5_rms_middle.yaml

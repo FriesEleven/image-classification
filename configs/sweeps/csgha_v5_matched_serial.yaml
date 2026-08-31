@@ -1,0 +1,13 @@
+name: cifar10_csgha_v5_rms_matched_serial
+description: >-
+  Serial retry after repeated native SIGABRT failures occurred only in the
+  two-job concurrent CUDA Graph batches. Run exactly one training process at a
+  time while preserving the scientific protocol: unchanged hybrid_leaky
+  control, CSGHA v5 RMS guidance, seeds 42/43/44, validation-only selection,
+  CUDA Graph, AMP, batch size 128, optimizer, attention positions and seed-bound
+  splits. All six runs start from scratch with new serial IDs. Earlier rms1,
+  rms2 and rms3 outputs remain untouched. Inference timing remains disabled.
+seeds: [42, 43, 44]
+experiments:
+  - configs/experiments/independent_leaky_middle_serial.yaml
+  - configs/experiments/csgha_v5_rms_middle_serial.yaml

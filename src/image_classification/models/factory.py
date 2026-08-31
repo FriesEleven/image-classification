@@ -30,13 +30,20 @@ def build_model(config: ExperimentConfig) -> nn.Module:
             cbam_positions=config.cbam_positions,
             deep_activation="leaky_relu" if config.model_type == "hybrid_leaky" else "relu",
         )
-    if config.model_type in {"csgha", "csgha_v4"}:
+    if config.model_type in {"csgha", "csgha_v4", "csgha_v5", "csgha_v6"}:
         return CSGHAMobileNetV2(
             num_classes=config.num_classes,
             se_positions=config.se_positions,
             cbam_positions=config.cbam_positions,
             guidance_position=config.guidance_position,
             guidance_reduction=config.guidance_reduction,
-            deep_activation="leaky_relu" if config.model_type == "csgha_v4" else "relu",
+            deep_activation=(
+                "leaky_relu"
+                if config.model_type in {"csgha_v4", "csgha_v5", "csgha_v6"} else "relu"
+            ),
+            guidance_output_normalization=(
+                "rms" if config.model_type in {"csgha_v5", "csgha_v6"} else "none"
+            ),
+            guidance_scale_cap=0.25 if config.model_type == "csgha_v6" else 1.0,
         )
     raise ValueError(f"Unsupported model type: {config.model_type}")

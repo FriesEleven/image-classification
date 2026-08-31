@@ -7,7 +7,18 @@ from pathlib import Path
 
 import yaml
 
-MODEL_TYPES = ("mobilenetv2", "eca", "cbam", "se", "hybrid", "csgha", "hybrid_leaky", "csgha_v4")
+MODEL_TYPES = (
+    "mobilenetv2",
+    "eca",
+    "cbam",
+    "se",
+    "hybrid",
+    "csgha",
+    "hybrid_leaky",
+    "csgha_v4",
+    "csgha_v5",
+    "csgha_v6",
+)
 DATASETS = ("cifar10", "cifar100")
 DATASET_NUM_CLASSES = {"cifar10": 10, "cifar100": 100}
 
@@ -79,7 +90,7 @@ class ExperimentConfig:
         positions = self.aux_positions + self.se_positions + self.cbam_positions
         if any(position < 0 or position > 18 for position in positions):
             raise ValueError("MobileNetV2 attention positions must be between 0 and 18")
-        if self.model_type in {"csgha", "csgha_v4"}:
+        if self.model_type in {"csgha", "csgha_v4", "csgha_v5", "csgha_v6"}:
             if not self.se_positions or not self.cbam_positions:
                 raise ValueError("CSGHA requires both SE and guided CBAM positions")
             if self.guidance_position not in self.se_positions:
@@ -96,12 +107,14 @@ class ExperimentConfig:
         return {
             "csgha": "csgha_v3_bounded_relu",
             "csgha_v4": "csgha_v4_bounded_deep_leaky_relu_0.1",
+            "csgha_v5": "csgha_v5_rms_normalized_guidance_deep_leaky_relu_0.1",
+            "csgha_v6": "csgha_v6_rms_guidance_cap_0.25_deep_leaky_relu_0.1",
             "hybrid_leaky": "independent_hybrid_deep_leaky_relu_0.1",
         }.get(self.model_type, f"{self.model_type}_v1")
 
     @property
     def experiment_id(self) -> str:
-        if self.model_type in {"csgha", "csgha_v4"}:
+        if self.model_type in {"csgha", "csgha_v4", "csgha_v5", "csgha_v6"}:
             se = "-".join(map(str, self.se_positions))
             cbam = "-".join(map(str, self.cbam_positions))
             return (
