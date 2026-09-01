@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "measurement_date": "2026-09-01",
+  "training_performed": false,
+  "profile_path": "artifacts/budget_selector/profiles/stage_sparse_rtx3080ti_paired_cuda_events_20260901_v5/profile.json",
+  "profile_sha256": "6f6363b5c933fc109dbd6dd67c1d2d9eaa4485756177b5244685e8dcfdd9069d",
+  "device": "NVIDIA GeForce RTX 3080 Ti",
+  "input_shape": [1, 3, 32, 32],
+  "timing_backend": "cuda_events_single_stream",
+  "rounds": 3,
+  "timed_runs_per_round": 100,
+  "baseline": {
+    "candidate_id": "shallow_none__middle_none__deep_none",
+    "parameters_total": 2236682,
+    "latency_ms": 3.9576,
+    "paired_anchor_measurements": 189
+  },
+  "singleton_profiles": {
+    "shallow_eca": {"parameter_delta": 6, "attention_operations": 11384, "latency_overhead_percent": 4.79},
+    "shallow_se": {"parameter_delta": 122, "attention_operations": 11344, "latency_overhead_percent": 12.99},
+    "shallow_cbam": {"parameter_delta": 276, "attention_operations": 65312, "latency_overhead_percent": 16.75},
+    "middle_eca": {"parameter_delta": 6, "attention_operations": 1408, "latency_overhead_percent": 5.18},
+    "middle_se": {"parameter_delta": 1160, "attention_operations": 2048, "latency_overhead_percent": 8.18},
+    "middle_cbam": {"parameter_delta": 1220, "attention_operations": 5904, "latency_overhead_percent": 15.45},
+    "deep_eca": {"parameter_delta": 6, "attention_operations": 1600, "latency_overhead_percent": 4.88},
+    "deep_se": {"parameter_delta": 6740, "attention_operations": 7040, "latency_overhead_percent": 7.66},
+    "deep_cbam": {"parameter_delta": 6596, "attention_operations": 14916, "latency_overhead_percent": 16.79}
+  },
+  "budget_feasible_candidate_counts": {
+    "ultra_light": 5,
+    "balanced": 22,
+    "relaxed": 58
+  },
+  "superseded_profiles": [
+    {
+      "path": "artifacts/budget_selector/profiles/stage_sparse_rtx3080ti_20260901_v1/profile.json",
+      "sha256": "bcc4a9e76029e4cd561f9aea960b6a305896dcb9d07019afc740cf627b63f621",
+      "reason": "Per-forward synchronized wall-clock timing had excessive host-side variance."
+    },
+    {
+      "path": "artifacts/budget_selector/profiles/stage_sparse_rtx3080ti_cuda_events_20260901_v2/profile.json",
+      "sha256": "a111548a2a5d93e46eea1c26d7066bf2670d52a717ff203dbe2ac8aa68bfd2fa",
+      "reason": "CUDA Event candidate and baseline medians were not paired in time."
+    },
+    {
+      "path": "artifacts/budget_selector/profiles/stage_sparse_rtx3080ti_cuda_events_20260901_v3/profile.json",
+      "sha256": "73190bed7d7bb5025fdfc1b587899659953122b3f3cf8aaaffd54f6f78352266",
+      "reason": "CUDA Event candidate and baseline medians were not paired in time."
+    },
+    {
+      "path": "artifacts/budget_selector/profiles/stage_sparse_rtx3080ti_paired_cuda_events_20260901_v4/profile.json",
+      "sha256": "b0bda4626511948ceac1004f88ae152744fec145197f57acfd791d38d5268030",
+      "reason": "Source snapshot predates the final exact-utility tie rule."
+    }
+  ]
+}

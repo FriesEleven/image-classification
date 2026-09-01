@@ -9,6 +9,7 @@ from .mobilenetv2 import (
     CSGHAMobileNetV2,
     HybridAttentionMobileNetV2,
     SEMobileNetV2,
+    StageSparseAttentionMobileNetV2,
 )
 
 __all__ = [
@@ -21,5 +22,6 @@ __all__ = [
     "HybridAttentionMobileNetV2",
     "SEBlock",
     "SEMobileNetV2",
+    "StageSparseAttentionMobileNetV2",
     "build_model",
 ]

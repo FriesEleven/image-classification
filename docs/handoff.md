@@ -1,8 +1,10 @@
-# 实验项目交接：CSGHA v5 / perf2（更新至2026-08-31）
+# 实验项目交接：CSGHA负结果归档 / 预算阶段选择（更新至2026-09-01）
 
 本文用于让新的对话接续当前代码、GPU服务器实验和论文计划。**先读本文件，再检查实时状态；不要把历史建议、短测或旧清单的残留字段当成当前正式结果。**
 
-最新状态见第15节；第1、7、9节保留v4阶段的历史计划，若与第15节冲突，以第15节为准。当前没有由Codex启动新的正式训练。
+最新状态见第18、19节；第1、7、9、15、16节保留CSGHA阶段的历史计划，若冲突，以第18、19节为准。当前没有由Codex启动新的正式训练。
+
+> **2026-09-01当前状态：** v6六组已完成正式审计和版本匹配诊断，三个seed全部落后matched control；CSGHA v3–v6已作为负结果/机制消融归档，不进入v7。服务器上不存在v7文件、v7进程或其他训练进程。当前正向路线改为“预算约束下的阶段感知稀疏注意力部署”；代码、硬件成本档案、30组最小校准矩阵、串行后台启动器和选择脚本均已准备并验证，下一步只需用户启动第19节的`probe1`批次。
 
 ## 1. 一分钟了解当前进度
 
@@ -622,3 +624,64 @@ cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/
 所有49个已完成、非当前v6 run的`model_best.pth`、`model_latest.pth`和`final.pth`共147个文件均已核验存在。训练曲线CSV、TensorBoard events、metrics、summary、config、split indices、provenance、sweep manifest、source snapshot、正式审计、版本匹配诊断、报告、图表及此前要求保留的失败/中断证据均未删除。因此论文绘图、best-checkpoint诊断、结果审计和从latest恢复的能力不受影响；正式审计代码本来也不依赖`epoch_*.pth`。
 
 正在运行的v6批次被明确排除，没有删除或修改其任何文件。v6完成并完成manifest审计后，可按同一规则只删除其`epoch_*.pth`，继续保留best/latest/final及全部论文证据；不要在训练进行中清理其目录或修改保存策略。
+
+## 18. 2026-09-01 v6审计、诊断与CSGHA路线停止
+
+### 18.1 v6正式审计
+
+精确manifest为`artifacts/sweeps/cifar10_csgha_v6_capped_matched_serial_v6s1_20260831_173039/manifest.json`，SHA-256为`44b5903955ea8b2aa7a68b1887d726dc0a06c632d85235092f8df4f3ab0866bf`。六组均为completed/return_code=0、连续200 epochs、validation-only，配置、划分、checkpoint和源码快照核验无问题。
+
+版本化审计位于`reports/audits/2026-09-01-csgha-v6-serial-v6s1/`，审计结果SHA-256为`ae1af2caafe54881927facf66e62b833c0c2857a58f94a8fdfef601f3dd1cf2c`。matched control seeds42/43/44为87.88/87.82/88.12%，v6为87.76/87.68/87.92%；配对`v6-control`为−0.12/−0.14/−0.20个百分点，均值−0.153±0.042，胜出0/3。对应control best checkpoint与v5串行control逐seed哈希完全相同。
+
+### 18.2 v6版本匹配诊断
+
+原始输出为`artifacts/diagnostics/csgha_v6_serial_information_20260901_v1/`，manifest SHA-256为`83453bc7b9088f403b25a114d166c4803c48449b983f72908e56f870cfbe0313`；版本化报告位于`reports/diagnostics/2026-09-01-csgha-v6-serial-v6s1/`。六个best checkpoint均strict load，在各自完整5,000张validation上精确复现；没有训练、没有官方test。
+
+- v6 guidance置零变化为−0.22/−0.24/−0.08pp，平均−0.18pp。
+- 九次无自身配对置换平均约−0.244pp，明显低于v5的−1.72pp。
+- v6 deep-zero为−0.78/−1.16/−2.72pp，平均−1.553pp；与v5的−1.433pp接近，仍远弱于matched control的−10.467pp。
+- 六个目标模块的引导贡献绝对均值约为bounded guidance绝对均值的0.25，证明固定cap确实处于最大幅度；投影`tanh`饱和率仍低（约0.34%–1.12%）。
+
+cap实现了设计目标，却同时削弱输入耦合，并未恢复deep分支或任务收益。因此停止“浅层描述直接加到深层channel logits”的CSGHA路线，不做v7，也不再扫描cap、归一化、激活或位置。归档结论位于`reports/negative_results/2026-09-01-csgha-v3-v6/`；允许作为负结果和机制消融，不允许包装为稳定正向方法。
+
+实时核查时`find ... -iname '*v7*'`无输出，`pgrep`也没有v7、train.py或run_baselines.py进程，因此“停止v7”的实际操作是确认其从未启动，无需发送kill信号，也没有删除任何证据。
+
+## 19. 预算感知阶段稀疏选择器与下一批
+
+### 19.1 冻结设计
+
+完整方案见`docs/budget_stage_selector_plan.md`。统一`model_type=stage_sparse`在三个stage packet上独立选择None/ECA/SE/CBAM：shallow=`features[1,2]`、middle=`[7,8]`、deep=`[15,16]`，共`4^3=64`个候选，每阶段最多一种注意力，无跨阶段信息传递。
+
+首批只探测all-none及9个“模块×阶段”单元，使用新开发seeds45/46/47，共10×3=30次。选择器计算每单元相对matched all-none的三seed配对均值与样本标准差，以`sum(mean)-0.5*sqrt(sum(std^2))`作为风险调整的加法搜索代理；然后在参数增量、阶段相关attention运算代理、实测延迟和激活阶段数四重约束下穷举64个候选。all-none始终可选，全部稳健效用为负时不得强制选注意力。多阶段预测只是选择代理，被选架构后续必须用新seeds48/49/50从头确认。
+
+Coordinate Attention暂不进入首轮，避免同时扩大候选模块和验证选择机制；如果确认阶段成功，再按统一协议作为外部候选补入。当前RTX 3080 Ti延迟只是服务器筛选代理，不作为手机部署证据。
+
+### 19.2 已完成准备与硬件档案
+
+实现入口：
+
+- 模型/配置：`src/image_classification/models/mobilenetv2.py`、`config.py`、`factory.py`。
+- 枚举、运算代理和选择：`src/image_classification/selection/budget.py`。
+- 64候选剖析：`scripts/diagnostics/profile_stage_sparse_candidates.py`。
+- 10个实验YAML与三seed sweep：`configs/experiments/budget_probe_*.yaml`、`configs/sweeps/budget_stage_probe.yaml`。
+- 默认预算：`configs/budgets/stage_sparse_mobilenetv2.yaml`。
+- 唯一首批启动器：`scripts/launch_budget_stage_probe.py`，固定`jobs=1`，默认tag=`probe1`。
+- 批次完成后的选择器：`scripts/analysis/select_budget_stage_attention.py`。
+
+正式硬件档案为`artifacts/budget_selector/profiles/stage_sparse_rtx3080ti_paired_cuda_events_20260901_v5/profile.json`，SHA-256为`6f6363b5c933fc109dbd6dd67c1d2d9eaa4485756177b5244685e8dcfdd9069d`。它在空闲RTX3080Ti上对64个未训练候选做3轮随机顺序剖析；每个候选都与同轮、相邻测量的all-none成对归一化，并随机交换测量先后，每次含20次warmup和100次CUDA Event计时。all-none为2,236,682参数，189个配对基线anchor的中位数为3.9576ms；三档预算分别有5/22/58个可行候选。精简报告位于`reports/profiles/2026-09-01-stage-sparse-rtx3080ti/`。
+
+旧v1–v4档案全部保留但禁止用于选择：v1逐次CPU wall-clock同步；v2/v3虽使用CUDA Event，却用不同时间测量的候选/基线独立中位数相除，仍受GPU时钟漂移影响；v4首次采用配对协议，但其源码快照早于最终“效用完全平局优先all-none”契约。v5在看到任何校准准确率前冻结并与最终源码完全匹配。轻量候选三次配对值仍保留系统抖动，若最终候选靠近预算边界，确认前必须增加配对轮数；当前三档可行候选数在v2–v5均保持5/22/58。
+
+服务器验证记录：新增/修改文件Ruff通过，`compileall`通过，`check_model.py`共12种配置前向通过；完整测试为123 passed + 3 subtests passed。唯一warning仍是CUDA Graph集成测试首次创建cuBLAS context。另用30条合成validation-only记录端到端走通“清单验证→九单元统计→三档预算选择→确认计划”dry-run。启动器dry-run精确打印30个全新ID，全部200epoch、validation-only、CUDA Graph、`measure_inference=false`、串行且从头训练；dry-run和剖析均未创建训练目录。
+
+### 19.3 用户下一步只需启动
+
+启动前不要再修改`src/`、`scripts/`或`configs/`；runner会冻结并持续检查源码指纹。启动器还会拒绝已有训练进程、已有目标目录或重复锁。给用户的一行后台启动命令：
+
+```bash
+cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/launch_budget_stage_probe.py
+```
+
+该命令本身创建独立后台session并立即返回PID、日志路径和监控命令。不要额外加`nohup`，不要并发启动第二批，也不要在训练中运行GPU诊断。
+
+完成后先审计精确`cifar10_budget_stage_probe_serial_probe1_<timestamp>/manifest.json`的30组完成性、配置、划分、checkpoint和无test事实，再使用上面的v5 profile运行选择器。选择结果冻结后才准备seeds48/49/50确认清单；未经确认不进入CIFAR-100、第二backbone或最终test。

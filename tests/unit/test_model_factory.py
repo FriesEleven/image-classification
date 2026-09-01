@@ -14,6 +14,12 @@ from image_classification.models import build_model
         ExperimentConfig(model_type="se", aux_positions=(1, 2)),
         ExperimentConfig(model_type="hybrid", se_positions=(1, 2), cbam_positions=(15, 16)),
         ExperimentConfig(
+            model_type="stage_sparse",
+            eca_positions=(1, 2),
+            se_positions=(7, 8),
+            cbam_positions=(15, 16),
+        ),
+        ExperimentConfig(
             model_type="csgha",
             se_positions=(1, 2),
             cbam_positions=(7, 8),
@@ -52,3 +58,16 @@ def test_cifar100_csgha_has_100_class_output():
         output = model(torch.randn(2, 3, 32, 32))
 
     assert output.shape == (2, 100)
+
+
+def test_empty_stage_sparse_member_matches_baseline_initialization():
+    torch.manual_seed(71)
+    baseline = build_model(ExperimentConfig(model_type="mobilenetv2"))
+    torch.manual_seed(71)
+    sparse_none = build_model(ExperimentConfig(model_type="stage_sparse"))
+
+    assert baseline.state_dict().keys() == sparse_none.state_dict().keys()
+    assert all(
+        torch.equal(baseline.state_dict()[name], sparse_none.state_dict()[name])
+        for name in baseline.state_dict()
+    )

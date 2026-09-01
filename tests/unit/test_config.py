@@ -18,6 +18,38 @@ def test_cli_positions_are_parsed():
     assert config.aux_positions == (1, 2)
 
 
+def test_stage_sparse_positions_and_id_are_explicit():
+    config = load_config(
+        [
+            "--experiment_name", "selected",
+            "--model_type", "stage_sparse",
+            "--eca_positions", "1,2",
+            "--se_positions", "7,8",
+            "--cbam_positions", "15,16",
+        ]
+    )
+
+    assert config.eca_positions == (1, 2)
+    assert config.experiment_id == (
+        "selected_stage_sparse_se7-8_eca1-2_cbam15-16_cifar10"
+    )
+    assert config.architecture_version == "stage_sparse_v1_independent_se_eca_cbam"
+
+
+def test_stage_sparse_rejects_overlapping_attention_positions():
+    with pytest.raises(ValueError, match="must be disjoint"):
+        ExperimentConfig(
+            model_type="stage_sparse",
+            eca_positions=(1, 2),
+            se_positions=(2, 3),
+        )
+
+
+def test_eca_positions_are_not_silently_ignored_by_other_models():
+    with pytest.raises(ValueError, match="only supported"):
+        ExperimentConfig(model_type="mobilenetv2", eca_positions=(1, 2))
+
+
 def test_cifar100_config_sets_class_count_and_split():
     config = load_config(["--dataset", "cifar100", "--validation_size", "5000"])
 

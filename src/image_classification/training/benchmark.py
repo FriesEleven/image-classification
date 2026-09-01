@@ -58,11 +58,15 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
         "parameters_cross_stage_guidance": cross_stage_guidance,
         "parameters_se": se,
         "parameters_main_attention": (
-            cbam + guided_cbam
-            if config.model_type in {
-                "hybrid", "csgha", "hybrid_leaky", "csgha_v4", "csgha_v5", "csgha_v6",
-            }
-            else eca + cbam + se
+            eca + cbam + se
+            if config.model_type == "stage_sparse"
+            else (
+                cbam + guided_cbam
+                if config.model_type in {
+                    "hybrid", "csgha", "hybrid_leaky", "csgha_v4", "csgha_v5", "csgha_v6",
+                }
+                else eca + cbam + se
+            )
         ),
         "parameters_aux_attention": (
             se
@@ -81,6 +85,7 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
         "model_type": config.model_type,
         "architecture_version": config.architecture_version,
         "aux_positions": list(config.aux_positions),
+        "eca_positions": list(config.eca_positions),
         "se_positions": list(config.se_positions),
         "cbam_positions": list(config.cbam_positions),
         "guidance_position": config.guidance_position,

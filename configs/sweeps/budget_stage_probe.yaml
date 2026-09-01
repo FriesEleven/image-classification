@@ -1,0 +1,21 @@
+name: cifar10_budget_stage_probe_serial
+description: >-
+  Validation-only calibration for budget-aware stage allocation. Compare the
+  all-none MobileNetV2 member with singleton ECA, SE and CBAM packets at
+  shallow (1-2), middle (7-8) and deep (15-16) stages. Use paired development
+  seeds 45/46/47, train every run from scratch and execute serially because
+  prior two-process CUDA Graph plus AMP batches showed random native SIGABRT.
+  Per-run latency is disabled; all 64 candidate architectures are profiled
+  separately on an idle GPU before training.
+seeds: [45, 46, 47]
+experiments:
+  - configs/experiments/budget_probe_none.yaml
+  - configs/experiments/budget_probe_eca_shallow.yaml
+  - configs/experiments/budget_probe_eca_middle.yaml
+  - configs/experiments/budget_probe_eca_deep.yaml
+  - configs/experiments/budget_probe_se_shallow.yaml
+  - configs/experiments/budget_probe_se_middle.yaml
+  - configs/experiments/budget_probe_se_deep.yaml
+  - configs/experiments/budget_probe_cbam_shallow.yaml
+  - configs/experiments/budget_probe_cbam_middle.yaml
+  - configs/experiments/budget_probe_cbam_deep.yaml

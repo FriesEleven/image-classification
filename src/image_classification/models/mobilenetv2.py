@@ -5,6 +5,7 @@ from torch import nn
 from torchvision.models import mobilenet_v2
 
 from .attention import CBAM, CrossStageGuidedCBAM, SEBlock
+from .eca import ECALayer
 
 
 def _output_channels(module: nn.Module) -> int | None:
@@ -73,6 +74,54 @@ class SEMobileNetV2(_SparseAttentionMobileNetV2):
         super().__init__(num_classes, width_mult, tuple(aux_positions))
         self.aux_positions = self.positions
         self._attach(SEBlock)
+
+
+class StageSparseAttentionMobileNetV2(nn.Module):
+    """MobileNetV2 with one independently selected attention type per feature layer."""
+
+    def __init__(
+        self,
+        num_classes: int = 10,
+        width_mult: float = 1.0,
+        eca_positions: tuple[int, ...] = (),
+        se_positions: tuple[int, ...] = (),
+        cbam_positions: tuple[int, ...] = (),
+    ):
+        super().__init__()
+        position_groups = {
+            "eca": tuple(eca_positions),
+            "se": tuple(se_positions),
+            "cbam": tuple(cbam_positions),
+        }
+        all_positions = tuple(position for positions in position_groups.values() for position in positions)
+        if len(all_positions) != len(set(all_positions)):
+            raise ValueError("Stage-sparse attention positions must be disjoint")
+
+        self.model = mobilenet_v2(weights=None, width_mult=width_mult)
+        self.model.classifier[1] = nn.Linear(self.model.last_channel, num_classes)
+        self.eca_positions = position_groups["eca"]
+        self.se_positions = position_groups["se"]
+        self.cbam_positions = position_groups["cbam"]
+        self.attention_kinds: dict[int, str] = {}
+
+        factories = {"eca": ECALayer, "se": SEBlock, "cbam": CBAM}
+        for kind, positions in position_groups.items():
+            for index in positions:
+                module = self.model.features[index]
+                channels = _output_channels(module)
+                if channels is None:
+                    raise ValueError(f"Cannot determine output channels for feature layer {index}")
+                module.stage_attention = factories[kind](channels)
+                self.attention_kinds[index] = kind
+
+    def forward(self, inputs: torch.Tensor) -> torch.Tensor:
+        outputs = inputs
+        for index, module in enumerate(self.model.features):
+            outputs = module(outputs)
+            if index in self.attention_kinds:
+                outputs = module.stage_attention(outputs)
+        outputs = outputs.mean((2, 3))
+        return self.model.classifier(outputs)
 
 
 class HybridAttentionMobileNetV2(nn.Module):

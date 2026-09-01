@@ -11,6 +11,7 @@ from .mobilenetv2 import (
     CSGHAMobileNetV2,
     HybridAttentionMobileNetV2,
     SEMobileNetV2,
+    StageSparseAttentionMobileNetV2,
 )
 
 
@@ -23,6 +24,13 @@ def build_model(config: ExperimentConfig) -> nn.Module:
         return CBAMMobileNetV2(num_classes=config.num_classes, aux_positions=config.aux_positions)
     if config.model_type == "se":
         return SEMobileNetV2(num_classes=config.num_classes, aux_positions=config.aux_positions)
+    if config.model_type == "stage_sparse":
+        return StageSparseAttentionMobileNetV2(
+            num_classes=config.num_classes,
+            eca_positions=config.eca_positions,
+            se_positions=config.se_positions,
+            cbam_positions=config.cbam_positions,
+        )
     if config.model_type in {"hybrid", "hybrid_leaky"}:
         return HybridAttentionMobileNetV2(
             num_classes=config.num_classes,

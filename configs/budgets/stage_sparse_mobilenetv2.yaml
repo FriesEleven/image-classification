@@ -1,0 +1,18 @@
+schema_version: 1
+risk_penalty: 0.5
+budgets:
+  - name: ultra_light
+    max_parameter_delta: 512
+    max_attention_operations: 100000
+    max_latency_overhead_percent: 15.0
+    max_active_stages: 1
+  - name: balanced
+    max_parameter_delta: 2000
+    max_attention_operations: 250000
+    max_latency_overhead_percent: 30.0
+    max_active_stages: 2
+  - name: relaxed
+    max_parameter_delta: 8000
+    max_attention_operations: 500000
+    max_latency_overhead_percent: 50.0
+    max_active_stages: 3

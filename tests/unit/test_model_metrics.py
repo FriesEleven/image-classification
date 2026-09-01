@@ -31,3 +31,23 @@ def test_csgha_metrics_separate_guided_attention_and_projection_parameters():
         + metrics["parameters_guided_cbam"]
         + metrics["parameters_se"]
     )
+
+
+def test_stage_sparse_metrics_count_all_selected_attention_as_main():
+    config = ExperimentConfig(
+        model_type="stage_sparse",
+        eca_positions=(1, 2),
+        se_positions=(7, 8),
+        cbam_positions=(15, 16),
+    )
+
+    metrics = model_metrics(build_model(config), config)
+
+    assert metrics["num_eca_modules"] == 2
+    assert metrics["num_se_modules"] == 2
+    assert metrics["num_cbam_modules"] == 2
+    assert metrics["eca_positions"] == [1, 2]
+    assert metrics["parameters_aux_attention"] == 0
+    assert metrics["parameters_main_attention"] == (
+        metrics["parameters_eca"] + metrics["parameters_se"] + metrics["parameters_cbam"]
+    )
