@@ -63,3 +63,15 @@ def test_v5_diagnostic_formula_matches_rms_normalized_model_path():
     raw, bounded, contribution = projected_guidance(module, torch.randn(4, 24))
     assert torch.allclose(bounded, _rms_normalize_channels(raw).tanh())
     assert torch.count_nonzero(contribution) == 0
+
+
+def test_v6_diagnostic_formula_matches_capped_rms_model_path():
+    config = ExperimentConfig(
+        model_type="csgha_v6", se_positions=(1, 2), cbam_positions=(7, 8),
+    )
+    module = next(iter(channel_modules(build_model(config), "csgha_v6").values()))
+    module.guidance_scale.data.fill_(10.0)
+    raw, bounded, contribution = projected_guidance(module, torch.randn(4, 24))
+    assert torch.allclose(bounded, _rms_normalize_channels(raw).tanh())
+    assert contribution.abs().max() <= 0.25
+    assert torch.allclose(contribution, 0.25 * module.guidance_scale.tanh() * bounded)

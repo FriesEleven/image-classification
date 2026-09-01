@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "decision_date": "2026-09-01",
+  "route": "csgha_additive_channel_logit_guidance",
+  "status": "stopped_negative_result",
+  "next_version_planned": false,
+  "official_test_evaluated_for_v4_v5_v6": false,
+  "versions": [
+    {
+      "version": "v3",
+      "paired_delta_pp": [0.22, -0.34, 0.34],
+      "paired_mean_pp": 0.073,
+      "wins": 2
+    },
+    {
+      "version": "v4",
+      "paired_delta_pp": [0.56, 0.08, -0.22],
+      "paired_mean_pp": 0.14,
+      "paired_sample_std_pp": 0.393,
+      "wins": 2
+    },
+    {
+      "version": "v5",
+      "paired_delta_pp": [-0.26, -0.64, 0.02],
+      "paired_mean_pp": -0.293,
+      "paired_sample_std_pp": 0.331,
+      "wins": 1
+    },
+    {
+      "version": "v6",
+      "paired_delta_pp": [-0.12, -0.14, -0.20],
+      "paired_mean_pp": -0.153,
+      "paired_sample_std_pp": 0.042,
+      "wins": 0,
+      "guidance_zero_delta_mean_pp": -0.18,
+      "permutation_delta_mean_pp": -0.24444444444445423,
+      "deep_zero_delta_mean_pp": -1.5533333333333363,
+      "matched_control_deep_zero_delta_mean_pp": -10.466666666666669,
+      "audit_manifest_sha256": "44b5903955ea8b2aa7a68b1887d726dc0a06c632d85235092f8df4f3ab0866bf",
+      "audit_results_sha256": "ae1af2caafe54881927facf66e62b833c0c2857a58f94a8fdfef601f3dd1cf2c",
+      "diagnostic_manifest_sha256": "83453bc7b9088f403b25a114d166c4803c48449b983f72908e56f870cfbe0313"
+    }
+  ],
+  "pivot": "budget_aware_stage_sparse_attention_deployment"
+}

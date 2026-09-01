@@ -1,4 +1,4 @@
-"""Version-matched checkpoint interventions for CSGHA-v4/v5 and matched controls."""
+"""Version-matched checkpoint interventions for CSGHA-v4/v5/v6 and controls."""
 
 import json
 from pathlib import Path
@@ -73,7 +73,7 @@ def loaders_from_saved_split(config: dict, run_directory: Path, batch_size: int,
 
 
 def channel_modules(model, model_type: str):
-    guided = model_type in {"csgha_v4", "csgha_v5"}
+    guided = model_type in {"csgha_v4", "csgha_v5", "csgha_v6"}
     suffix = "guided_cbam.channel_attention" if guided else "cbam.channel_attention"
     modules = {name: module for name, module in model.named_modules() if name.endswith(suffix)}
     if len(modules) != 2:
@@ -132,7 +132,7 @@ def _statistics(storage: dict, guided: bool) -> dict:
 
 
 def run_condition(model, loader, device, model_type, mode, descriptors=None, means=None, collect_stats=False):
-    guided = model_type in {"csgha_v4", "csgha_v5"}
+    guided = model_type in {"csgha_v4", "csgha_v5", "csgha_v6"}
     modules = channel_modules(model, model_type)
     storage = {name: {} for name in modules}
     handles = []
@@ -255,7 +255,7 @@ def diagnose_retry1_run(row: dict, output: Path, source_snapshot: Path, batch_si
     }
     planned = [("deep_zero", "deep_zero", None)]
     means = {}
-    if config.model_type in {"csgha_v4", "csgha_v5"}:
+    if config.model_type in {"csgha_v4", "csgha_v5", "csgha_v6"}:
         train_descriptors = collect_descriptors(model, train_loader, device)
         validation_descriptors = collect_descriptors(model, validation_loader, device)
         with torch.inference_mode():
@@ -296,9 +296,9 @@ def diagnose_retry1_run(row: dict, output: Path, source_snapshot: Path, batch_si
         "validation_index_sha256": array_sha256(validation_indices),
         "mean_source": "all 45000 saved training indices; evaluation transform; no labels",
         "permutation_seeds": [7301, 7302, 7303]
-        if config.model_type in {"csgha_v4", "csgha_v5"} else [],
+        if config.model_type in {"csgha_v4", "csgha_v5", "csgha_v6"} else [],
         "permutation_scope": "full saved validation split; no fixed points"
-        if config.model_type in {"csgha_v4", "csgha_v5"} else None,
+        if config.model_type in {"csgha_v4", "csgha_v5", "csgha_v6"} else None,
         "batch_size": batch_size, "precision": "float32; no autocast",
         "statistics": statistics, "conditions": conditions,
         "paired_arrays": str(array_path), "paired_arrays_sha256": sha256(array_path),

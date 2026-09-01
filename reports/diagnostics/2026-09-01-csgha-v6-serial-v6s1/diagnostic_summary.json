@@ -1,0 +1,924 @@
+{
+  "schema_version": 1,
+  "manifest_sha256": "83453bc7b9088f403b25a114d166c4803c48449b983f72908e56f870cfbe0313",
+  "audit_sha256": "ae1af2caafe54881927facf66e62b833c0c2857a58f94a8fdfef601f3dd1cf2c",
+  "official_test_evaluated": false,
+  "rows": [
+    {
+      "model_type": "csgha_v6",
+      "seed": 42,
+      "original": 87.76,
+      "deep_zero": 86.98,
+      "deep_zero_delta_pp": -0.7800000000000029,
+      "guidance_zero": 87.53999999999999,
+      "guidance_zero_delta_pp": -0.22000000000000908,
+      "guidance_removal_prediction_changes": 84,
+      "guidance_removal_hurts": 39,
+      "guidance_removal_helps": 28,
+      "mean_descriptor": 87.66000000000001,
+      "mean_descriptor_delta_pp": -0.10000000000000009,
+      "mean_contribution": 87.7,
+      "mean_contribution_delta_pp": -0.060000000000004494,
+      "permutations": [
+        87.46000000000001,
+        87.5,
+        87.68
+      ],
+      "permutation_mean": 87.54666666666667,
+      "permutation_delta_pp": -0.21333333333333826,
+      "statistics": {
+        "model.features.7.guided_cbam.channel_attention": {
+          "deep": {
+            "abs_mean": 2.5215994169782245,
+            "abs_max": 45.80768585205078,
+            "sample_std_per_channel_mean": 2.0370082338049214,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.70108125,
+            "constant_channel_fraction": 0.0
+          },
+          "gate": {
+            "abs_mean": 0.6778614389191094,
+            "abs_max": 1.0,
+            "sample_std_per_channel_mean": 0.21223343856622667,
+            "zero_fraction": 0.0,
+            "positive_fraction": 1.0,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_pre_activation": {
+            "abs_mean": 7.410012700052932,
+            "abs_max": 31.8564395904541,
+            "sample_std_per_channel_mean": 4.412717187952915,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.04875,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_pre_activation": {
+            "abs_mean": 10.563139929948374,
+            "abs_max": 35.45476531982422,
+            "sample_std_per_channel_mean": 5.169199457464731,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.01775,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_post_activation": {
+            "abs_mean": 0.8133702445964897,
+            "abs_max": 9.4617919921875,
+            "sample_std_per_channel_mean": 0.6945764161500438,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.04875,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_post_activation": {
+            "abs_mean": 1.0937616003149044,
+            "abs_max": 13.43014144897461,
+            "sample_std_per_channel_mean": 0.6846630933220219,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.01775,
+            "constant_channel_fraction": 0.0
+          },
+          "raw": {
+            "abs_mean": 24.92942279742951,
+            "abs_max": 231.1453094482422,
+            "sample_std_per_channel_mean": 30.326977934608006,
+            "zero_fraction": 0.0014,
+            "positive_fraction": 0.521190625,
+            "constant_channel_fraction": 0.0
+          },
+          "bounded": {
+            "abs_mean": 0.5513265966071982,
+            "abs_max": 0.999754011631012,
+            "sample_std_per_channel_mean": 0.5775435842795115,
+            "zero_fraction": 0.0014,
+            "positive_fraction": 0.521190625,
+            "constant_channel_fraction": 0.0
+          },
+          "contribution": {
+            "abs_mean": 0.13783163846613128,
+            "abs_max": 0.2499384880065918,
+            "sample_std_per_channel_mean": 0.14438588509806538,
+            "zero_fraction": 0.0014,
+            "positive_fraction": 0.477409375,
+            "constant_channel_fraction": 0.0
+          },
+          "sigmoid_saturation_fraction": 0.33323436975479126,
+          "tanh_saturation_fraction_abs_gt_099": 0.006384375039488077
+        },
+        "model.features.8.guided_cbam.channel_attention": {
+          "deep": {
+            "abs_mean": 0.3553376338740055,
+            "abs_max": 9.037185668945312,
+            "sample_std_per_channel_mean": 0.23247175385145358,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.48595,
+            "constant_channel_fraction": 0.0
+          },
+          "gate": {
+            "abs_mean": 0.5135546460821361,
+            "abs_max": 0.9962525367736816,
+            "sample_std_per_channel_mean": 0.06477317002311439,
+            "zero_fraction": 0.0,
+            "positive_fraction": 1.0,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_pre_activation": {
+            "abs_mean": 2.3506658232368527,
+            "abs_max": 8.48768424987793,
+            "sample_std_per_channel_mean": 1.1475789713748106,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.02605,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_pre_activation": {
+            "abs_mean": 2.792489036863856,
+            "abs_max": 9.24334716796875,
+            "sample_std_per_channel_mean": 1.5599213777089553,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.0553,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_post_activation": {
+            "abs_mean": 0.2450797789285887,
+            "abs_max": 2.042362928390503,
+            "sample_std_per_channel_mean": 0.1571240093596534,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.02605,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_post_activation": {
+            "abs_mean": 0.31764167887553924,
+            "abs_max": 5.103363990783691,
+            "sample_std_per_channel_mean": 0.30061751652852375,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.0553,
+            "constant_channel_fraction": 0.0
+          },
+          "raw": {
+            "abs_mean": 33.124635941673496,
+            "abs_max": 220.32981872558594,
+            "sample_std_per_channel_mean": 37.78262569654444,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.490840625,
+            "constant_channel_fraction": 0.0
+          },
+          "bounded": {
+            "abs_mean": 0.5655861160068336,
+            "abs_max": 0.9989739656448364,
+            "sample_std_per_channel_mean": 0.5810235158379891,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.490840625,
+            "constant_channel_fraction": 0.0
+          },
+          "contribution": {
+            "abs_mean": 0.1413965290017084,
+            "abs_max": 0.2497434914112091,
+            "sample_std_per_channel_mean": 0.14525587895949726,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.509159375,
+            "constant_channel_fraction": 0.0
+          },
+          "sigmoid_saturation_fraction": 0.0015843750443309546,
+          "tanh_saturation_fraction_abs_gt_099": 0.00341562507674098
+        }
+      },
+      "checkpoint_sha256": "f95fc81665468a4722190b210b422c624966c9998f94569a01df75751933435f",
+      "paired_arrays_sha256": "40fa352372f6bb12762c4b2e862b9158fb28c7b5a6c8292863b3eba1e372d82e"
+    },
+    {
+      "model_type": "csgha_v6",
+      "seed": 43,
+      "original": 87.68,
+      "deep_zero": 86.52,
+      "deep_zero_delta_pp": -1.1600000000000055,
+      "guidance_zero": 87.44,
+      "guidance_zero_delta_pp": -0.24000000000000687,
+      "guidance_removal_prediction_changes": 91,
+      "guidance_removal_hurts": 41,
+      "guidance_removal_helps": 29,
+      "mean_descriptor": 87.42,
+      "mean_descriptor_delta_pp": -0.26000000000000467,
+      "mean_contribution": 87.52,
+      "mean_contribution_delta_pp": -0.16000000000000458,
+      "permutations": [
+        87.28,
+        87.56,
+        87.32
+      ],
+      "permutation_mean": 87.38666666666666,
+      "permutation_delta_pp": -0.29333333333335077,
+      "statistics": {
+        "model.features.7.guided_cbam.channel_attention": {
+          "deep": {
+            "abs_mean": 1.7620858577597065,
+            "abs_max": 36.486358642578125,
+            "sample_std_per_channel_mean": 1.8550090503108885,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.60053125,
+            "constant_channel_fraction": 0.0
+          },
+          "gate": {
+            "abs_mean": 0.5848561625662242,
+            "abs_max": 1.0,
+            "sample_std_per_channel_mean": 0.21801823443812854,
+            "zero_fraction": 0.0,
+            "positive_fraction": 1.0,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_pre_activation": {
+            "abs_mean": 5.575515630048886,
+            "abs_max": 23.010509490966797,
+            "sample_std_per_channel_mean": 3.6391344626386672,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.0957,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_pre_activation": {
+            "abs_mean": 9.52944115541801,
+            "abs_max": 28.53972625732422,
+            "sample_std_per_channel_mean": 4.433971212887086,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.02385,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_post_activation": {
+            "abs_mean": 0.754735541311022,
+            "abs_max": 10.811246871948242,
+            "sample_std_per_channel_mean": 0.9388353448839691,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.0957,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_post_activation": {
+            "abs_mean": 0.9969736762965055,
+            "abs_max": 9.335887908935547,
+            "sample_std_per_channel_mean": 0.6287244482192161,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.02385,
+            "constant_channel_fraction": 0.0
+          },
+          "raw": {
+            "abs_mean": 27.916607060223644,
+            "abs_max": 232.44476318359375,
+            "sample_std_per_channel_mean": 33.37845547643678,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.53276875,
+            "constant_channel_fraction": 0.0
+          },
+          "bounded": {
+            "abs_mean": 0.5755726104252645,
+            "abs_max": 0.997379720211029,
+            "sample_std_per_channel_mean": 0.6037289668589169,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.53276875,
+            "constant_channel_fraction": 0.0
+          },
+          "contribution": {
+            "abs_mean": 0.14389315260631613,
+            "abs_max": 0.24934493005275726,
+            "sample_std_per_channel_mean": 0.15093224171472922,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.53276875,
+            "constant_channel_fraction": 0.0
+          },
+          "sigmoid_saturation_fraction": 0.16805000603199005,
+          "tanh_saturation_fraction_abs_gt_099": 0.003700000001117587
+        },
+        "model.features.8.guided_cbam.channel_attention": {
+          "deep": {
+            "abs_mean": 0.5075370461125441,
+            "abs_max": 11.038106918334961,
+            "sample_std_per_channel_mean": 0.2940134780898463,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.6017,
+            "constant_channel_fraction": 0.0
+          },
+          "gate": {
+            "abs_mean": 0.5475455515833102,
+            "abs_max": 0.9985861778259277,
+            "sample_std_per_channel_mean": 0.07482258191425831,
+            "zero_fraction": 0.0,
+            "positive_fraction": 1.0,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_pre_activation": {
+            "abs_mean": 2.2401137648908422,
+            "abs_max": 8.84762191772461,
+            "sample_std_per_channel_mean": 1.2130386649175382,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.0499,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_pre_activation": {
+            "abs_mean": 3.246138469299674,
+            "abs_max": 12.898768424987793,
+            "sample_std_per_channel_mean": 1.6218509700959265,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.04395,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_post_activation": {
+            "abs_mean": 0.25054083025560686,
+            "abs_max": 4.2556047439575195,
+            "sample_std_per_channel_mean": 0.20835722464832598,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.0499,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_post_activation": {
+            "abs_mean": 0.3473269009168782,
+            "abs_max": 3.413788080215454,
+            "sample_std_per_channel_mean": 0.24627848599732835,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.04395,
+            "constant_channel_fraction": 0.0
+          },
+          "raw": {
+            "abs_mean": 24.994307496090066,
+            "abs_max": 176.0030975341797,
+            "sample_std_per_channel_mean": 29.31121255000631,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.46325625,
+            "constant_channel_fraction": 0.0
+          },
+          "bounded": {
+            "abs_mean": 0.5672652130376798,
+            "abs_max": 0.9987691044807434,
+            "sample_std_per_channel_mean": 0.5956996073085383,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.46325625,
+            "constant_channel_fraction": 0.0
+          },
+          "contribution": {
+            "abs_mean": 0.14181630325941996,
+            "abs_max": 0.24969227612018585,
+            "sample_std_per_channel_mean": 0.14892490182713458,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.53674375,
+            "constant_channel_fraction": 0.0
+          },
+          "sigmoid_saturation_fraction": 0.0057875001803040504,
+          "tanh_saturation_fraction_abs_gt_099": 0.005631249863654375
+        }
+      },
+      "checkpoint_sha256": "a80a06c997f683fb621112bf4446686baf906775fc3c6bb2903da83f40a701c8",
+      "paired_arrays_sha256": "47bc1ac98aa580c5922f54f1465e18bd6a53fb4bb9de32f59ba46deb2d8b1ae1"
+    },
+    {
+      "model_type": "csgha_v6",
+      "seed": 44,
+      "original": 87.92,
+      "deep_zero": 85.2,
+      "deep_zero_delta_pp": -2.72,
+      "guidance_zero": 87.83999999999999,
+      "guidance_zero_delta_pp": -0.08000000000000229,
+      "guidance_removal_prediction_changes": 64,
+      "guidance_removal_hurts": 29,
+      "guidance_removal_helps": 25,
+      "mean_descriptor": 87.58,
+      "mean_descriptor_delta_pp": -0.33999999999999586,
+      "mean_contribution": 87.8,
+      "mean_contribution_delta_pp": -0.11999999999999789,
+      "permutations": [
+        87.6,
+        87.72,
+        87.76
+      ],
+      "permutation_mean": 87.69333333333333,
+      "permutation_delta_pp": -0.22666666666667368,
+      "statistics": {
+        "model.features.7.guided_cbam.channel_attention": {
+          "deep": {
+            "abs_mean": 2.7519023228909045,
+            "abs_max": 56.986114501953125,
+            "sample_std_per_channel_mean": 3.723714100581179,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.6419625,
+            "constant_channel_fraction": 0.0
+          },
+          "gate": {
+            "abs_mean": 0.6155986236273958,
+            "abs_max": 1.0,
+            "sample_std_per_channel_mean": 0.2808232118057651,
+            "zero_fraction": 0.0,
+            "positive_fraction": 1.0,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_pre_activation": {
+            "abs_mean": 7.103693447763473,
+            "abs_max": 22.582847595214844,
+            "sample_std_per_channel_mean": 4.559651258090145,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.0831,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_pre_activation": {
+            "abs_mean": 10.800676603391766,
+            "abs_max": 34.97417068481445,
+            "sample_std_per_channel_mean": 5.3920172297171876,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.03985,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_post_activation": {
+            "abs_mean": 1.0232355537773143,
+            "abs_max": 15.629697799682617,
+            "sample_std_per_channel_mean": 1.2618418266392453,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.0831,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_post_activation": {
+            "abs_mean": 1.2237188074842387,
+            "abs_max": 14.208633422851562,
+            "sample_std_per_channel_mean": 0.9949445979805259,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.03985,
+            "constant_channel_fraction": 0.0
+          },
+          "raw": {
+            "abs_mean": 25.309086383475847,
+            "abs_max": 165.47169494628906,
+            "sample_std_per_channel_mean": 29.486091277711388,
+            "zero_fraction": 0.0002,
+            "positive_fraction": 0.472071875,
+            "constant_channel_fraction": 0.0
+          },
+          "bounded": {
+            "abs_mean": 0.5709642913770314,
+            "abs_max": 0.9982938170433044,
+            "sample_std_per_channel_mean": 0.5929993998392178,
+            "zero_fraction": 0.0002,
+            "positive_fraction": 0.472071875,
+            "constant_channel_fraction": 0.0
+          },
+          "contribution": {
+            "abs_mean": 0.14274106180159402,
+            "abs_max": 0.24957343935966492,
+            "sample_std_per_channel_mean": 0.14824983874431258,
+            "zero_fraction": 0.0002,
+            "positive_fraction": 0.527728125,
+            "constant_channel_fraction": 0.0
+          },
+          "sigmoid_saturation_fraction": 0.2987000048160553,
+          "tanh_saturation_fraction_abs_gt_099": 0.0035562498960644007
+        },
+        "model.features.8.guided_cbam.channel_attention": {
+          "deep": {
+            "abs_mean": 4.156448458696766,
+            "abs_max": 45.81642150878906,
+            "sample_std_per_channel_mean": 1.796354935735109,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.758671875,
+            "constant_channel_fraction": 0.0
+          },
+          "gate": {
+            "abs_mean": 0.7435872581785434,
+            "abs_max": 1.0,
+            "sample_std_per_channel_mean": 0.15080232788984396,
+            "zero_fraction": 0.0,
+            "positive_fraction": 1.0,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_pre_activation": {
+            "abs_mean": 8.424548978966474,
+            "abs_max": 28.133188247680664,
+            "sample_std_per_channel_mean": 3.9697490131023736,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.0106,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_pre_activation": {
+            "abs_mean": 12.428893573141098,
+            "abs_max": 36.14596176147461,
+            "sample_std_per_channel_mean": 5.324737193557236,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.0074,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_post_activation": {
+            "abs_mean": 0.8558548287229205,
+            "abs_max": 8.911307334899902,
+            "sample_std_per_channel_mean": 0.4591919481666127,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.0106,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_post_activation": {
+            "abs_mean": 1.2556529955835896,
+            "abs_max": 11.357002258300781,
+            "sample_std_per_channel_mean": 0.6027792652483299,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.0074,
+            "constant_channel_fraction": 0.0
+          },
+          "raw": {
+            "abs_mean": 16.77981995016705,
+            "abs_max": 216.93186950683594,
+            "sample_std_per_channel_mean": 19.965128246150684,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.45585625,
+            "constant_channel_fraction": 0.0
+          },
+          "bounded": {
+            "abs_mean": 0.4979437330322348,
+            "abs_max": 0.9994478821754456,
+            "sample_std_per_channel_mean": 0.5073417032998125,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.45585625,
+            "constant_channel_fraction": 0.0
+          },
+          "contribution": {
+            "abs_mean": 0.12448592375603143,
+            "abs_max": 0.2498619556427002,
+            "sample_std_per_channel_mean": 0.1268354163262131,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.54414375,
+            "constant_channel_fraction": 0.0
+          },
+          "sigmoid_saturation_fraction": 0.4661000072956085,
+          "tanh_saturation_fraction_abs_gt_099": 0.011171874590218067
+        }
+      },
+      "checkpoint_sha256": "e2ef13684c1365f4cb7ce0654a3a7f3cfa8e806981c477110a65416e35306fea",
+      "paired_arrays_sha256": "0ac033a80691ec7a1dc920f268f074aa771f7a68b2aa07e2cdef19214c12d01f"
+    },
+    {
+      "model_type": "hybrid_leaky",
+      "seed": 42,
+      "original": 87.88,
+      "deep_zero": 71.48,
+      "deep_zero_delta_pp": -16.400000000000002,
+      "guidance_zero": null,
+      "guidance_zero_delta_pp": null,
+      "guidance_removal_prediction_changes": null,
+      "guidance_removal_hurts": null,
+      "guidance_removal_helps": null,
+      "mean_descriptor": null,
+      "mean_descriptor_delta_pp": null,
+      "mean_contribution": null,
+      "mean_contribution_delta_pp": null,
+      "permutations": [],
+      "permutation_mean": null,
+      "permutation_delta_pp": null,
+      "statistics": {
+        "model.features.7.cbam.channel_attention": {
+          "deep": {
+            "abs_mean": 5.546610683340695,
+            "abs_max": 106.71974182128906,
+            "sample_std_per_channel_mean": 5.02812575531796,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.7678375,
+            "constant_channel_fraction": 0.0
+          },
+          "gate": {
+            "abs_mean": 0.749587776360027,
+            "abs_max": 1.0,
+            "sample_std_per_channel_mean": 0.26278850729685266,
+            "zero_fraction": 1.5625e-05,
+            "positive_fraction": 0.999984375,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_pre_activation": {
+            "abs_mean": 11.867501576211303,
+            "abs_max": 35.61662292480469,
+            "sample_std_per_channel_mean": 7.342310397689156,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.08465,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_pre_activation": {
+            "abs_mean": 18.708601902472974,
+            "abs_max": 46.14244079589844,
+            "sample_std_per_channel_mean": 8.388194078054559,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.02365,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_post_activation": {
+            "abs_mean": 1.5622439635023475,
+            "abs_max": 26.296907424926758,
+            "sample_std_per_channel_mean": 1.891062341888568,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.08465,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_post_activation": {
+            "abs_mean": 1.9655067726840847,
+            "abs_max": 22.615829467773438,
+            "sample_std_per_channel_mean": 1.2598709528889314,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.02365,
+            "constant_channel_fraction": 0.0
+          },
+          "sigmoid_saturation_fraction": 0.6057656407356262
+        },
+        "model.features.8.cbam.channel_attention": {
+          "deep": {
+            "abs_mean": 32.54312354838846,
+            "abs_max": 307.1355285644531,
+            "sample_std_per_channel_mean": 17.25592487515966,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.86425,
+            "constant_channel_fraction": 0.0
+          },
+          "gate": {
+            "abs_mean": 0.8641899154485462,
+            "abs_max": 1.0,
+            "sample_std_per_channel_mean": 0.15547728231722266,
+            "zero_fraction": 0.00499375,
+            "positive_fraction": 0.99500625,
+            "constant_channel_fraction": 0.09375
+          },
+          "avg_hidden_pre_activation": {
+            "abs_mean": 31.409574886600673,
+            "abs_max": 102.82982635498047,
+            "sample_std_per_channel_mean": 17.67990690847962,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.08845,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_pre_activation": {
+            "abs_mean": 58.033764483299855,
+            "abs_max": 188.02386474609375,
+            "sample_std_per_channel_mean": 22.12237899655902,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.02275,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_post_activation": {
+            "abs_mean": 4.201663691834727,
+            "abs_max": 56.7777099609375,
+            "sample_std_per_channel_mean": 5.294339533056,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.08845,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_post_activation": {
+            "abs_mean": 6.097884961011598,
+            "abs_max": 42.954288482666016,
+            "sample_std_per_channel_mean": 3.5385850788841076,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.02275,
+            "constant_channel_fraction": 0.0
+          },
+          "sigmoid_saturation_fraction": 0.9510031342506409
+        }
+      },
+      "checkpoint_sha256": "8c73154b319381ca916a6c91d2bd422c989e1f5a27f426caebbbc02404ae5464",
+      "paired_arrays_sha256": "f9a3827a4ca1f07e030191c8866a91a790f44ee4b9fc97693ae9bd438c598d25"
+    },
+    {
+      "model_type": "hybrid_leaky",
+      "seed": 43,
+      "original": 87.82,
+      "deep_zero": 78.97999999999999,
+      "deep_zero_delta_pp": -8.840000000000003,
+      "guidance_zero": null,
+      "guidance_zero_delta_pp": null,
+      "guidance_removal_prediction_changes": null,
+      "guidance_removal_hurts": null,
+      "guidance_removal_helps": null,
+      "mean_descriptor": null,
+      "mean_descriptor_delta_pp": null,
+      "mean_contribution": null,
+      "mean_contribution_delta_pp": null,
+      "permutations": [],
+      "permutation_mean": null,
+      "permutation_delta_pp": null,
+      "statistics": {
+        "model.features.7.cbam.channel_attention": {
+          "deep": {
+            "abs_mean": 5.171566030167577,
+            "abs_max": 107.82443237304688,
+            "sample_std_per_channel_mean": 7.067820705678782,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.68333125,
+            "constant_channel_fraction": 0.0
+          },
+          "gate": {
+            "abs_mean": 0.6683499376676602,
+            "abs_max": 1.0,
+            "sample_std_per_channel_mean": 0.33360978540242764,
+            "zero_fraction": 5.9375e-05,
+            "positive_fraction": 0.999940625,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_pre_activation": {
+            "abs_mean": 8.926087746056169,
+            "abs_max": 33.38568878173828,
+            "sample_std_per_channel_mean": 6.35406180491942,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.14145,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_pre_activation": {
+            "abs_mean": 15.117722675041854,
+            "abs_max": 44.57567596435547,
+            "sample_std_per_channel_mean": 7.71972784988906,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.05035,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_post_activation": {
+            "abs_mean": 1.700630953251893,
+            "abs_max": 23.379432678222656,
+            "sample_std_per_channel_mean": 2.5329832249398483,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.14145,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_post_activation": {
+            "abs_mean": 1.7780622140921696,
+            "abs_max": 22.504419326782227,
+            "sample_std_per_channel_mean": 1.7213433772938882,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.05035,
+            "constant_channel_fraction": 0.0
+          },
+          "sigmoid_saturation_fraction": 0.5531562566757202
+        },
+        "model.features.8.cbam.channel_attention": {
+          "deep": {
+            "abs_mean": 11.437697973773387,
+            "abs_max": 210.00732421875,
+            "sample_std_per_channel_mean": 5.35050209761,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.811965625,
+            "constant_channel_fraction": 0.0
+          },
+          "gate": {
+            "abs_mean": 0.8132177213840501,
+            "abs_max": 1.0,
+            "sample_std_per_channel_mean": 0.15032396118555907,
+            "zero_fraction": 5e-05,
+            "positive_fraction": 0.99995,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_pre_activation": {
+            "abs_mean": 15.74226129514277,
+            "abs_max": 57.860862731933594,
+            "sample_std_per_channel_mean": 8.290783755549262,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.04945,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_pre_activation": {
+            "abs_mean": 26.381044107116757,
+            "abs_max": 82.21200561523438,
+            "sample_std_per_channel_mean": 10.860104836742796,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.01495,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_post_activation": {
+            "abs_mean": 1.847929858312381,
+            "abs_max": 35.75091552734375,
+            "sample_std_per_channel_mean": 1.8051671160705882,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.04945,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_post_activation": {
+            "abs_mean": 2.7267027632860583,
+            "abs_max": 48.434383392333984,
+            "sample_std_per_channel_mean": 1.5290270670865183,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.01495,
+            "constant_channel_fraction": 0.0
+          },
+          "sigmoid_saturation_fraction": 0.8359687328338623
+        }
+      },
+      "checkpoint_sha256": "6c3c9bd32212ec83aaedddce10064bfda2f7a2c5b8751b6daf28d7c087e50af4",
+      "paired_arrays_sha256": "b13a4271399a120efcf4403f100a9c7db021b3a38846a22e70592e8621e9f3a6"
+    },
+    {
+      "model_type": "hybrid_leaky",
+      "seed": 44,
+      "original": 88.12,
+      "deep_zero": 81.96,
+      "deep_zero_delta_pp": -6.159999999999998,
+      "guidance_zero": null,
+      "guidance_zero_delta_pp": null,
+      "guidance_removal_prediction_changes": null,
+      "guidance_removal_hurts": null,
+      "guidance_removal_helps": null,
+      "mean_descriptor": null,
+      "mean_descriptor_delta_pp": null,
+      "mean_contribution": null,
+      "mean_contribution_delta_pp": null,
+      "permutations": [],
+      "permutation_mean": null,
+      "permutation_delta_pp": null,
+      "statistics": {
+        "model.features.7.cbam.channel_attention": {
+          "deep": {
+            "abs_mean": 5.7926740796260905,
+            "abs_max": 84.53254699707031,
+            "sample_std_per_channel_mean": 6.541832684089039,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.689984375,
+            "constant_channel_fraction": 0.0
+          },
+          "gate": {
+            "abs_mean": 0.6782284948737912,
+            "abs_max": 1.0,
+            "sample_std_per_channel_mean": 0.33125911401766456,
+            "zero_fraction": 0.0,
+            "positive_fraction": 1.0,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_pre_activation": {
+            "abs_mean": 12.896288642347605,
+            "abs_max": 39.489288330078125,
+            "sample_std_per_channel_mean": 8.090042542177962,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.09465,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_pre_activation": {
+            "abs_mean": 19.326634669359027,
+            "abs_max": 55.03620910644531,
+            "sample_std_per_channel_mean": 9.539136439367432,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.03295,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_post_activation": {
+            "abs_mean": 1.7152116508076025,
+            "abs_max": 20.75218391418457,
+            "sample_std_per_channel_mean": 2.095677895973162,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.09465,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_post_activation": {
+            "abs_mean": 2.0454278952276685,
+            "abs_max": 17.968303680419922,
+            "sample_std_per_channel_mean": 1.4442311129982524,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.03295,
+            "constant_channel_fraction": 0.0
+          },
+          "sigmoid_saturation_fraction": 0.6344218850135803
+        },
+        "model.features.8.cbam.channel_attention": {
+          "deep": {
+            "abs_mean": 19.181847353687047,
+            "abs_max": 174.61370849609375,
+            "sample_std_per_channel_mean": 6.8221117673652305,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.8014625,
+            "constant_channel_fraction": 0.0
+          },
+          "gate": {
+            "abs_mean": 0.8031524725710618,
+            "abs_max": 1.0,
+            "sample_std_per_channel_mean": 0.1348953869957279,
+            "zero_fraction": 0.000146875,
+            "positive_fraction": 0.999853125,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_pre_activation": {
+            "abs_mean": 23.75754856223762,
+            "abs_max": 75.61207580566406,
+            "sample_std_per_channel_mean": 10.05659368078593,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.0153,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_pre_activation": {
+            "abs_mean": 36.699120283424854,
+            "abs_max": 111.12630462646484,
+            "sample_std_per_channel_mean": 13.10729438718558,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.0073,
+            "constant_channel_fraction": 0.0
+          },
+          "avg_hidden_post_activation": {
+            "abs_mean": 2.4822888987482807,
+            "abs_max": 30.963863372802734,
+            "sample_std_per_channel_mean": 1.5042172220942218,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.0153,
+            "constant_channel_fraction": 0.0
+          },
+          "max_hidden_post_activation": {
+            "abs_mean": 3.7183471098105887,
+            "abs_max": 27.011348724365234,
+            "sample_std_per_channel_mean": 1.54645169364836,
+            "zero_fraction": 0.0,
+            "positive_fraction": 0.0073,
+            "constant_channel_fraction": 0.0
+          },
+          "sigmoid_saturation_fraction": 0.9006812572479248
+        }
+      },
+      "checkpoint_sha256": "0a392d86be047f2c2b7b48d7164292ba0d42ef65eaeb1741cdbf570e56e087d1",
+      "paired_arrays_sha256": "8900ded3077b7d77585007a434262ebf4fd30dd05bb12db78c49abe57e87bb4b"
+    }
+  ],
+  "guided_guidance_zero_delta_mean_pp": -0.18000000000000607,
+  "guided_permutation_delta_mean_pp": -0.24444444444445423,
+  "guided_deep_zero_delta_mean_pp": -1.5533333333333363,
+  "control_deep_zero_delta_mean_pp": -10.466666666666669
+}

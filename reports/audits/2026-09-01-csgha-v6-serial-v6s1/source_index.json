@@ -1,0 +1,25 @@
+{
+  "snapshot_sha256": "ba31b09d56eb41f8fa740ea5e27066a688659d2af78ae77acca97d2677a56980",
+  "manifest": {
+    "path": "artifacts/sweeps/cifar10_csgha_v6_capped_matched_serial_v6s1_20260831_173039/manifest.json",
+    "sha256": "44b5903955ea8b2aa7a68b1887d726dc0a06c632d85235092f8df4f3ab0866bf",
+    "size_bytes": 29625
+  },
+  "checkpoint_hashes": {
+    "independent_leaky_se1-2_cbam7-8_serial_v6s1_seed42_hybrid_leaky_se1-2_cbam7-8_cifar10": "8c73154b319381ca916a6c91d2bd422c989e1f5a27f426caebbbc02404ae5464",
+    "independent_leaky_se1-2_cbam7-8_serial_v6s1_seed43_hybrid_leaky_se1-2_cbam7-8_cifar10": "6c3c9bd32212ec83aaedddce10064bfda2f7a2c5b8751b6daf28d7c087e50af4",
+    "independent_leaky_se1-2_cbam7-8_serial_v6s1_seed44_hybrid_leaky_se1-2_cbam7-8_cifar10": "0a392d86be047f2c2b7b48d7164292ba0d42ef65eaeb1741cdbf570e56e087d1",
+    "csgha_v6_capped_se1-2_cbam7-8_serial_v6s1_seed42_csgha_v6_se1-2_guide2_cbam7-8_cifar10": "f95fc81665468a4722190b210b422c624966c9998f94569a01df75751933435f",
+    "csgha_v6_capped_se1-2_cbam7-8_serial_v6s1_seed43_csgha_v6_se1-2_guide2_cbam7-8_cifar10": "a80a06c997f683fb621112bf4446686baf906775fc3c6bb2903da83f40a701c8",
+    "csgha_v6_capped_se1-2_cbam7-8_serial_v6s1_seed44_csgha_v6_se1-2_guide2_cbam7-8_cifar10": "e2ef13684c1365f4cb7ce0654a3a7f3cfa8e806981c477110a65416e35306fea"
+  },
+  "split_hashes": {
+    "independent_leaky_se1-2_cbam7-8_serial_v6s1_seed42_hybrid_leaky_se1-2_cbam7-8_cifar10": "25d918f697c7902c53b19a033fb1f9be2ab4b277abcc0dad7d6fd11dc73f3be4",
+    "independent_leaky_se1-2_cbam7-8_serial_v6s1_seed43_hybrid_leaky_se1-2_cbam7-8_cifar10": "0ca8209c9411d6264d6f3c5199d498ace2c2903d8f793f5c67d94404f3d1fae2",
+    "independent_leaky_se1-2_cbam7-8_serial_v6s1_seed44_hybrid_leaky_se1-2_cbam7-8_cifar10": "703fa65351c77dffeb81f64538f61b17f64352728fcce9121de18026c32d7b92",
+    "csgha_v6_capped_se1-2_cbam7-8_serial_v6s1_seed42_csgha_v6_se1-2_guide2_cbam7-8_cifar10": "25d918f697c7902c53b19a033fb1f9be2ab4b277abcc0dad7d6fd11dc73f3be4",
+    "csgha_v6_capped_se1-2_cbam7-8_serial_v6s1_seed43_csgha_v6_se1-2_guide2_cbam7-8_cifar10": "0ca8209c9411d6264d6f3c5199d498ace2c2903d8f793f5c67d94404f3d1fae2",
+    "csgha_v6_capped_se1-2_cbam7-8_serial_v6s1_seed44_csgha_v6_se1-2_guide2_cbam7-8_cifar10": "703fa65351c77dffeb81f64538f61b17f64352728fcce9121de18026c32d7b92"
+  },
+  "scope": "Exact v6 serial-v6s1 manifest only; no prior CSGHA batches, training, or test evaluation."
+}
