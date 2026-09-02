@@ -1,6 +1,6 @@
 # 类别风险约束、跨种子共享早退：P1 独立校准确认计划
 
-> **2026-09-02重启状态：** 首次 `p1a` 按用户要求在 baseline seed54 epoch125 后中断，保留为非正式证据，不续训、不覆盖。资源诊断确认单个 32×32 MobileNetV2 在 RTX 4090D 上每 epoch 约6秒，低利用率主要来自任务粒度而非卡死。P1b 保持 batch128、8 workers、`jobs=1`及全部科学配方，只把已验证 checkpoint 完全等价的 `prefetch_factor` 从4增至8，并修复串行 runner 的完整进程组回收。默认全新 tag 现为 `p1b`。
+> **2026-09-02完成状态：** `p1b` 六组已完成、审计、锁定策略并执行唯一一次官方test。共享exit8阈值为`0.984`；test上三seed平均早退`64.85±0.30%`、MAC代理节省`36.51±0.17%`，策略准确率`87.04±0.18%`，相对最终头总体/balanced/最差类别均无下降。详见`reports/audits/2026-09-02-early-exit-p1b/`与`reports/experiments/2026-09-02-early-exit-p1b/`。本计划中的启动命令仅为历史记录，禁止重跑P1b或官方test。
 
 ## 1. P0 结论与本批目的
 

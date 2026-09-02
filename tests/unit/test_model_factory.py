@@ -94,6 +94,70 @@ def test_multi_exit_outputs_are_ordered_and_prefix_execution_matches():
         model.forward_to_exit(inputs, 7)
 
 
+def test_multi_exit_dynamic_policy_continues_only_unresolved_samples():
+    config = ExperimentConfig(
+        model_type="multi_exit",
+        exit_positions=(8, 16),
+        exit_loss_weights=(0.2, 0.3),
+    )
+    model = build_model(config).eval()
+    inputs = torch.randn(8, 3, 32, 32)
+    exit16_calls = []
+    handle = model.exit_heads["16"].register_forward_hook(
+        lambda _module, _inputs, _output: exit16_calls.append(True)
+    )
+
+    with torch.no_grad():
+        final_logits, exit8_logits, _exit16_logits = model(inputs)
+        confidence = torch.softmax(exit8_logits, dim=1).amax(dim=1)
+        ordered = confidence.sort().values
+        threshold = float((ordered[3] + ordered[4]) / 2)
+        exit16_calls.clear()
+        routed_logits, paths = model.forward_with_policy(inputs, threshold)
+    handle.remove()
+
+    early = confidence >= threshold
+    assert early.any() and (~early).any()
+    torch.testing.assert_close(routed_logits[early], exit8_logits[early])
+    torch.testing.assert_close(routed_logits[~early], final_logits[~early])
+    torch.testing.assert_close(paths, torch.where(early, 0, 1))
+    assert exit16_calls == []
+
+
+def test_multi_exit_dynamic_policy_supports_all_early_and_all_final():
+    model = build_model(
+        ExperimentConfig(
+            model_type="multi_exit",
+            exit_positions=(8, 16),
+            exit_loss_weights=(0.2, 0.3),
+        )
+    ).eval()
+    inputs = torch.randn(2, 3, 32, 32)
+
+    with torch.no_grad():
+        final_logits, exit8_logits, _exit16_logits = model(inputs)
+        all_early_logits, all_early_paths = model.forward_with_policy(inputs, 0.0)
+        all_final_logits, all_final_paths = model.forward_with_policy(inputs, 2.0)
+
+    torch.testing.assert_close(all_early_logits, exit8_logits)
+    torch.testing.assert_close(all_final_logits, final_logits)
+    torch.testing.assert_close(all_early_paths, torch.zeros(2, dtype=torch.long))
+    torch.testing.assert_close(all_final_paths, torch.ones(2, dtype=torch.long))
+
+
+def test_multi_exit_dynamic_policy_rejects_training_mode():
+    model = build_model(
+        ExperimentConfig(
+            model_type="multi_exit",
+            exit_positions=(8, 16),
+            exit_loss_weights=(0.2, 0.3),
+        )
+    )
+
+    with pytest.raises(RuntimeError, match="inference-only"):
+        model.forward_with_policy(torch.randn(1, 3, 32, 32), 0.9)
+
+
 def test_multi_exit_adds_only_heads_to_identically_initialized_backbone():
     torch.manual_seed(73)
     baseline = build_model(ExperimentConfig(model_type="mobilenetv2"))

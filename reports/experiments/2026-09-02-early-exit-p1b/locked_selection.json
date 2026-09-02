@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "status": "ready_for_locked_test",
+  "scope": "P1 model-selection validation plus disjoint policy calibration; official CIFAR-10 test is not evaluated by this analysis",
+  "manifest": "/root/autodl-tmp/image-classification/artifacts/sweeps/cifar10_early_exit_p1_serial_p1b_20260902_144353/manifest.json",
+  "manifest_sha256": "1545e85651103400c425bf3eaae0e70e4d1a4d0e413203158d2f6b6ff16c8c88",
+  "device": "cuda",
+  "data_protocol": {
+    "train_samples": 40000,
+    "model_selection_validation_samples": 5000,
+    "policy_calibration_samples": 5000,
+    "split_seed": 20260902,
+    "training_seeds": [
+      54,
+      55,
+      56
+    ],
+    "split_fingerprint": "99d6dcdd68388b2fb3b3bff7ff97065c4931b32756af103234cc833fd9610b80"
+  },
+  "threshold_grid": {
+    "frozen_before_training": true,
+    "start": 0.0,
+    "stop": 1.0,
+    "step": 0.001,
+    "includes_final_only_sentinel": true,
+    "candidate_count": 1002
+  },
+  "cost_profile": {
+    "method": "conv_linear_macs_per_sample_v1",
+    "exit_positions": [
+      8,
+      16
+    ],
+    "path_macs": [
+      2676864,
+      5234688,
+      6124928
+    ],
+    "path_cost_fractions": [
+      0.4370441579068358,
+      0.854652985308562,
+      1.0
+    ],
+    "ignored_operations": [
+      "batch_norm",
+      "activations",
+      "pooling",
+      "memory_traffic"
+    ],
+    "paper_evidence": false
+  },
+  "best_checkpoint_sha256": {
+    "early_exit_p1_baseline_p1b_seed54_mobilenetv2_cifar10": "008d89e45737c7e567a957176cb168091e484f45bc6d0efb4a53dc166e7aed46",
+    "early_exit_p1_multi_p1b_seed54_multi_exit_pos8-16_cifar10": "7f923c81bb7a1f1a9795865b11034e60a9ebf4ae690bdd117bae21110db58ebc",
+    "early_exit_p1_baseline_p1b_seed55_mobilenetv2_cifar10": "c5d4d8fbe5e5c4f57067855546b604140716ec868d0002fa09f3d248fd072dcc",
+    "early_exit_p1_multi_p1b_seed55_multi_exit_pos8-16_cifar10": "2266b0a2ec663c7951946b7bc2e3d427295d0e97e519cbbb4e533f8906b0e32f",
+    "early_exit_p1_baseline_p1b_seed56_mobilenetv2_cifar10": "d052238f5a1fa3cce288aeca3836a9b75091b36032ceaae024a558caa9b87999",
+    "early_exit_p1_multi_p1b_seed56_multi_exit_pos8-16_cifar10": "7a00b59b3bfce526a8dd00318199742c4a8a15d539d9e121bb56ba0b4ab96d8e"
+  },
+  "seed_results": [
+    {
+      "seed": 54,
+      "baseline_experiment_id": "early_exit_p1_baseline_p1b_seed54_mobilenetv2_cifar10",
+      "multi_exit_experiment_id": "early_exit_p1_multi_p1b_seed54_multi_exit_pos8-16_cifar10",
+      "baseline_validation_accuracy": 0.8736,
+      "multi_exit_final_validation_accuracy": 0.882,
+      "paired_final_validation_gain": 0.008399999999999963,
+      "exit8_validation_accuracy": 0.8814,
+      "exit16_validation_accuracy": 0.8824
+    },
+    {
+      "seed": 55,
+      "baseline_experiment_id": "early_exit_p1_baseline_p1b_seed55_mobilenetv2_cifar10",
+      "multi_exit_experiment_id": "early_exit_p1_multi_p1b_seed55_multi_exit_pos8-16_cifar10",
+      "baseline_validation_accuracy": 0.871,
+      "multi_exit_final_validation_accuracy": 0.8788,
+      "paired_final_validation_gain": 0.007800000000000029,
+      "exit8_validation_accuracy": 0.8722,
+      "exit16_validation_accuracy": 0.8776
+    },
+    {
+      "seed": 56,
+      "baseline_experiment_id": "early_exit_p1_baseline_p1b_seed56_mobilenetv2_cifar10",
+      "multi_exit_experiment_id": "early_exit_p1_multi_p1b_seed56_multi_exit_pos8-16_cifar10",
+      "baseline_validation_accuracy": 0.8736,
+      "multi_exit_final_validation_accuracy": 0.8746,
+      "paired_final_validation_gain": 0.0010000000000000009,
+      "exit8_validation_accuracy": 0.8712,
+      "exit16_validation_accuracy": 0.8724
+    }
+  ],
+  "aggregate": {
+    "paired_final_validation_gain_mean": 0.005733333333333331,
+    "paired_final_validation_gain_sample_std": 0.004110150037812888
+  },
+  "locked_policy": {
+    "policy_version": "shared_exit8_softmax_threshold_v1",
+    "exit_position": 8,
+    "confidence": "maximum softmax probability",
+    "confidence_threshold": 0.984,
+    "protected_predicted_classes": [],
+    "fallback": "final head",
+    "shared_across_training_seeds": [
+      54,
+      55,
+      56
+    ],
+    "path_cost_fractions": [
+      0.4370441579068358,
+      1.0
+    ],
+    "calibration_metrics": {
+      "54": {
+        "accuracy": 0.8696,
+        "reference_accuracy": 0.8694,
+        "accuracy_drop": -0.000200000000000089,
+        "balanced_accuracy": 0.8696000000000002,
+        "reference_balanced_accuracy": 0.8694,
+        "balanced_accuracy_drop": -0.00020000000000020002,
+        "worst_class_accuracy_drop": 0.0,
+        "route_fractions": [
+          0.645,
+          0.355
+        ],
+        "expected_cost_fraction": 0.6368934818499092,
+        "cost_saving_fraction": 0.36310651815009076
+      },
+      "55": {
+        "accuracy": 0.8712,
+        "reference_accuracy": 0.8712,
+        "accuracy_drop": 0.0,
+        "balanced_accuracy": 0.8712,
+        "reference_balanced_accuracy": 0.8712,
+        "balanced_accuracy_drop": 0.0,
+        "worst_class_accuracy_drop": 0.0,
+        "route_fractions": [
+          0.6526,
+          0.3474
+        ],
+        "expected_cost_fraction": 0.6326150174500011,
+        "cost_saving_fraction": 0.36738498254999885
+      },
+      "56": {
+        "accuracy": 0.8712,
+        "reference_accuracy": 0.8712,
+        "accuracy_drop": 0.0,
+        "balanced_accuracy": 0.8712,
+        "reference_balanced_accuracy": 0.8712,
+        "balanced_accuracy_drop": 0.0,
+        "worst_class_accuracy_drop": 0.0,
+        "route_fractions": [
+          0.6444,
+          0.3556
+        ],
+        "expected_cost_fraction": 0.637231255355165,
+        "cost_saving_fraction": 0.362768744644835
+      }
+    },
+    "selection_constraints": {
+      "max_accuracy_drop": 0.0,
+      "max_balanced_accuracy_drop": 0.0,
+      "max_worst_class_accuracy_drop": 0.0,
+      "min_early_fraction": 0.15,
+      "max_early_fraction": 0.95
+    },
+    "selection_objective": "maximize minimum per-dataset cost saving, then mean saving"
+  },
+  "gates": {
+    "mean_final_validation_gain_at_least_minus_0_003": true,
+    "each_final_validation_gain_at_least_minus_0_0075": true,
+    "shared_dynamic_policy_found": true,
+    "each_calibration_mac_saving_at_least_0_15": true,
+    "each_calibration_accuracy_drop_at_most_0": true,
+    "each_calibration_balanced_drop_at_most_0": true,
+    "each_calibration_worst_class_drop_at_most_0": true,
+    "each_calibration_route_is_dynamic": true
+  },
+  "recommended_next_step": "Hash and freeze this selection, then evaluate the six best checkpoints and the one locked policy on official CIFAR-10 test exactly once."
+}

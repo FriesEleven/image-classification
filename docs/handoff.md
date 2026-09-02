@@ -1,24 +1,21 @@
-# 实验项目交接：CSGHA负结果归档 / 预算阶段选择（更新至2026-09-01）
+# 实验项目交接：CSGHA负结果归档 / 稳健早退（更新至2026-09-02）
 
 本文用于让新的对话接续当前代码、GPU服务器实验和论文计划。**先读本文件，再检查实时状态；不要把历史建议、短测或旧清单的残留字段当成当前正式结果。**
 
-最新状态见第21、22节；第1、7、9、15、16、18、19、20节保留此前阶段的历史计划，若冲突，以第22节为准。当前没有由Codex启动新的正式训练。
+最新状态见第23节；第7、9、15、16、18–22节保留此前阶段的历史计划，若冲突，以第23节为准。当前没有正式训练进程。
 
-> **2026-09-02当前状态：** P1a 已按用户要求在 baseline seed54 epoch125 后安全中断并保留，未产生任何 completed 正式 run。诊断确认低利用率来自 32×32 MobileNetV2 单任务粒度；后台日志本来就只有每 epoch 一行。增加 worker 不提速且改变增强 RNG，因此 P1b 继续8 workers、batch128、串行，只采用两次配对验证 checkpoint 完全一致的 `prefetch_factor=8` 小幅优化，并修复串行 runner 的完整进程组回收。服务器当前无训练/GPU进程；下一步只需启动第22节的全新 `p1b` 批次。
+> **2026-09-02当前状态：** P1b 六组已完成并通过零问题文件级审计。共享 exit8 阈值 `0.984` 在三个独立 calibration 集均满足总体、balanced、最差类别经验下降≤0，约64.4%–65.3%早退。随后已按一次性锁执行官方 CIFAR-10 test：锁定策略准确率 `87.04±0.18%`，相对各自最终头没有任何类别下降，早退 `64.85±0.30%`，MAC代理节省 `36.51±0.17%`。官方test不得重跑或用于调参。精确查新表明普通风险控制/蒸馏/逐类校准已有更强先例，当前证据尚不足以单独投稿；下一主张收窄为“策略跨模型重训版本直接迁移、无需逐版本重校准”。真实分阶段续算已实现并通过定向测试，RTX4090D空闲剖析待在干净提交上执行，然后准备P2未见seed迁移确认批次。
 
 ## 1. 一分钟了解当前进度
 
-- 研究方向：MobileNetV2上的轻量跨阶段引导注意力（CSGHA），数据集CIFAR-10/100。用户明确要求**坚持新机制路线**，不是把独立SE+CBAM换名包装成创新。
-- 已完成：CIFAR-10/100数据配置、45k/5k划分、统一训练循环、18次正式历史实验审计、v1/v2/v3五个checkpoint的版本匹配诊断。
-- 当前结论：guidance确实利用了输入信息，但v3对同位置独立组合的三seed平均优势仅 **0.073个百分点**，尚不能声称稳定有效。
-- 已实现下一候选：v4仅将目标block的deep channel MLP激活从ReLU换成LeakyReLU(0.1)，同时实现完全匹配的无guidance控制。
-- 当前正式候选配置：`configs/experiments/csgha_v4_leaky_middle.yaml`、`independent_leaky_middle.yaml`。
-- 最新执行后端：**perf2，两路独立实验并行**，训练CUDA Graph，每组batch128、8个data workers、1个PyTorch CPU线程。不是两张卡，也不是DDP或把两个模型合成batch256。
-- 下一批：两种模型 × seeds42/43/44，共6次200epoch、validation-only训练，全部从头运行。
-- **核实时正式perf2六组尚未启动**，六个目标目录均不存在，没有训练进程，GPU为0%/0MiB。用户可能在本文生成后自行启动，所以新对话必须重新检查。
-- 旧v4批次首组在epoch100/200后按用户要求中断，其他五组未开始；日志/权重保留，不能当成六组完成，也不从这个checkpoint续训。
-- 最新验证：GPU服务器 **75 tests passed + 3 subtests passed**；两种模型各3轮的串行/并行权重逐参数一致、完整training.csv字节一致。
-- 正式v4准确率、三seed稳定性和v4机制诊断结果均**未知**。吞吐优化不等于方法精度提升。
+- CSGHA v3–v6 和预算阶段静态注意力均已作为负结果归档，不再扩展或改名包装。
+- 当前方向：最差类别风险约束、跨模型重训版本可迁移的阶段早退。
+- P0 是探索/失败定位；P1b 是首个严格独立 calibration + 锁定 test 正结果，完整证据见第23节。
+- P1b test 的策略相对最终头平均 `+0.01±0.01 pp`，约65%样本在exit8退出，MAC代理节省约36.5%；但MAC不是延迟。
+- 代码已具有真正的分阶段续算路径：exit8只计算一次，fallback从缓存特征继续，未使用的exit16不执行。
+- 当前无训练进程；不要重跑官方test，不要根据test更改阈值0.984。
+- 精确查新后的候选创新不是“早退+KD+阈值”，而是**冻结策略对未参与校准的新训练seed/模型版本的无重校准迁移**，辅以最差类别风险和真实部署测量。
+- 下一步先在干净源码提交上做无数据、batch1、空闲RTX4090D配对时延剖析；随后只启动P2最小未见seed确认批次。
 
 用户此前的固定偏好：需要新实验时，准备可运行的后台Python脚本，给出**一行启动命令**，由用户启动；不要在读完交接后自行启动长训练。用户如果明确授权启动，再执行。
 
@@ -785,3 +782,31 @@ cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/
 ```
 
 预计仍约2小时，prefetch收益较小且利用率可能仍在较低区间。完成后只审计 `p1b` 唯一 completed manifest；P1a和smoke不能进入统计。
+
+## 23. 2026-09-02 P1b完成、锁定test正结果与论文边界
+
+### 23.1 唯一批次与正式审计
+
+唯一 completed manifest 为 `artifacts/sweeps/cifar10_early_exit_p1_serial_p1b_20260902_144353/manifest.json`，SHA-256 为 `1545e85651103400c425bf3eaae0e70e4d1a4d0e413203158d2f6b6ff16c8c88`。六组均 completed/return_code=0、严格串行、连续200 epochs，无termination signal；总时长约2.166小时。正式审计位于`reports/audits/2026-09-02-early-exit-p1b/`，`audit_results.json` SHA-256为`5681878b3b3fcc97d2f667e2832b1875aaa00b40ba82edf06e8356c8fb7fa486`，issues为空。
+
+审计核对了manifest/config/summary、首次best、best/latest/final哈希、40k train/5k model-selection validation/5k policy calibration互斥且覆盖50k、固定split seed、同seed配对划分、全run相同划分内容、源码提交`278164e9d75aafba511ea02107f4ff0e7c2c67a8`及source snapshot、CUDA Graph provenance、benchmark skipped/null和test未访问事实。
+
+checkpoint-selection validation上，baseline seeds54/55/56为87.36/87.10/87.36%，multi-exit最终头为88.20/87.88/87.46%；配对差值`+0.84/+0.78/+0.10 pp`，平均`+0.573±0.411 pp`，胜出3/3。
+
+### 23.2 共享策略锁与唯一官方test
+
+冻结选择器只读取三个独立5k calibration集合，选出一个跨seed共享的exit8最大softmax阈值`0.984`，无类别排除，fallback为最终头。三个seed calibration早退率为64.50%/65.26%/64.44%，MAC代理节省36.31%/36.74%/36.28%；总体、balanced、最差类别经验下降均≤0，全部冻结gate通过。选择文件为`artifacts/policy_selections/early_exit_p1b_20260902_165900/selection.json`，SHA-256为`8dce5d938e06ae9d7432bd6baafd0c0ed9f978678fb53767ab02eeafecc723ab`。
+
+随后一次性评估器先校验selection、manifest、audit及六个best checkpoint哈希，再创建固定access registry，官方CIFAR-10 test仅执行一次且未搜索任何策略。正式结果位于`reports/experiments/2026-09-02-early-exit-p1b/`；`test_results.json` SHA-256为`239ef583cfd4352eb64b398ce1390706f0fa187aa3c6b6c96c2f90675c45d8f5`。baseline test为86.58/86.80/87.12%，multi-exit最终头为87.23/86.94/86.91%，锁定策略为87.24/86.94/86.93%。策略相对最终头为`+0.01/0.00/+0.02 pp`，三个seed都没有类别下降；相对baseline平均`+0.203±0.429 pp`。早退率65.14%/64.88%/64.54%，MAC代理节省36.67%/36.52%/36.33%。完整test logits/routes仅保留在ignored artifacts中，供后续统计和绘图，禁止重新打开test或据此改阈值。
+
+### 23.3 清理与部署实现
+
+审计、策略锁和test证据固化后，只删除P1b六组共120个`epoch_*.pth`周期优化器快照，3,268,915,068 bytes；18个best/latest/final checkpoint、日志、配置、划分、manifest/source snapshot、锁文件和test logits全部保留。清理回执为`reports/audits/2026-09-02-early-exit-p1b/cleanup_receipt.json`。P1a中断负证据未删除。清理后六个P1b run共约265MB，`/root/autodl-tmp`约44GB可用。
+
+`MultiExitMobileNetV2.forward_with_policy`现已实现真实按样本分阶段续算：计算exit8置信度后，仅未退出子集从缓存特征继续到最终头，不重复前缀且跳过exit16。定向测试同时覆盖混合路由、全早退、全fallback、数值等价和训练模式拒绝。硬件剖析器为`scripts/diagnostics/profile_early_exit_p1_deployment.py`；必须先把实现提交成干净源码，再在无训练进程时运行，剖析器不加载任何数据集。
+
+### 23.4 查新结论与下一主张
+
+P1b证明了一个可复现的经验事实，但尚不足以单独投稿：NeurIPS 2024 Fast yet Safe已经给出早退的分布无关风险控制和多模型任务验证；PCEE已有单一性能阈值；2026年SAFE-KD已直接覆盖视觉backbone的蒸馏加conformal风险控制；CalexNet已覆盖逐类校准、多seed、多数据集/backbone、延迟和能耗。因此不得把“KD+softmax阈值+风险约束”写成创新，经验零下降也不是统计零风险保证。
+
+下一候选主张收窄为：**一个在源模型版本上冻结的路由策略，能否直接迁移到未参与阈值校准的新训练seed/模型版本，而无需逐版本重新校准，同时保持最差类别无退化和真实部署收益。** 精确检索尚未发现早退论文直接把跨重训版本的阈值迁移作为主要问题。下一批P2应使用全新training seeds，只在训练前冻结的gate下检验阈值`0.984`，不得用新seed输出重新选阈值；若失败即归档，若通过才进入外部数据/第二backbone确认。P2入口与唯一启动命令必须在RTX4090D剖析完成后冻结。

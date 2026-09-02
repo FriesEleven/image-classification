@@ -1,0 +1,564 @@
+{
+  "schema_version": 1,
+  "status": "locked_official_test_complete",
+  "scope": "One official CIFAR-10 test evaluation of six preselected best checkpoints and one calibration-locked shared exit8 policy; no test-time tuning.",
+  "started_at_utc": "2026-09-02T09:28:44.698489+00:00",
+  "finished_at_utc": "2026-09-02T09:29:09.530164+00:00",
+  "device": "cuda",
+  "selection_sha256": "8dce5d938e06ae9d7432bd6baafd0c0ed9f978678fb53767ab02eeafecc723ab",
+  "audit_sha256": "5681878b3b3fcc97d2f667e2832b1875aaa00b40ba82edf06e8356c8fb7fa486",
+  "manifest_sha256": "1545e85651103400c425bf3eaae0e70e4d1a4d0e413203158d2f6b6ff16c8c88",
+  "evaluator_sha256": "e78a5cfcca9c52f2677d84c5aa1444a9cda4e108f1127a5c6d05df0d29b8e12f",
+  "test_set": {
+    "dataset": "cifar10",
+    "samples": 10000,
+    "class_names": [
+      "airplane",
+      "automobile",
+      "bird",
+      "cat",
+      "deer",
+      "dog",
+      "frog",
+      "horse",
+      "ship",
+      "truck"
+    ],
+    "labels_sha256": "58847385deb4ccbb7c09be7f24b641c276d033ba2f054a4b528cc2cac9e2f468",
+    "raw_test_batch_sha256": "f53d8d457504f7cff4ea9e021afcf0e0ad8e24a91f3fc42091b8adef61157831"
+  },
+  "locked_policy": {
+    "policy_version": "shared_exit8_softmax_threshold_v1",
+    "exit_position": 8,
+    "confidence": "maximum softmax probability",
+    "threshold": 0.984,
+    "fallback": "final head",
+    "protected_predicted_classes": [],
+    "path_cost_fractions": [
+      0.4370441579068358,
+      1.0
+    ],
+    "selection_performed_on_test": false
+  },
+  "seed_results": [
+    {
+      "seed": 54,
+      "samples": 10000,
+      "baseline_test_accuracy": 0.8658,
+      "multi_exit_final_test_accuracy": 0.8723,
+      "exit8_test_accuracy": 0.8752,
+      "exit16_test_accuracy": 0.8706,
+      "paired_final_gain_vs_baseline": 0.00649999999999995,
+      "locked_policy": {
+        "accuracy": 0.8724,
+        "reference_accuracy": 0.8723,
+        "accuracy_drop": -9.999999999998899e-05,
+        "balanced_accuracy": 0.8724000000000001,
+        "reference_balanced_accuracy": 0.8722999999999999,
+        "balanced_accuracy_drop": -0.00010000000000021103,
+        "worst_class_accuracy_drop": 0.0,
+        "route_fractions": [
+          0.6514,
+          0.3486
+        ],
+        "expected_cost_fraction": 0.6332905644605129,
+        "cost_saving_fraction": 0.3667094355394871
+      },
+      "locked_policy_gain_vs_baseline": 0.006599999999999939,
+      "locked_policy_gain_vs_final": 9.999999999998899e-05,
+      "decision_changes_vs_final": {
+        "changed": 1,
+        "harmed": 0,
+        "rescued": 1,
+        "net_correct": 1
+      },
+      "early_route_count": 6514,
+      "final_route_count": 3486,
+      "class_metrics": [
+        {
+          "class_id": 0,
+          "class_name": "airplane",
+          "support": 1000,
+          "baseline_accuracy": 0.88,
+          "multi_exit_final_accuracy": 0.877,
+          "locked_policy_accuracy": 0.877,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.0030000000000000027
+        },
+        {
+          "class_id": 1,
+          "class_name": "automobile",
+          "support": 1000,
+          "baseline_accuracy": 0.944,
+          "multi_exit_final_accuracy": 0.943,
+          "locked_policy_accuracy": 0.943,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.0010000000000000009
+        },
+        {
+          "class_id": 2,
+          "class_name": "bird",
+          "support": 1000,
+          "baseline_accuracy": 0.811,
+          "multi_exit_final_accuracy": 0.835,
+          "locked_policy_accuracy": 0.836,
+          "locked_policy_drop_vs_final": -0.0010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.02499999999999991
+        },
+        {
+          "class_id": 3,
+          "class_name": "cat",
+          "support": 1000,
+          "baseline_accuracy": 0.748,
+          "multi_exit_final_accuracy": 0.739,
+          "locked_policy_accuracy": 0.739,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.009000000000000008
+        },
+        {
+          "class_id": 4,
+          "class_name": "deer",
+          "support": 1000,
+          "baseline_accuracy": 0.869,
+          "multi_exit_final_accuracy": 0.871,
+          "locked_policy_accuracy": 0.871,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.0020000000000000018
+        },
+        {
+          "class_id": 5,
+          "class_name": "dog",
+          "support": 1000,
+          "baseline_accuracy": 0.792,
+          "multi_exit_final_accuracy": 0.818,
+          "locked_policy_accuracy": 0.818,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.025999999999999912
+        },
+        {
+          "class_id": 6,
+          "class_name": "frog",
+          "support": 1000,
+          "baseline_accuracy": 0.891,
+          "multi_exit_final_accuracy": 0.9,
+          "locked_policy_accuracy": 0.9,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.009000000000000008
+        },
+        {
+          "class_id": 7,
+          "class_name": "horse",
+          "support": 1000,
+          "baseline_accuracy": 0.895,
+          "multi_exit_final_accuracy": 0.887,
+          "locked_policy_accuracy": 0.887,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.008000000000000007
+        },
+        {
+          "class_id": 8,
+          "class_name": "ship",
+          "support": 1000,
+          "baseline_accuracy": 0.909,
+          "multi_exit_final_accuracy": 0.932,
+          "locked_policy_accuracy": 0.932,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.02300000000000002
+        },
+        {
+          "class_id": 9,
+          "class_name": "truck",
+          "support": 1000,
+          "baseline_accuracy": 0.919,
+          "multi_exit_final_accuracy": 0.921,
+          "locked_policy_accuracy": 0.921,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.0020000000000000018
+        }
+      ],
+      "baseline_experiment_id": "early_exit_p1_baseline_p1b_seed54_mobilenetv2_cifar10",
+      "multi_exit_experiment_id": "early_exit_p1_multi_p1b_seed54_multi_exit_pos8-16_cifar10"
+    },
+    {
+      "seed": 55,
+      "samples": 10000,
+      "baseline_test_accuracy": 0.868,
+      "multi_exit_final_test_accuracy": 0.8694,
+      "exit8_test_accuracy": 0.8686,
+      "exit16_test_accuracy": 0.8683,
+      "paired_final_gain_vs_baseline": 0.0013999999999999568,
+      "locked_policy": {
+        "accuracy": 0.8694,
+        "reference_accuracy": 0.8694,
+        "accuracy_drop": 0.0,
+        "balanced_accuracy": 0.8694,
+        "reference_balanced_accuracy": 0.8694,
+        "balanced_accuracy_drop": 0.0,
+        "worst_class_accuracy_drop": 0.0,
+        "route_fractions": [
+          0.6488,
+          0.3512
+        ],
+        "expected_cost_fraction": 0.6347542496499551,
+        "cost_saving_fraction": 0.3652457503500449
+      },
+      "locked_policy_gain_vs_baseline": 0.0013999999999999568,
+      "locked_policy_gain_vs_final": 0.0,
+      "decision_changes_vs_final": {
+        "changed": 0,
+        "harmed": 0,
+        "rescued": 0,
+        "net_correct": 0
+      },
+      "early_route_count": 6488,
+      "final_route_count": 3512,
+      "class_metrics": [
+        {
+          "class_id": 0,
+          "class_name": "airplane",
+          "support": 1000,
+          "baseline_accuracy": 0.894,
+          "multi_exit_final_accuracy": 0.883,
+          "locked_policy_accuracy": 0.883,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.01100000000000001
+        },
+        {
+          "class_id": 1,
+          "class_name": "automobile",
+          "support": 1000,
+          "baseline_accuracy": 0.948,
+          "multi_exit_final_accuracy": 0.93,
+          "locked_policy_accuracy": 0.93,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.017999999999999905
+        },
+        {
+          "class_id": 2,
+          "class_name": "bird",
+          "support": 1000,
+          "baseline_accuracy": 0.823,
+          "multi_exit_final_accuracy": 0.836,
+          "locked_policy_accuracy": 0.836,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.013000000000000012
+        },
+        {
+          "class_id": 3,
+          "class_name": "cat",
+          "support": 1000,
+          "baseline_accuracy": 0.698,
+          "multi_exit_final_accuracy": 0.718,
+          "locked_policy_accuracy": 0.718,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 4,
+          "class_name": "deer",
+          "support": 1000,
+          "baseline_accuracy": 0.882,
+          "multi_exit_final_accuracy": 0.874,
+          "locked_policy_accuracy": 0.874,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.008000000000000007
+        },
+        {
+          "class_id": 5,
+          "class_name": "dog",
+          "support": 1000,
+          "baseline_accuracy": 0.8,
+          "multi_exit_final_accuracy": 0.794,
+          "locked_policy_accuracy": 0.794,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.006000000000000005
+        },
+        {
+          "class_id": 6,
+          "class_name": "frog",
+          "support": 1000,
+          "baseline_accuracy": 0.913,
+          "multi_exit_final_accuracy": 0.916,
+          "locked_policy_accuracy": 0.916,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.0030000000000000027
+        },
+        {
+          "class_id": 7,
+          "class_name": "horse",
+          "support": 1000,
+          "baseline_accuracy": 0.898,
+          "multi_exit_final_accuracy": 0.905,
+          "locked_policy_accuracy": 0.905,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.007000000000000006
+        },
+        {
+          "class_id": 8,
+          "class_name": "ship",
+          "support": 1000,
+          "baseline_accuracy": 0.916,
+          "multi_exit_final_accuracy": 0.927,
+          "locked_policy_accuracy": 0.927,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.01100000000000001
+        },
+        {
+          "class_id": 9,
+          "class_name": "truck",
+          "support": 1000,
+          "baseline_accuracy": 0.908,
+          "multi_exit_final_accuracy": 0.911,
+          "locked_policy_accuracy": 0.911,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.0030000000000000027
+        }
+      ],
+      "baseline_experiment_id": "early_exit_p1_baseline_p1b_seed55_mobilenetv2_cifar10",
+      "multi_exit_experiment_id": "early_exit_p1_multi_p1b_seed55_multi_exit_pos8-16_cifar10"
+    },
+    {
+      "seed": 56,
+      "samples": 10000,
+      "baseline_test_accuracy": 0.8712,
+      "multi_exit_final_test_accuracy": 0.8691,
+      "exit8_test_accuracy": 0.8735,
+      "exit16_test_accuracy": 0.8699,
+      "paired_final_gain_vs_baseline": -0.0020999999999999908,
+      "locked_policy": {
+        "accuracy": 0.8693,
+        "reference_accuracy": 0.8691,
+        "accuracy_drop": -0.00019999999999997797,
+        "balanced_accuracy": 0.8693,
+        "reference_balanced_accuracy": 0.8690999999999999,
+        "balanced_accuracy_drop": -0.000200000000000089,
+        "worst_class_accuracy_drop": 0.0,
+        "route_fractions": [
+          0.6454,
+          0.3546
+        ],
+        "expected_cost_fraction": 0.6366682995130719,
+        "cost_saving_fraction": 0.3633317004869281
+      },
+      "locked_policy_gain_vs_baseline": -0.0019000000000000128,
+      "locked_policy_gain_vs_final": 0.00019999999999997797,
+      "decision_changes_vs_final": {
+        "changed": 2,
+        "harmed": 0,
+        "rescued": 2,
+        "net_correct": 2
+      },
+      "early_route_count": 6454,
+      "final_route_count": 3546,
+      "class_metrics": [
+        {
+          "class_id": 0,
+          "class_name": "airplane",
+          "support": 1000,
+          "baseline_accuracy": 0.888,
+          "multi_exit_final_accuracy": 0.881,
+          "locked_policy_accuracy": 0.882,
+          "locked_policy_drop_vs_final": -0.0010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.006000000000000005
+        },
+        {
+          "class_id": 1,
+          "class_name": "automobile",
+          "support": 1000,
+          "baseline_accuracy": 0.939,
+          "multi_exit_final_accuracy": 0.947,
+          "locked_policy_accuracy": 0.947,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.008000000000000007
+        },
+        {
+          "class_id": 2,
+          "class_name": "bird",
+          "support": 1000,
+          "baseline_accuracy": 0.833,
+          "multi_exit_final_accuracy": 0.836,
+          "locked_policy_accuracy": 0.836,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.0030000000000000027
+        },
+        {
+          "class_id": 3,
+          "class_name": "cat",
+          "support": 1000,
+          "baseline_accuracy": 0.753,
+          "multi_exit_final_accuracy": 0.725,
+          "locked_policy_accuracy": 0.725,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.028000000000000025
+        },
+        {
+          "class_id": 4,
+          "class_name": "deer",
+          "support": 1000,
+          "baseline_accuracy": 0.874,
+          "multi_exit_final_accuracy": 0.881,
+          "locked_policy_accuracy": 0.881,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.007000000000000006
+        },
+        {
+          "class_id": 5,
+          "class_name": "dog",
+          "support": 1000,
+          "baseline_accuracy": 0.795,
+          "multi_exit_final_accuracy": 0.788,
+          "locked_policy_accuracy": 0.788,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.007000000000000006
+        },
+        {
+          "class_id": 6,
+          "class_name": "frog",
+          "support": 1000,
+          "baseline_accuracy": 0.894,
+          "multi_exit_final_accuracy": 0.902,
+          "locked_policy_accuracy": 0.902,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.008000000000000007
+        },
+        {
+          "class_id": 7,
+          "class_name": "horse",
+          "support": 1000,
+          "baseline_accuracy": 0.891,
+          "multi_exit_final_accuracy": 0.909,
+          "locked_policy_accuracy": 0.91,
+          "locked_policy_drop_vs_final": -0.0010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.019000000000000017
+        },
+        {
+          "class_id": 8,
+          "class_name": "ship",
+          "support": 1000,
+          "baseline_accuracy": 0.918,
+          "multi_exit_final_accuracy": 0.906,
+          "locked_policy_accuracy": 0.906,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.01200000000000001
+        },
+        {
+          "class_id": 9,
+          "class_name": "truck",
+          "support": 1000,
+          "baseline_accuracy": 0.927,
+          "multi_exit_final_accuracy": 0.916,
+          "locked_policy_accuracy": 0.916,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.01100000000000001
+        }
+      ],
+      "baseline_experiment_id": "early_exit_p1_baseline_p1b_seed56_mobilenetv2_cifar10",
+      "multi_exit_experiment_id": "early_exit_p1_multi_p1b_seed56_multi_exit_pos8-16_cifar10"
+    }
+  ],
+  "aggregate": {
+    "baseline_test_accuracy": {
+      "values": [
+        0.8658,
+        0.868,
+        0.8712
+      ],
+      "mean": 0.8683333333333333,
+      "sample_std": 0.002715388247255487
+    },
+    "multi_exit_final_test_accuracy": {
+      "values": [
+        0.8723,
+        0.8694,
+        0.8691
+      ],
+      "mean": 0.8702666666666666,
+      "sample_std": 0.001767295485574872
+    },
+    "paired_final_gain_vs_baseline": {
+      "values": [
+        0.00649999999999995,
+        0.0013999999999999568,
+        -0.0020999999999999908
+      ],
+      "mean": 0.0019333333333333054,
+      "sample_std": 0.0043247350593224885
+    },
+    "locked_policy_accuracy": {
+      "values": [
+        0.8724,
+        0.8694,
+        0.8693
+      ],
+      "mean": 0.8703666666666666,
+      "sample_std": 0.0017616280348965066
+    },
+    "locked_policy_gain_vs_baseline": {
+      "values": [
+        0.006599999999999939,
+        0.0013999999999999568,
+        -0.0019000000000000128
+      ],
+      "mean": 0.0020333333333332946,
+      "sample_std": 0.004285246006162672
+    },
+    "locked_policy_gain_vs_final": {
+      "values": [
+        9.999999999998899e-05,
+        0.0,
+        0.00019999999999997797
+      ],
+      "mean": 9.999999999998899e-05,
+      "sample_std": 9.999999999998899e-05
+    },
+    "early_route_fraction": {
+      "values": [
+        0.6514,
+        0.6488,
+        0.6454
+      ],
+      "mean": 0.6485333333333333,
+      "sample_std": 0.0030088757590391413
+    },
+    "mac_saving_fraction": {
+      "values": [
+        0.3667094355394871,
+        0.3652457503500449,
+        0.3633317004869281
+      ],
+      "mean": 0.36509562879215335,
+      "sample_std": 0.0016938641866835978
+    },
+    "worst_class_accuracy_drop_vs_final": {
+      "values": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean": 0.0,
+      "sample_std": 0.0
+    }
+  },
+  "prediction_files": {
+    "54": {
+      "path": "artifacts/locked_tests/early_exit_p1b_20260902/test_logits_and_routes_seed54.npz",
+      "size_bytes": 1490257,
+      "sha256": "e1d7d25c802c81068ff2743ff15d82baf12f9b19f1fdc5816138deb0ce8243af"
+    },
+    "55": {
+      "path": "artifacts/locked_tests/early_exit_p1b_20260902/test_logits_and_routes_seed55.npz",
+      "size_bytes": 1489201,
+      "sha256": "136c1d290ea3577e0d21bd4a0eb98af035b1124e3330743c21a553bbc5884f01"
+    },
+    "56": {
+      "path": "artifacts/locked_tests/early_exit_p1b_20260902/test_logits_and_routes_seed56.npz",
+      "size_bytes": 1489346,
+      "sha256": "905b30d1de7e65aef78c9e218f2b345993509136ac69dd58095ba8dccea04dfc"
+    }
+  },
+  "limitations": [
+    "MAC saving counts convolution and linear operations only and is not measured latency.",
+    "Risk constraints are empirical on a finite 5k calibration set, not formal guarantees.",
+    "The current evidence covers CIFAR-10, MobileNetV2 and three training seeds only."
+  ]
+}
