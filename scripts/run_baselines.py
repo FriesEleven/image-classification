@@ -24,6 +24,7 @@ from image_classification.training.sweep import (
     NATIVE_DIAGNOSTIC_ENVIRONMENT,
     exit_record,
     native_diagnostic_environment,
+    run_owned_process,
     run_parallel_queue,
 )
 
@@ -206,23 +207,28 @@ def main() -> int:
                 print(f"Already complete: {run['experiment_id']}", flush=True)
                 continue
             run.update(status="running", started_at=_timestamp())
-            _write_manifest(manifest_path, manifest)
-            completed = subprocess.run(
-                run["command"], cwd=ROOT, check=False, env=native_diagnostic_environment(),
+
+            def record_process(process, current_run=run):
+                current_run.update(pid=process.pid, process_group=process.pid)
+                _write_manifest(manifest_path, manifest)
+
+            return_code = run_owned_process(
+                run["command"], cwd=ROOT, env=native_diagnostic_environment(),
+                on_start=record_process,
             )
             if source_fingerprint() != manifest["runtime"]["source_sha256"]:
                 raise RuntimeError("Source/config files changed during training; inspect the run before reuse")
             run.update(
-                status="completed" if completed.returncode == 0 else "failed",
+                status="completed" if return_code == 0 else "failed",
                 finished_at=_timestamp(),
-                **exit_record(completed.returncode),
+                **exit_record(return_code),
             )
-            if completed.returncode == 0:
+            if return_code == 0:
                 run["summary"] = _completed_summary(run)
             else:
                 failures += 1
             _write_manifest(manifest_path, manifest)
-            if completed.returncode and not args.continue_on_error:
+            if return_code and not args.continue_on_error:
                 break
     except (KeyboardInterrupt, Exception):
         manifest["status"] = "interrupted"

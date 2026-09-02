@@ -16,7 +16,7 @@ from image_classification.paths import ARTIFACTS_DIR, PROJECT_ROOT
 from scripts.run_baselines import build_plan, load_sweep
 
 SWEEP = PROJECT_ROOT / "configs/sweeps/early_exit_p1.yaml"
-EXPERIMENT_TAG = "p1a"
+EXPERIMENT_TAG = "p1b"
 JOBS = 1
 SEEDS = (54, 55, 56)
 SPLIT_SEED = 20_260_902
@@ -39,7 +39,7 @@ def validated_plan(experiment_tag: str = EXPERIMENT_TAG):
         "measure_inference": False,
         "accumulation_steps": 1,
         "num_workers": 8,
-        "prefetch_factor": 4,
+        "prefetch_factor": 8,
     }
     counts = Counter()
     for run in plan:

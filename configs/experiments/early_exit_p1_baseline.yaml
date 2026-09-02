@@ -14,4 +14,4 @@ torch_num_threads: 1
 measure_inference: false
 accumulation_steps: 1
 num_workers: 8
-prefetch_factor: 4
+prefetch_factor: 8

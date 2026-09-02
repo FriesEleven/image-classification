@@ -44,7 +44,7 @@ EXPECTED_PROTOCOL = {
     "measure_inference": False,
     "accumulation_steps": 1,
     "num_workers": 8,
-    "prefetch_factor": 4,
+    "prefetch_factor": 8,
 }
 EXPECTED_MULTI_EXIT = {
     "exit_positions": [8, 16],

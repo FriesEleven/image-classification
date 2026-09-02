@@ -1,11 +1,13 @@
 import json
 import signal
+import subprocess
 import sys
+import time
 from pathlib import Path
 
 import pytest
 
-from image_classification.training.sweep import run_parallel_queue
+from image_classification.training.sweep import _stop_process_groups, run_owned_process, run_parallel_queue
 
 
 def plan(tmp_path, delays=(0.1, 0.1, 0.1), fail_index=None):
@@ -113,3 +115,51 @@ def test_explicit_continue_on_error_runs_remaining_jobs(tmp_path):
     assert run_parallel_queue(runs, 2, tmp_path, tmp_path / "logs", lambda: None,
                               lambda: None, summary, continue_on_error=True, poll_seconds=0.01) == 1
     assert [row["status"] for row in runs] == ["failed", "completed", "completed"]
+
+
+def test_owned_serial_process_has_distinct_group_and_reports_pid(tmp_path):
+    receipt = tmp_path / "receipt.json"
+    observed = {}
+    code = (
+        "import json,os; from pathlib import Path; "
+        f"Path({str(receipt)!r}).write_text(json.dumps({{'pid': os.getpid(), 'pgid': os.getpgrp()}}))"
+    )
+
+    return_code = run_owned_process(
+        [sys.executable, "-c", code],
+        tmp_path,
+        on_start=lambda process: observed.update(pid=process.pid),
+    )
+
+    child = json.loads(receipt.read_text())
+    assert return_code == 0
+    assert child == {"pid": observed["pid"], "pgid": observed["pid"]}
+
+
+def test_stop_process_groups_reaps_owned_parent_and_grandchild(tmp_path):
+    grandchild_receipt = tmp_path / "grandchild.pid"
+    code = (
+        "import subprocess,sys,time; from pathlib import Path; "
+        "child=subprocess.Popen([sys.executable,'-c','import time; time.sleep(60)']); "
+        f"Path({str(grandchild_receipt)!r}).write_text(str(child.pid)); "
+        "time.sleep(60)"
+    )
+    process = subprocess.Popen(
+        [sys.executable, "-c", code], cwd=tmp_path, start_new_session=True,
+    )
+    for _ in range(100):
+        if grandchild_receipt.exists():
+            break
+        time.sleep(0.01)
+    assert grandchild_receipt.exists()
+
+    _stop_process_groups([process])
+
+    assert process.poll() is not None
+    grandchild = int(grandchild_receipt.read_text())
+    grandchild_status = Path(f"/proc/{grandchild}/stat")
+    for _ in range(100):
+        if not grandchild_status.exists() or grandchild_status.read_text().split()[2] == "Z":
+            break
+        time.sleep(0.01)
+    assert not grandchild_status.exists() or grandchild_status.read_text().split()[2] == "Z"

@@ -30,11 +30,11 @@ def test_early_exit_p1_is_exact_disjoint_matched_serial_matrix():
 
 def test_early_exit_p1_retry_tag_produces_fresh_ids():
     original = {run["experiment_id"] for run in validated_plan()}
-    retry = {run["experiment_id"] for run in validated_plan("p1b")}
+    retry = {run["experiment_id"] for run in validated_plan("p1c")}
 
     assert len(retry) == 6
     assert original.isdisjoint(retry)
-    assert all("_p1b_seed" in experiment_id for experiment_id in retry)
+    assert all("_p1c_seed" in experiment_id for experiment_id in retry)
 
 
 def _logits(predictions):

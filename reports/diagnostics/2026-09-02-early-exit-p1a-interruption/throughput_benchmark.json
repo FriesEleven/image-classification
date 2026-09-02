@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "scope": "Execution-only throughput diagnostics after the user-requested P1a interruption; no official test evaluation.",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 4090 D",
+    "gpu_memory_mib": 24564,
+    "cpu": "Intel Xeon Platinum 8352S",
+    "visible_logical_cpus": 128,
+    "cgroup_cpu_quota_cores": 16
+  },
+  "p1a_observation": {
+    "completed_epochs": 125,
+    "mean_epoch_seconds": 5.98432,
+    "last_50_epoch_mean_seconds": 6.001,
+    "resource_sample": {
+      "gpu_utilization_percent": 25,
+      "gpu_memory_utilization_percent": 3,
+      "gpu_memory_used_mib": 780,
+      "gpu_power_watts": 78.21,
+      "data_workers": 8
+    }
+  },
+  "worker_count_screen": [
+    {
+      "workers": 8,
+      "repeat": "a",
+      "epoch_1_seconds": 10.82,
+      "best_checkpoint_sha256": "c052caaa124524c60a4321e9506d3e545271deaed1273b076687141c32ffb052"
+    },
+    {
+      "workers": 12,
+      "epoch_1_seconds": 10.98,
+      "best_checkpoint_sha256": "d6e5f24ecca9cd8bfb5f80f292b94b7d7c7c44267f0c777aa9dd26aab1258723"
+    },
+    {
+      "workers": 16,
+      "epoch_1_seconds": 11.54,
+      "best_checkpoint_sha256": "31706355d07ff279a448270fb6913130bb6f7aea665de6608f548ec1d29bbd68"
+    },
+    {
+      "workers": 8,
+      "repeat": "b",
+      "epoch_1_seconds": 10.19,
+      "best_checkpoint_sha256": "c052caaa124524c60a4321e9506d3e545271deaed1273b076687141c32ffb052"
+    }
+  ],
+  "worker_count_conclusion": "Eight workers were fastest. Changing worker count also changed augmentation RNG assignment and checkpoints, so worker count remains frozen at eight.",
+  "prefetch_trials": [
+    {
+      "seed": 9154,
+      "prefetch_4_epoch_seconds": [10.40, 6.52, 5.77],
+      "prefetch_8_epoch_seconds": [10.98, 5.74, 5.26],
+      "shared_best_checkpoint_sha256": "9b7eadabd7d02fba70c3fb0983649c9f6b14d9e54a2c106901ed208f61d58c07"
+    },
+    {
+      "seed": 9254,
+      "execution_order": [8, 4],
+      "prefetch_8_epoch_seconds": [10.61, 5.90, 5.96, 6.50, 6.08],
+      "prefetch_4_epoch_seconds": [9.36, 6.37, 6.11, 6.36, 5.50],
+      "shared_best_checkpoint_sha256": "01066aa4d3e20c7505f8579ec52ebbf71e33b8ceee492d3a4e4829a09ca67a86"
+    }
+  ],
+  "steady_epoch_aggregate": {
+    "prefetch_4_seconds": [6.52, 5.77, 6.37, 6.11, 6.36, 5.50],
+    "prefetch_8_seconds": [5.74, 5.26, 5.90, 5.96, 6.50, 6.08],
+    "prefetch_4_mean_seconds": 6.105,
+    "prefetch_8_mean_seconds": 5.906666666666666,
+    "mean_time_reduction_fraction": 0.03248757848703262,
+    "prefetch_4_median_seconds": 6.235,
+    "prefetch_8_median_seconds": 5.93,
+    "median_time_reduction_fraction": 0.04891740176423414
+  },
+  "frozen_p1b_execution": {
+    "jobs": 1,
+    "batch_size": 128,
+    "num_workers": 8,
+    "prefetch_factor": 8,
+    "logging": "one line per epoch; interactive tqdm disabled in background",
+    "reason": "Prefetch depth preserved exact checkpoints in both paired trials and provided a small steady-state throughput improvement. Batch size, optimizer, learning rate, model, loss and serial execution remain unchanged."
+  },
+  "interpretation": "Low utilization is expected for one small MobileNetV2 on 32x32 inputs. Throughput and protocol equivalence, not a high utilization percentage, are the optimization criteria."
+}

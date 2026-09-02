@@ -1,5 +1,7 @@
 # 类别风险约束、跨种子共享早退：P1 独立校准确认计划
 
+> **2026-09-02重启状态：** 首次 `p1a` 按用户要求在 baseline seed54 epoch125 后中断，保留为非正式证据，不续训、不覆盖。资源诊断确认单个 32×32 MobileNetV2 在 RTX 4090D 上每 epoch 约6秒，低利用率主要来自任务粒度而非卡死。P1b 保持 batch128、8 workers、`jobs=1`及全部科学配方，只把已验证 checkpoint 完全等价的 `prefetch_factor` 从4增至8，并修复串行 runner 的完整进程组回收。默认全新 tag 现为 `p1b`。
+
 ## 1. P0 结论与本批目的
 
 P0a 唯一完成 manifest 为 `artifacts/sweeps/cifar10_early_exit_p0_serial_p0a_20260902_110000/manifest.json`，SHA-256 为 `49a40fc1afb007d7a357c4bc54fd4b96f7618cebaf6a290955bfb8fe19327cd6`。正式审计未发现完整性、配置、划分、checkpoint、源码快照或 test 边界问题。
@@ -35,7 +37,7 @@ P1 的唯一目的，是用新训练 seed 和互不重叠的模型选择/策略�
 
 三个子集分层、完全不重叠并覆盖官方 50k train；数据划分 seed 与训练 seed 解耦，而 DataLoader shuffle 仍随训练 seed 变化。baseline 与 multi-exit 以及三个训练 seed 使用同一份固定索引，避免数据构成差异。
 
-其余配方冻结为 batch128、AdamW、OneCycleLR、AMP、CUDA Graph、`jobs=1`、`evaluate_test=false`、`measure_inference=false`。P1 不在训练中测延迟，避免 GPU 争用污染硬件证据。
+其余配方冻结为 batch128、AdamW、OneCycleLR、AMP、CUDA Graph、8 workers、`prefetch_factor=8`、`jobs=1`、`evaluate_test=false`、`measure_inference=false`。P1 不在训练中测延迟，避免 GPU 争用污染硬件证据。
 
 ## 4. 训练前冻结的共享策略
 
@@ -56,13 +58,13 @@ P1 的唯一目的，是用新训练 seed 和互不重叠的模型选择/策略�
 
 - 配置：`configs/experiments/early_exit_p1_{baseline,multi}.yaml`。
 - Sweep：`configs/sweeps/early_exit_p1.yaml`。
-- 后台启动器：`scripts/launch_early_exit_p1.py`，默认 tag=`p1a`，固定 `jobs=1`。
+- 后台启动器：`scripts/launch_early_exit_p1.py`，默认 tag=`p1b`，固定 `jobs=1`。
 - 共享策略：`src/image_classification/selection/early_exit.py`。
 - 完成后策略锁定：`scripts/analysis/analyze_early_exit_p1.py`。
 
-服务器启动前验证：本次修改文件 Ruff、`compileall`、`git diff --check` 均通过；`scripts/diagnostics/check_model.py` 的 13 种配置全部前向通过；`check_data.py` 核对 CIFAR-10/100 历史 45k/5k 边界通过；完整测试为 158 passed + 3 subtests passed。唯一 warning 仍是 CUDA Graph 集成测试首次建立 cuBLAS context。另已完成真实 GPU 的 P1 一轮 40k/5k/5k 冒烟，三集合覆盖 50k 且两两无交集，训练未迭代 calibration、`test_evaluated=false`。启动器 dry-run 精确打印六个新 ID，未创建目标目录、未启动训练。
+服务器启动前验证：本次修改文件 Ruff、`compileall`、`git diff --check` 均通过；`scripts/diagnostics/check_model.py` 的 13 种配置全部前向通过；`check_data.py` 核对 CIFAR-10/100 历史 45k/5k 边界通过；P1b 优化后的完整测试为 160 passed + 3 subtests passed。唯一 warning 仍是 CUDA Graph 集成测试首次建立 cuBLAS context。另已完成真实 GPU 的 P1 一轮 40k/5k/5k 冒烟，三集合覆盖 50k 且两两无交集，训练未迭代 calibration、`test_evaluated=false`。启动器 dry-run 精确打印六个全新 `p1b` ID，未创建目标目录、未启动训练。
 
-启动器拒绝已有训练进程、已有目标目录、重复锁和协议漂移；命令本身创建独立后台 session 并立即返回 PID 与日志路径，不需要额外 `nohup`。预计与 P0 同量级，约 2 小时，实际以 launcher log 为准。
+启动器拒绝已有训练进程、已有目标目录、重复锁和协议漂移；命令本身创建独立后台 session 并立即返回 PID 与日志路径，不需要额外 `nohup`。串行 runner 也会把每个训练任务放入独立 session，记录 PID/PGID，并在中断时有界回收完整进程组。预计与 P0 同量级，约 2 小时，实际以 launcher log 为准。
 
 唯一下一批启动命令：
 

@@ -36,19 +36,60 @@ def exit_record(return_code):
     return {"return_code": return_code, "termination_signal": termination_signal}
 
 
+def _stop_process_groups(processes):
+    """Escalate signals only to process groups explicitly created by this runner."""
+
+    processes = list(processes)
+    process_groups = {process.pid for process in processes}
+
+    def group_exists(process_group):
+        try:
+            os.killpg(process_group, 0)
+        except ProcessLookupError:
+            return False
+        except PermissionError:
+            return True
+        return True
+
+    for sig, timeout in ((signal.SIGINT, 10), (signal.SIGTERM, 3), (signal.SIGKILL, 3)):
+        for process_group in process_groups:
+            try:
+                os.killpg(process_group, sig)
+            except ProcessLookupError:
+                pass
+        deadline = time.monotonic() + timeout
+        while any(group_exists(value) for value in process_groups) and time.monotonic() < deadline:
+            for process in processes:
+                process.poll()
+            time.sleep(0.1)
+        if not any(group_exists(value) for value in process_groups):
+            break
+
+
+def run_owned_process(command, cwd, env=None, on_start=None):
+    """Run one child in its own session and always reap its complete process group."""
+
+    def terminate(_signum, _frame):
+        raise KeyboardInterrupt("Sweep termination requested")
+
+    previous_term = signal.signal(signal.SIGTERM, terminate)
+    process = None
+    try:
+        process = subprocess.Popen(command, cwd=cwd, env=env, start_new_session=True)
+        if on_start is not None:
+            on_start(process)
+        return process.wait()
+    except BaseException:
+        if process is not None:
+            _stop_process_groups([process])
+        raise
+    finally:
+        signal.signal(signal.SIGTERM, previous_term)
+
+
 def _stop_owned(active, status, on_change):
     """Stop only process groups created by this queue, including data workers."""
-    for sig, timeout in ((signal.SIGINT, 10), (signal.SIGTERM, 3), (signal.SIGKILL, 3)):
-        for item in active.values():
-            process = item["process"]
-            if process.poll() is None:
-                try:
-                    os.killpg(process.pid, sig)
-                except ProcessLookupError:
-                    pass
-        deadline = time.monotonic() + timeout
-        while any(item["process"].poll() is None for item in active.values()) and time.monotonic() < deadline:
-            time.sleep(0.1)
+    _stop_process_groups(item["process"] for item in active.values())
     for item in active.values():
         process, run = item["process"], item["run"]
         run.update(status=status, finished_at=_timestamp(), **exit_record(process.poll()))

@@ -2,9 +2,9 @@
 
 本文用于让新的对话接续当前代码、GPU服务器实验和论文计划。**先读本文件，再检查实时状态；不要把历史建议、短测或旧清单的残留字段当成当前正式结果。**
 
-最新状态见第20、21节；第1、7、9、15、16、18、19节保留此前阶段的历史计划，若冲突，以第21节为准。当前没有由Codex启动新的正式训练。
+最新状态见第21、22节；第1、7、9、15、16、18、19、20节保留此前阶段的历史计划，若冲突，以第22节为准。当前没有由Codex启动新的正式训练。
 
-> **2026-09-02当前状态：** 早退 P0a 六组已完成正式审计；multi-exit 最终头三 seed 均胜 baseline，但原双出口策略因最差类别下降超门槛判为失败。后验诊断发现约 42% MAC 节省的跨 seed 共享 exit8 阈值信号，现已按严格数据边界重设计为 P1：固定 40k train / 5k model-selection / 5k policy-calibration、新 seeds54/55/56、共6组串行 validation/calibration-only 训练。P0 周期 checkpoint 已清理，关键证据完整；服务器无训练进程。下一步只需用户启动第21节的 P1 批次。
+> **2026-09-02当前状态：** P1a 已按用户要求在 baseline seed54 epoch125 后安全中断并保留，未产生任何 completed 正式 run。诊断确认低利用率来自 32×32 MobileNetV2 单任务粒度；后台日志本来就只有每 epoch 一行。增加 worker 不提速且改变增强 RNG，因此 P1b 继续8 workers、batch128、串行，只采用两次配对验证 checkpoint 完全一致的 `prefetch_factor=8` 小幅优化，并修复串行 runner 的完整进程组回收。服务器当前无训练/GPU进程；下一步只需启动第22节的全新 `p1b` 批次。
 
 ## 1. 一分钟了解当前进度
 
@@ -753,3 +753,35 @@ cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/
 ```
 
 命令会自行创建后台 session 并返回 PID、日志和监控命令，不要额外套 `nohup`、不要并发第二批。预计约 2 小时。完成后先审计唯一 completed P1 manifest，再运行预置 P1 分析器；不得根据 test 反向改阈值或选模型。
+
+## 22. 2026-09-02 P1a用户中断、吞吐诊断与P1b重启
+
+### 22.1 中断范围与证据
+
+用户在平台观察到 CPU/GPU 利用率约40%后明确要求暂停。实时定位到 P1a runner PID/PGID/SID `62684`、主训练 PID `62738`，唯一活动 run 为 baseline seed54；Codex只向该 runner 发送 SIGINT。实验在 epoch125 后停止，manifest 正确回写 `interrupted`，其余五组仍为 `pending`。随后主训练进程已退出，但旧串行 `subprocess.run` 路径遗留同一 PGID 的 DataLoader workers；确认所有残留均属于 PGID `62684` 后发送 SIGTERM，最终训练进程与 GPU compute process 均为零。
+
+中断 manifest 为 `artifacts/sweeps/cifar10_early_exit_p1_serial_p1a_20260902_140021/manifest.json`，SHA-256 `c6cd523d0ec7e83be7d2f31cb906f0ab1d1f5ee30ccc7fb237afdd6ad8050cab`；launcher log 为 `artifacts/launcher_logs/early_exit_p1_serial_p1a_20260902_140017_138584.log`，SHA-256 `f0e2f8afc56ea26a0b1f485ff112812d62e48b2c8bcc6c98b27ccba9ed083e4a`。seed54 半程 training CSV 有连续125轮，SHA-256 `cf66fff07f6291fe9661372f4d4f3aa9ab28e1ba4528c3b673a8de94bea91c9a`。P1a 无 summary、无 completed 正式 run、无 test；半程目录、best/latest、epoch10–120及源码快照全部保留，不续训、不覆盖、不混入 P1b。
+
+### 22.2 低利用率解释与等价优化
+
+当前机器实际为 RTX 4090D 24GB，CPU cgroup 配额16核。中断前一次实时采样为 GPU 25%、显存3%/780MiB、功耗78.21W；8个 DataLoader worker 各约占0.67 CPU核。P1a 125轮平均5.984秒/epoch，最后50轮平均6.001秒，训练吞吐稳定且没有卡死。32×32输入、2.24M参数MobileNetV2、batch128的单任务对4090D本来就是很小的负载，GPU utilization百分比不能单独作为训练效率目标。
+
+后台 launcher 把 stdout/stderr 写入文件，因此 `sys.stderr.isatty=false`，tqdm 已禁用；训练只在每个 epoch 结束打印一行，训练指标也延迟到 epoch 末统一同步。进一步删日志不会实质减少 CPU↔GPU 同步。
+
+版本化吞吐诊断位于 `reports/diagnostics/2026-09-02-early-exit-p1a-interruption/`。8/12/16 workers的一轮配对表明8 workers最快；更改 worker 数还会改变数据增强 RNG 分配和 checkpoint，因此仍固定8。保持相同 worker/seed时，`prefetch_factor=4/8`在两次反向顺序试验中分别得到完全相同的 checkpoint SHA，证明训练结果逐字节等价。排除首次 worker 启动后，六个稳定 epoch：prefetch4均值/中位数6.105/6.235秒，prefetch8为5.907/5.930秒，即约3.25%/4.89%小幅改善。所有8个 smoke run均未评估test；记录哈希后已删除，不占用服务器空间。
+
+P1b 因而只把 `prefetch_factor` 从4改为8；batch128、8 workers、AdamW、OneCycleLR、AMP、CUDA Graph、模型、损失、数据划分和 `jobs=1` 均不变。没有采用增加batch或并发训练，因为前者改变优化问题，后者重引入此前原生崩溃风险。不要期待利用率接近100%；本次优化以稳定epoch吞吐和结果等价为准。
+
+### 22.3 串行停止机制修复与重启入口
+
+`run_baselines.py` 的串行任务不再使用不可控的 `subprocess.run`：每个 child 由 `run_owned_process` 放入独立 session，manifest 记录 child PID/PGID；runner 收到 SIGINT/SIGTERM或异常时，只对自己创建的完整进程组按 SIGINT 10秒→SIGTERM 3秒→SIGKILL 3秒有界升级，并轮询进程组而不只看主进程，避免 DataLoader orphan。并行队列复用同一组回收原语。新增测试核对 child 独立 PGID以及父/孙进程共同回收。
+
+P1 默认 tag 已从中断的 `p1a` 改为全新 `p1b`，分析器也冻结要求 `prefetch_factor=8`。修改文件 Ruff、compileall、diff-check通过；完整测试为160 passed + 3 subtests passed，仅有已知CUDA Graph首次建立cuBLAS context warning。dry-run精确打印 baseline/multi-exit × seeds54/55/56 六个 `_p1b_` ID，六个目标目录均未创建，未启动正式训练。
+
+用户下一步只运行以下一行；launcher自身后台化并返回 PID、log和监控命令，不要另加`nohup`：
+
+```bash
+cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/launch_early_exit_p1.py
+```
+
+预计仍约2小时，prefetch收益较小且利用率可能仍在较低区间。完成后只审计 `p1b` 唯一 completed manifest；P1a和smoke不能进入统计。
