@@ -10,6 +10,8 @@ from sklearn.metrics import auc, classification_report, confusion_matrix, roc_cu
 from sklearn.preprocessing import label_binarize
 from tqdm import tqdm
 
+from image_classification.training.objectives import primary_logits
+
 
 def classification_metrics(labels, predictions, loss: float) -> dict:
     report = classification_report(labels, predictions, output_dict=True, zero_division=0)
@@ -65,7 +67,8 @@ def validate(
             inputs = inputs.to(device, non_blocking=True)
             targets = targets.to(device, non_blocking=True)
             outputs = model(inputs)
-            accumulator.update(outputs, host_targets, criterion(outputs, targets))
+            final_logits = primary_logits(outputs)
+            accumulator.update(final_logits, host_targets, criterion(final_logits, targets))
     return accumulator.finish()
 
 

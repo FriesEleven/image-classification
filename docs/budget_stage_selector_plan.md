@@ -1,5 +1,7 @@
 # 预算约束下的阶段感知稀疏注意力部署：执行计划
 
+> 2026-09-02 状态：本计划已经完成并触发停止规则。30/30 次 probe1 均完成；九个注意力单元的三 seed 配对平均增益全部为负，冻结选择器在 ultra-light、balanced、relaxed 三档预算均选择 all-none。不得启动原计划 seeds48/49/50 确认批次，也不得据此扩展 CIFAR-100、第二 backbone 或 Coordinate Attention。正式归档见 `reports/negative_results/2026-09-02-budget-stage-probe1/`，后续执行方向见 `docs/early_exit_p0_plan.md`。
+
 ## 1. 研究问题
 
 目标不再是继续修改 CSGHA，而是回答一个可部署且可复现的问题：在给定参数、阶段相关运算量和目标硬件延迟预算时，MobileNetV2 的浅层、中层和深层分别应该不放注意力，还是放 ECA、SE 或 CBAM？

@@ -685,3 +685,31 @@ cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/
 该命令本身创建独立后台session并立即返回PID、日志路径和监控命令。不要额外加`nohup`，不要并发启动第二批，也不要在训练中运行GPU诊断。
 
 完成后先审计精确`cifar10_budget_stage_probe_serial_probe1_<timestamp>/manifest.json`的30组完成性、配置、划分、checkpoint和无test事实，再使用上面的v5 profile运行选择器。选择结果冻结后才准备seeds48/49/50确认清单；未经确认不进入CIFAR-100、第二backbone或最终test。
+
+## 20. 2026-09-02 probe1完成、静态注意力停止与早退P0入口
+
+### 20.1 probe1审计与冻结选择结果
+
+精确manifest为`artifacts/sweeps/cifar10_budget_stage_probe_serial_probe1_20260901_114320/manifest.json`，SHA-256为`2b162999a7fc456792bb90f68bb7aa3bcd11fe2443067c1b37c36ff9eebf3e99`。30/30组均completed/return_code=0、连续200 epochs、validation-only；所有summary、best/latest/final checkpoint及best哈希核验通过，没有官方test结果。
+
+matched all-none seeds45/46/47 validation accuracy为87.74/89.02/88.54%，均值88.433%。九个singleton相对matched all-none的三seed平均增益全部为负：deep CBAM −0.387pp、deep ECA −0.360pp、deep SE −0.100pp、middle CBAM −0.113pp、middle ECA −0.160pp、middle SE −0.060pp、shallow CBAM −0.187pp、shallow ECA −0.187pp、shallow SE −0.027pp。即使均值最接近零的shallow SE，在冻结`beta=0.5`风险惩罚后效用仍为负。
+
+选择器使用精确probe manifest、冻结v5 RTX3080Ti profile和默认预算实际执行，输出位于`artifacts/budget_selector/selections/cifar10_stage_sparse_probe1_20260902_v3/`。ultra-light、balanced、relaxed三档预算分别有5/22/58个可行候选，但全部选择all-none、效用0。`confirmation_plan.yaml`明确记录`required=false`、无candidate、无seed、不得确认训练。
+
+选择器同时修复了一个工作流错误：旧实现即使只选中all-none也会泛化地产生seeds48/49/50确认建议；现在all-none会触发停止规则。输入manifest/profile/budget及选择器源码哈希均写入selection.json，定向测试通过。版本化负结果位于`reports/negative_results/2026-09-02-budget-stage-probe1/`。因此不启动seeds48/49/50，不扩展静态注意力到CIFAR-100、第二backbone、Coordinate Attention或test。该结论只否定当前冻结静态阶段包协议，不声称所有注意力在所有任务上有害。
+
+### 20.2 下一训练方向
+
+当前训练方向切换为“类别风险约束、跨seed稳健的阶段早退”，完整冻结设计见`docs/early_exit_p0_plan.md`。泛化的早退、知识蒸馏、风险控制和逐类阈值已有大量工作，不能单独作为创新；候选论文主张必须落在最差类别风险、跨seed稳健性、严格数据边界和目标硬件预算的组合上，并在P0通过后再次查新。
+
+P0仅比较原生MobileNetV2与在`features[8]`、`features[16]`附加轻量头的multi-exit模型，各用新seeds51/52/53，共6次200epoch、串行、validation-only、从头训练。最终头只用自身CE；出口使用权重0.2/0.3、alpha0.5、temperature3的停止梯度最终头蒸馏。best checkpoint仍只看最终头。静态MAC代理的三条路径约为43.70%/85.47%/100%，只用于P0筛选，不替代真实硬件延迟。
+
+实现入口为`configs/sweeps/early_exit_p0.yaml`、`scripts/launch_early_exit_p0.py`和`scripts/analysis/analyze_early_exit_p0.py`。服务器上修改文件Ruff、compileall、diff-check、13种模型前向均通过；完整测试为143 passed + 3 subtests passed；真实GPU CUDA Graph多输出训练通过；写入`/tmp`的一轮45k/5k、1-epoch multi-exit冒烟完成且`test_evaluated=false`。dry-run确认六个全新`_p0a_seed{51,52,53}`目录，`jobs=1`，未启动正式训练。
+
+P0完成后必须先审计唯一manifest，再运行预置分析器。只有最终头配对损失、检查子集总体/最差类别风险和MAC节省五项冻结gate全部通过，才设计互不重叠的数据协议和正式批次；P0的validation子划分不是独立论文证据。
+
+唯一后台启动命令：
+
+```bash
+cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/launch_early_exit_p0.py
+```

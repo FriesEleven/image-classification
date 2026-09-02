@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "status": "negative_result_stop",
+  "dataset": "cifar10",
+  "official_test_evaluated": false,
+  "probe_manifest": "artifacts/sweeps/cifar10_budget_stage_probe_serial_probe1_20260901_114320/manifest.json",
+  "probe_manifest_sha256": "2b162999a7fc456792bb90f68bb7aa3bcd11fe2443067c1b37c36ff9eebf3e99",
+  "hardware_profile": "artifacts/budget_selector/profiles/stage_sparse_rtx3080ti_paired_cuda_events_20260901_v5/profile.json",
+  "hardware_profile_sha256": "6f6363b5c933fc109dbd6dd67c1d2d9eaa4485756177b5244685e8dcfdd9069d",
+  "selection": "artifacts/budget_selector/selections/cifar10_stage_sparse_probe1_20260902_v3/selection.json",
+  "selection_sha256": "beafa7606eea343a65531d878e945bcae9d05cc431917e926453dadbe983a1fc",
+  "runs": 30,
+  "seeds": [45, 46, 47],
+  "baseline_validation_accuracy_percent": [87.74, 89.02, 88.54],
+  "baseline_mean_percent": 88.43333333333334,
+  "baseline_sample_std_percent": 0.6466323014923823,
+  "unit_evidence": {
+    "shallow_eca": {"paired_gain_pp": [-0.08, -0.76, 0.28], "mean_gain_pp": -0.18666666666665796, "sample_std_pp": 0.52814139520902, "wins": 1},
+    "shallow_se": {"paired_gain_pp": [0.04, -0.34, 0.22], "mean_gain_pp": -0.02666666666666136, "sample_std_pp": 0.2858904218985486, "wins": 2},
+    "shallow_cbam": {"paired_gain_pp": [0.50, -0.94, -0.12], "mean_gain_pp": -0.18666666666666268, "sample_std_pp": 0.7223111056416981, "wins": 1},
+    "middle_eca": {"paired_gain_pp": [-0.04, -0.80, 0.36], "mean_gain_pp": -0.15999999999999184, "sample_std_pp": 0.5892367945062547, "wins": 1},
+    "middle_se": {"paired_gain_pp": [0.64, -0.82, 0.00], "mean_gain_pp": -0.0599999999999928, "sample_std_pp": 0.731846978541283, "wins": 1},
+    "middle_cbam": {"paired_gain_pp": [-0.04, -0.36, 0.06], "mean_gain_pp": -0.113333333333325, "sample_std_pp": 0.2193931022920517, "wins": 1},
+    "deep_eca": {"paired_gain_pp": [0.18, -1.20, -0.06], "mean_gain_pp": -0.3599999999999947, "sample_std_pp": 0.737292343646677, "wins": 1},
+    "deep_se": {"paired_gain_pp": [0.10, -0.70, 0.30], "mean_gain_pp": -0.09999999999999905, "sample_std_pp": 0.5291502622129229, "wins": 2},
+    "deep_cbam": {"paired_gain_pp": [-0.02, -0.76, -0.38], "mean_gain_pp": -0.38666666666665606, "sample_std_pp": 0.3700450423034087, "wins": 0}
+  },
+  "selected_by_budget": {
+    "ultra_light": "shallow_none__middle_none__deep_none",
+    "balanced": "shallow_none__middle_none__deep_none",
+    "relaxed": "shallow_none__middle_none__deep_none"
+  },
+  "confirmation_required": false,
+  "confirmation_seeds": [],
+  "decision": "Stop the static attention selector route under the pre-specified all-none rule."
+}

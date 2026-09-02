@@ -29,6 +29,68 @@ class BaseMobileNetV2(nn.Module):
         return self.model(inputs)
 
 
+class EarlyExitHead(nn.Module):
+    """A deliberately small classifier attached to an intermediate feature map."""
+
+    def __init__(self, channels: int, num_classes: int):
+        super().__init__()
+        self.pool = nn.AdaptiveAvgPool2d(1)
+        self.classifier = nn.Linear(channels, num_classes)
+
+    def forward(self, inputs: torch.Tensor) -> torch.Tensor:
+        return self.classifier(self.pool(inputs).flatten(1))
+
+
+class MultiExitMobileNetV2(nn.Module):
+    """MobileNetV2 with ordered intermediate heads for exploratory early exiting."""
+
+    def __init__(
+        self,
+        num_classes: int = 10,
+        width_mult: float = 1.0,
+        exit_positions: tuple[int, ...] = (8, 16),
+    ):
+        super().__init__()
+        if not exit_positions:
+            raise ValueError("At least one early-exit position is required")
+        self.model = mobilenet_v2(weights=None, width_mult=width_mult)
+        self.model.classifier[1] = nn.Linear(self.model.last_channel, num_classes)
+        self.exit_positions = tuple(exit_positions)
+        heads = {}
+        for position in self.exit_positions:
+            channels = _output_channels(self.model.features[position])
+            if channels is None:
+                raise ValueError(f"Cannot determine output channels for exit layer {position}")
+            heads[str(position)] = EarlyExitHead(channels, num_classes)
+        self.exit_heads = nn.ModuleDict(heads)
+
+    def _final_logits(self, features: torch.Tensor) -> torch.Tensor:
+        return self.model.classifier(features.mean((2, 3)))
+
+    def forward(self, inputs: torch.Tensor) -> tuple[torch.Tensor, ...]:
+        outputs = inputs
+        exit_logits = []
+        for index, module in enumerate(self.model.features):
+            outputs = module(outputs)
+            if index in self.exit_positions:
+                exit_logits.append(self.exit_heads[str(index)](outputs))
+        return (self._final_logits(outputs), *exit_logits)
+
+    def forward_to_exit(
+        self, inputs: torch.Tensor, exit_position: int | None,
+    ) -> torch.Tensor:
+        """Execute only the prefix required by one exit, or the full final path."""
+
+        if exit_position is not None and exit_position not in self.exit_positions:
+            raise ValueError(f"Unknown early-exit position: {exit_position}")
+        outputs = inputs
+        for index, module in enumerate(self.model.features):
+            outputs = module(outputs)
+            if index == exit_position:
+                return self.exit_heads[str(index)](outputs)
+        return self._final_logits(outputs)
+
+
 class _SparseAttentionMobileNetV2(nn.Module):
     attention_attribute = ""
 

@@ -65,6 +65,44 @@ def test_validation_only_flag_is_parsed():
     assert config.evaluate_test is False
 
 
+def test_multi_exit_config_records_training_contract():
+    config = load_config(
+        [
+            "--experiment_name", "exit_p0",
+            "--model_type", "multi_exit",
+            "--exit_positions", "8,16",
+            "--exit_loss_weights", "0.2,0.3",
+            "--exit_distillation_alpha", "0.5",
+            "--exit_temperature", "3",
+        ]
+    )
+
+    assert config.exit_positions == (8, 16)
+    assert config.exit_loss_weights == (0.2, 0.3)
+    assert config.experiment_id == "exit_p0_multi_exit_pos8-16_cifar10"
+    assert config.to_dict()["exit_positions"] == [8, 16]
+    assert "exit_positions" not in ExperimentConfig().to_dict()
+
+
+@pytest.mark.parametrize(
+    ("positions", "weights", "message"),
+    [
+        ((), (), "requires at least one"),
+        ((16, 8), (0.2, 0.3), "unique and increasing"),
+        ((8, 18), (0.2, 0.3), "between 1 and 17"),
+        ((8, 16), (0.2,), "one exit_loss_weight"),
+        ((8, 16), (0.2, 0.0), "must be positive"),
+    ],
+)
+def test_multi_exit_config_rejects_ambiguous_contract(positions, weights, message):
+    with pytest.raises(ValueError, match=message):
+        ExperimentConfig(
+            model_type="multi_exit",
+            exit_positions=positions,
+            exit_loss_weights=weights,
+        )
+
+
 def test_shared_gpu_runtime_options_are_explicit_and_validated():
     config = load_config(["--torch_num_threads", "1", "--measure_inference", "false"])
     assert config.torch_num_threads == 1

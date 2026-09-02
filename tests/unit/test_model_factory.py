@@ -71,3 +71,42 @@ def test_empty_stage_sparse_member_matches_baseline_initialization():
         torch.equal(baseline.state_dict()[name], sparse_none.state_dict()[name])
         for name in baseline.state_dict()
     )
+
+
+def test_multi_exit_outputs_are_ordered_and_prefix_execution_matches():
+    config = ExperimentConfig(
+        model_type="multi_exit",
+        exit_positions=(8, 16),
+        exit_loss_weights=(0.2, 0.3),
+    )
+    model = build_model(config).eval()
+    inputs = torch.randn(2, 3, 32, 32)
+
+    with torch.no_grad():
+        final_logits, exit8_logits, exit16_logits = model(inputs)
+
+    assert final_logits.shape == exit8_logits.shape == exit16_logits.shape == (2, 10)
+    with torch.no_grad():
+        torch.testing.assert_close(model.forward_to_exit(inputs, 8), exit8_logits)
+        torch.testing.assert_close(model.forward_to_exit(inputs, 16), exit16_logits)
+        torch.testing.assert_close(model.forward_to_exit(inputs, None), final_logits)
+    with pytest.raises(ValueError, match="Unknown"):
+        model.forward_to_exit(inputs, 7)
+
+
+def test_multi_exit_adds_only_heads_to_identically_initialized_backbone():
+    torch.manual_seed(73)
+    baseline = build_model(ExperimentConfig(model_type="mobilenetv2"))
+    torch.manual_seed(73)
+    multi_exit = build_model(
+        ExperimentConfig(
+            model_type="multi_exit",
+            exit_positions=(8, 16),
+            exit_loss_weights=(0.2, 0.3),
+        )
+    )
+
+    assert all(
+        torch.equal(value, multi_exit.state_dict()[name])
+        for name, value in baseline.state_dict().items()
+    )

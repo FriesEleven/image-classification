@@ -21,6 +21,7 @@ from image_classification.training.benchmark import benchmark_inference, model_m
 from image_classification.training.checkpoint import append_training_log, save_checkpoint
 from image_classification.training.cuda_graph import prepare_training_graph
 from image_classification.training.evaluate import EpochAccumulator, save_evaluation_data, validate
+from image_classification.training.objectives import primary_logits, training_objective
 from image_classification.training.optimizer_step import OptimizerStepTracker
 from image_classification.training.provenance import file_sha256, runtime_provenance
 from image_classification.utils import seed_everything
@@ -81,10 +82,10 @@ def _train_epoch(model, loader, criterion, optimizer, scheduler, scaler, config,
             group_size = min(config.accumulation_steps, len(loader) - group_start)
             with autocast(device_type=device.type, enabled=amp_enabled, cache_enabled=not config.cuda_graph):
                 outputs = model(inputs)
-                batch_loss = criterion(outputs, targets)
+                batch_loss = training_objective(outputs, targets, criterion, config)
                 loss = batch_loss / group_size
             scaler.scale(loss).backward()
-            accumulator.update(outputs, host_targets, batch_loss)
+            accumulator.update(primary_logits(outputs), host_targets, batch_loss)
             if interactive and step % 50 == 0:
                 progress.set_postfix(loss=f"{batch_loss.item():.4f}")
             if step % config.accumulation_steps == 0 or step == len(loader):

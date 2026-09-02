@@ -34,6 +34,11 @@ CONFIGS = (
         se_positions=(7, 8),
         cbam_positions=(15, 16),
     ),
+    ExperimentConfig(
+        model_type="multi_exit",
+        exit_positions=(8, 16),
+        exit_loss_weights=(0.2, 0.3),
+    ),
 )
 
 
@@ -43,10 +48,11 @@ def main() -> int:
         model = build_model(config).eval()
         with torch.no_grad():
             output = model(sample)
+        outputs = output if isinstance(output, tuple) else (output,)
         parameters = sum(parameter.numel() for parameter in model.parameters())
         print(
             f"{config.dataset:8s} {config.model_type:12s} "
-            f"output={tuple(output.shape)} parameters={parameters:,}"
+            f"outputs={[tuple(value.shape) for value in outputs]} parameters={parameters:,}"
         )
     return 0
 

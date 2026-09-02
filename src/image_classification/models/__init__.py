@@ -8,6 +8,7 @@ from .mobilenetv2 import (
     CBAMMobileNetV2,
     CSGHAMobileNetV2,
     HybridAttentionMobileNetV2,
+    MultiExitMobileNetV2,
     SEMobileNetV2,
     StageSparseAttentionMobileNetV2,
 )
@@ -20,6 +21,7 @@ __all__ = [
     "CrossStageGuidedCBAM",
     "ECAMobileNetV2",
     "HybridAttentionMobileNetV2",
+    "MultiExitMobileNetV2",
     "SEBlock",
     "SEMobileNetV2",
     "StageSparseAttentionMobileNetV2",

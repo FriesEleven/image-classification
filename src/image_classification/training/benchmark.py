@@ -9,6 +9,7 @@ from torch import nn
 from image_classification.config import ExperimentConfig
 from image_classification.models.attention import CBAM, CrossStageGuidedCBAM, SEBlock
 from image_classification.models.eca import ECALayer
+from image_classification.models.mobilenetv2 import EarlyExitHead
 
 
 def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
@@ -31,11 +32,25 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
     )
     cross_stage_guidance = guidance_projection + guidance_normalization + guidance_scale
     se = sum(sum(parameter.numel() for parameter in module.parameters()) for module in model.modules() if isinstance(module, SEBlock))
+    exit_heads = sum(
+        sum(parameter.numel() for parameter in module.parameters())
+        for module in model.modules()
+        if isinstance(module, EarlyExitHead)
+    )
     classifier = sum(parameter.numel() for name, parameter in model.named_parameters() if "classifier" in name)
+    # Exit head linear layers also contain "classifier" in their name. Keep the
+    # final classifier and auxiliary heads disjoint in the persisted accounting.
+    classifier -= exit_heads
     eca_count = sum(isinstance(module, ECALayer) for module in model.modules())
     cbam_count = sum(isinstance(module, CBAM) for module in model.modules())
     guided_cbam_count = len(guided_modules)
     se_count = sum(isinstance(module, SEBlock) for module in model.modules())
+    exit_head_count = sum(isinstance(module, EarlyExitHead) for module in model.modules())
+    exit_head_flops = sum(
+        module.classifier.in_features * module.classifier.out_features
+        for module in model.modules()
+        if isinstance(module, EarlyExitHead)
+    )
     base_flops = 91.0e6
     estimated_attention_flops = (
         eca_count * 0.01e6
@@ -47,8 +62,9 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
     return {
         "parameters_total": total,
         "parameters_trainable": trainable,
-        "parameters_backbone": total - classifier - eca - cbam - guided_cbam - se,
+        "parameters_backbone": total - classifier - exit_heads - eca - cbam - guided_cbam - se,
         "parameters_classifier": classifier,
+        "parameters_exit_heads": exit_heads,
         "parameters_eca": eca,
         "parameters_cbam": cbam,
         "parameters_guided_cbam": guided_cbam,
@@ -79,15 +95,18 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
         "num_cbam_modules": cbam_count,
         "num_guided_cbam_modules": guided_cbam_count,
         "num_se_modules": se_count,
-        "flops_total": base_flops + estimated_attention_flops,
+        "num_exit_heads": exit_head_count,
+        "flops_total": base_flops + estimated_attention_flops + exit_head_flops,
         "flops_base": base_flops,
         "flops_attention_adjustment": estimated_attention_flops,
+        "flops_exit_head_adjustment": exit_head_flops,
         "model_type": config.model_type,
         "architecture_version": config.architecture_version,
         "aux_positions": list(config.aux_positions),
         "eca_positions": list(config.eca_positions),
         "se_positions": list(config.se_positions),
         "cbam_positions": list(config.cbam_positions),
+        "exit_positions": list(config.exit_positions),
         "guidance_position": config.guidance_position,
         "guidance_reduction": config.guidance_reduction,
         "guidance_source_channels": getattr(model, "guide_channels", None),
@@ -98,7 +117,10 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
             if config.model_type in {"csgha_v5", "csgha_v6"} else "tanh"
         ),
         "guidance_scale_cap": 0.25 if config.model_type == "csgha_v6" else 1.0,
-        "flops_note": "FLOPs are an analytical estimate, not profiler output.",
+        "flops_note": (
+            "FLOPs are an analytical full-forward estimate, not profiler output. "
+            "Early-exit deployment paths require separate prefix measurements."
+        ),
     }
 
 

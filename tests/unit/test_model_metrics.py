@@ -51,3 +51,21 @@ def test_stage_sparse_metrics_count_all_selected_attention_as_main():
     assert metrics["parameters_main_attention"] == (
         metrics["parameters_eca"] + metrics["parameters_se"] + metrics["parameters_cbam"]
     )
+
+
+def test_multi_exit_metrics_keep_heads_separate_from_final_classifier():
+    baseline_config = ExperimentConfig(model_type="mobilenetv2")
+    exit_config = ExperimentConfig(
+        model_type="multi_exit",
+        exit_positions=(8, 16),
+        exit_loss_weights=(0.2, 0.3),
+    )
+    baseline = model_metrics(build_model(baseline_config), baseline_config)
+    multi_exit = model_metrics(build_model(exit_config), exit_config)
+
+    assert multi_exit["num_exit_heads"] == 2
+    assert multi_exit["exit_positions"] == [8, 16]
+    assert multi_exit["parameters_exit_heads"] == (64 + 1) * 10 + (160 + 1) * 10
+    assert multi_exit["flops_exit_head_adjustment"] == 64 * 10 + 160 * 10
+    assert multi_exit["parameters_classifier"] == baseline["parameters_classifier"]
+    assert multi_exit["parameters_backbone"] == baseline["parameters_backbone"]

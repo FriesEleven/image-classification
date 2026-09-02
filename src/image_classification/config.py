@@ -19,6 +19,7 @@ MODEL_TYPES = (
     "csgha_v5",
     "csgha_v6",
     "stage_sparse",
+    "multi_exit",
 )
 DATASETS = ("cifar10", "cifar100")
 DATASET_NUM_CLASSES = {"cifar10": 10, "cifar100": 100}
@@ -30,6 +31,14 @@ def _positions(value: str | Sequence[int] | None) -> tuple[int, ...]:
     if isinstance(value, str):
         return tuple(int(item.strip()) for item in value.split(",") if item.strip())
     return tuple(int(item) for item in value)
+
+
+def _floats(value: str | Sequence[float] | None) -> tuple[float, ...]:
+    if value is None or value == "":
+        return ()
+    if isinstance(value, str):
+        return tuple(float(item.strip()) for item in value.split(",") if item.strip())
+    return tuple(float(item) for item in value)
 
 
 def _boolean(value: str | bool) -> bool:
@@ -62,6 +71,10 @@ class ExperimentConfig:
     eca_positions: tuple[int, ...] = ()
     se_positions: tuple[int, ...] = ()
     cbam_positions: tuple[int, ...] = ()
+    exit_positions: tuple[int, ...] = ()
+    exit_loss_weights: tuple[float, ...] = ()
+    exit_distillation_alpha: float = 0.5
+    exit_temperature: float = 3.0
     guidance_position: int = 2
     guidance_reduction: int = 4
     num_workers: int = 8
@@ -100,6 +113,23 @@ class ExperimentConfig:
                 raise ValueError("stage_sparse attention positions must be disjoint")
         elif self.eca_positions:
             raise ValueError("eca_positions are only supported by stage_sparse")
+        if self.model_type == "multi_exit":
+            if not self.exit_positions:
+                raise ValueError("multi_exit requires at least one exit position")
+            if tuple(sorted(set(self.exit_positions))) != self.exit_positions:
+                raise ValueError("multi_exit exit_positions must be unique and increasing")
+            if any(position < 1 or position > 17 for position in self.exit_positions):
+                raise ValueError("multi_exit exit positions must be between 1 and 17")
+            if len(self.exit_loss_weights) != len(self.exit_positions):
+                raise ValueError("multi_exit requires one exit_loss_weight per exit position")
+            if any(weight <= 0 for weight in self.exit_loss_weights):
+                raise ValueError("multi_exit exit_loss_weights must be positive")
+            if not 0 <= self.exit_distillation_alpha <= 1:
+                raise ValueError("exit_distillation_alpha must be between 0 and 1")
+            if self.exit_temperature <= 0:
+                raise ValueError("exit_temperature must be positive")
+        elif self.exit_positions or self.exit_loss_weights:
+            raise ValueError("exit positions and loss weights are only supported by multi_exit")
         if self.model_type in {"csgha", "csgha_v4", "csgha_v5", "csgha_v6"}:
             if not self.se_positions or not self.cbam_positions:
                 raise ValueError("CSGHA requires both SE and guided CBAM positions")
@@ -121,6 +151,7 @@ class ExperimentConfig:
             "csgha_v6": "csgha_v6_rms_guidance_cap_0.25_deep_leaky_relu_0.1",
             "hybrid_leaky": "independent_hybrid_deep_leaky_relu_0.1",
             "stage_sparse": "stage_sparse_v1_independent_se_eca_cbam",
+            "multi_exit": "mobilenetv2_multi_exit_v1_detached_final_kd",
         }.get(self.model_type, f"{self.model_type}_v1")
 
     @property
@@ -143,6 +174,9 @@ class ExperimentConfig:
             return (
                 f"{self.experiment_name}_stage_sparse_se{se}_eca{eca}_cbam{cbam}_{self.dataset}"
             )
+        if self.model_type == "multi_exit":
+            positions = "-".join(map(str, self.exit_positions))
+            return f"{self.experiment_name}_multi_exit_pos{positions}_{self.dataset}"
         if self.model_type in {"cbam", "se"} and self.aux_positions:
             positions = "-".join(map(str, self.aux_positions))
             return f"{self.experiment_name}_{self.model_type}_pos{positions}_{self.dataset}"
@@ -150,11 +184,21 @@ class ExperimentConfig:
 
     def to_dict(self) -> dict:
         data = asdict(self)
-        for key in ("aux_positions", "eca_positions", "se_positions", "cbam_positions"):
+        for key in (
+            "aux_positions", "eca_positions", "se_positions", "cbam_positions",
+            "exit_positions", "exit_loss_weights",
+        ):
             data[key] = list(data[key])
         if self.model_type != "stage_sparse":
             # Preserve the resolved-config schema used by all historical runs.
             data.pop("eca_positions")
+        if self.model_type != "multi_exit":
+            # Do not alter the resolved-config schema of historical runs.
+            for key in (
+                "exit_positions", "exit_loss_weights", "exit_distillation_alpha",
+                "exit_temperature",
+            ):
+                data.pop(key)
         return data
 
 
@@ -178,6 +222,10 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--eca_positions")
     parser.add_argument("--se_positions")
     parser.add_argument("--cbam_positions")
+    parser.add_argument("--exit_positions")
+    parser.add_argument("--exit_loss_weights")
+    parser.add_argument("--exit_distillation_alpha", type=float)
+    parser.add_argument("--exit_temperature", type=float)
     parser.add_argument("--guidance_position", type=int)
     parser.add_argument("--guidance_reduction", type=int)
     parser.add_argument("--num_workers", type=int)
@@ -194,7 +242,8 @@ def load_config(argv: Sequence[str] | None = None) -> ExperimentConfig:
         with config_path.open(encoding="utf-8") as handle:
             values.update(yaml.safe_load(handle) or {})
     values.update({key: value for key, value in args.items() if value is not None})
-    for key in ("aux_positions", "eca_positions", "se_positions", "cbam_positions"):
+    for key in ("aux_positions", "eca_positions", "se_positions", "cbam_positions", "exit_positions"):
         values[key] = _positions(values.get(key))
+    values["exit_loss_weights"] = _floats(values.get("exit_loss_weights"))
     config = ExperimentConfig(**values)
     return config

@@ -1,0 +1,11 @@
+name: cifar10_early_exit_p0_serial
+description: >-
+  Exploratory validation-only feasibility batch for two stage-aware MobileNetV2
+  exits. Pair a plain final-head control with the detached-final KD multi-exit
+  model on fresh seeds 51/52/53. This is not paper evidence and never evaluates
+  the official test set. Execute serially because concurrent CUDA Graph plus AMP
+  training previously produced random native SIGABRT failures.
+seeds: [51, 52, 53]
+experiments:
+  - configs/experiments/early_exit_p0_baseline.yaml
+  - configs/experiments/early_exit_p0_multi.yaml

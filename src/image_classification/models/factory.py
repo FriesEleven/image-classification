@@ -10,6 +10,7 @@ from .mobilenetv2 import (
     CBAMMobileNetV2,
     CSGHAMobileNetV2,
     HybridAttentionMobileNetV2,
+    MultiExitMobileNetV2,
     SEMobileNetV2,
     StageSparseAttentionMobileNetV2,
 )
@@ -20,6 +21,11 @@ def build_model(config: ExperimentConfig) -> nn.Module:
         return BaseMobileNetV2(num_classes=config.num_classes)
     if config.model_type == "eca":
         return ECAMobileNetV2(num_classes=config.num_classes)
+    if config.model_type == "multi_exit":
+        return MultiExitMobileNetV2(
+            num_classes=config.num_classes,
+            exit_positions=config.exit_positions,
+        )
     if config.model_type == "cbam":
         return CBAMMobileNetV2(num_classes=config.num_classes, aux_positions=config.aux_positions)
     if config.model_type == "se":

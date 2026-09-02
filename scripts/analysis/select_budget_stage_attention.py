@@ -1,6 +1,7 @@
 """Select stage-sparse attention candidates from paired probe runs and hardware budgets."""
 
 import argparse
+import hashlib
 import json
 import sys
 from datetime import datetime
@@ -40,6 +41,14 @@ EXPECTED_PROTOCOL = {
 
 def _load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _probe_candidates() -> list[dict]:
@@ -154,6 +163,35 @@ def _load_budget_config(path: Path) -> dict:
     return value
 
 
+def _confirmation_plan(selected_ids: list[str], baseline_id: str) -> dict:
+    attention_ids = [candidate_id for candidate_id in selected_ids if candidate_id != baseline_id]
+    if not attention_ids:
+        return {
+            "required": False,
+            "selected_candidate_ids": [],
+            "matched_baseline_candidate_id": baseline_id,
+            "recommended_confirmation_seeds": [],
+            "retrain_from_scratch": False,
+            "evaluate_test": False,
+            "stop_reason": (
+                "Every frozen budget selected all-none. The pre-specified stop rule forbids "
+                "forcing an attention confirmation batch."
+            ),
+        }
+    return {
+        "required": True,
+        "selected_candidate_ids": attention_ids,
+        "matched_baseline_candidate_id": baseline_id,
+        "recommended_confirmation_seeds": [48, 49, 50],
+        "retrain_from_scratch": True,
+        "evaluate_test": False,
+        "note": (
+            "Freeze candidates before confirmation; additive probe scores are not final "
+            "accuracy evidence."
+        ),
+    }
+
+
 def _markdown(result: dict) -> str:
     lines = [
         "# Budget-aware stage-sparse selection",
@@ -191,6 +229,16 @@ def _markdown(result: dict) -> str:
             f"{selected['attention_operations_estimate']:,} | "
             f"{selected['latency_overhead_percent']:+.2f}% |"
         )
+    if result["confirmation_plan"]["required"]:
+        confirmation = (
+            "At least one budget selected attention. Confirm the deduplicated candidates and "
+            "matched all-none from scratch on the frozen confirmation seeds."
+        )
+    else:
+        confirmation = (
+            "All budgets selected all-none, so the pre-specified stopping rule is active and no "
+            "attention confirmation training should be launched."
+        )
     lines.extend(
         [
             "",
@@ -198,6 +246,7 @@ def _markdown(result: dict) -> str:
                 "No official test set was evaluated. If a budget selects the all-none candidate, retain that negative "
                 "result instead of forcing an attention deployment."
             ),
+            confirmation,
             "",
         ]
     )
@@ -230,24 +279,21 @@ def main() -> int:
         "schema_version": 1,
         "created_at": datetime.now().astimezone().isoformat(timespec="seconds"),
         "probe_manifest": str(manifest_path),
+        "probe_manifest_sha256": _file_sha256(manifest_path),
         "probe_sweep_name": manifest["sweep_name"],
         "hardware_profile": str(profile_path),
+        "hardware_profile_sha256": _file_sha256(profile_path),
         "profile_family": profile["profile_family"],
         "budget_config": str(args.budgets.resolve()),
+        "budget_config_sha256": _file_sha256(args.budgets.resolve()),
+        "selector_source_sha256": _file_sha256(Path(__file__).resolve()),
         "calibration_seeds": list(EXPECTED_SEEDS),
         "official_test_evaluated": False,
         "baseline_candidate_id": baseline_id,
         "risk_penalty": budget_config["risk_penalty"],
         "unit_evidence": evidence,
         "selections": selections,
-        "confirmation_plan": {
-            "selected_candidate_ids": selected_ids,
-            "matched_baseline_candidate_id": baseline_id,
-            "recommended_confirmation_seeds": [48, 49, 50],
-            "retrain_from_scratch": True,
-            "evaluate_test": False,
-            "note": "Freeze candidates before confirmation; additive probe scores are not final accuracy evidence.",
-        },
+        "confirmation_plan": _confirmation_plan(selected_ids, baseline_id),
     }
     if args.dry_run:
         print(_markdown(result))

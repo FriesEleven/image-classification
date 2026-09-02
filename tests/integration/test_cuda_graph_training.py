@@ -63,9 +63,52 @@ def test_graph_matches_eager_no_cache_and_preserves_partial_batch_eval_and_rng(m
             assert torch.equal(value, graph.state_dict()[key]), key
     assert graph._training_graph_replays == 3
     assert graph._training_graph_fallbacks == 3
-    assert all(int(value) == 6 for key, value in graph.state_dict().items() if key.endswith("num_batches_tracked"))
+    assert all(
+        int(value) == 6
+        for key, value in graph.state_dict().items()
+        if key.endswith("num_batches_tracked")
+    )
     eager_eval = validate(eager, batches, torch.nn.CrossEntropyLoss(), torch.device("cuda"))
     graph_eval = validate(graph, batches, torch.nn.CrossEntropyLoss(), torch.device("cuda"))
     assert eager_eval[0] == graph_eval[0]
     assert (eager_eval[3] == graph_eval[3]).all()
     assert graph._training_graph_replays == 3
+
+
+def test_multi_exit_tuple_training_uses_graph_and_eager_partial_batch():
+    config = ExperimentConfig(
+        model_type="multi_exit",
+        exit_positions=(8, 16),
+        exit_loss_weights=(0.2, 0.3),
+        batch_size=4,
+        cuda_graph=True,
+        accumulation_steps=1,
+        num_workers=0,
+        evaluate_test=False,
+    )
+    model = build_model(config).cuda().train()
+    prepare_training_graph(model, 4, torch.device("cuda"), amp=True)
+    batches = [
+        (torch.randn(size, 3, 32, 32, device="cuda"), torch.arange(size, device="cuda") % 10)
+        for size in (4, 2)
+    ]
+    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4, weight_decay=1e-4)
+    scaler = GradScaler("cuda", init_scale=8)
+    scheduler = Counter()
+
+    metrics = _train_epoch(
+        model,
+        batches,
+        torch.nn.CrossEntropyLoss(),
+        optimizer,
+        scheduler,
+        scaler,
+        config,
+        torch.device("cuda"),
+    )
+    validation = validate(model, batches, torch.nn.CrossEntropyLoss(), torch.device("cuda"))
+
+    assert 0 <= metrics["accuracy"] <= 1
+    assert validation[3].shape == (6, 10)
+    assert model._training_graph_replays == 1
+    assert model._training_graph_fallbacks == 3  # partial training batch plus two validation batches
