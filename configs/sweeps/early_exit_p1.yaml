@@ -1,0 +1,11 @@
+name: cifar10_early_exit_p1_serial
+description: >-
+  Paper-facing protocol confirmation for the P0-frozen MobileNetV2 exit8/exit16
+  architecture. Pair a plain baseline with the detached-final KD multi-exit
+  model on training seeds 54/55/56. Every run shares split seed 20260902 and
+  uses disjoint 40k train, 5k checkpoint-selection validation and 5k policy
+  calibration subsets. Execute serially and do not evaluate the official test.
+seeds: [54, 55, 56]
+experiments:
+  - configs/experiments/early_exit_p1_baseline.yaml
+  - configs/experiments/early_exit_p1_multi.yaml

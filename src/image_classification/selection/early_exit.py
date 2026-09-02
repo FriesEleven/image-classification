@@ -175,3 +175,106 @@ def select_policy(
         },
         "grid_points": grid_points,
     }
+
+
+def select_shared_single_exit_policy(
+    datasets: Sequence[tuple[np.ndarray, np.ndarray, np.ndarray]],
+    path_costs: Sequence[float],
+    thresholds: Sequence[float],
+    max_accuracy_drop: float = 0.0,
+    max_balanced_accuracy_drop: float = 0.0,
+    max_worst_class_drop: float = 0.0,
+    min_early_fraction: float = 0.15,
+    max_early_fraction: float = 0.95,
+) -> dict | None:
+    """Select one threshold that satisfies empirical risk constraints on every dataset.
+
+    Each dataset is ``(labels, exit_logits, final_logits)``. The same confidence
+    threshold is applied to every dataset/model, which makes the selection
+    deliberately robust to the individual training seed rather than tuning one
+    threshold per checkpoint.
+    """
+
+    if not datasets:
+        raise ValueError("at least one calibration dataset is required")
+    if len(path_costs) != 2 or not 0 <= path_costs[0] < path_costs[1] or path_costs[1] != 1.0:
+        raise ValueError("path_costs must contain one early path followed by final cost 1.0")
+    if not 0 <= min_early_fraction <= max_early_fraction <= 1:
+        raise ValueError("early route fraction bounds must satisfy 0 <= min <= max <= 1")
+    candidates = sorted({float(value) for value in thresholds})
+    if not candidates or not all(np.isfinite(candidates)):
+        raise ValueError("thresholds must contain finite values")
+
+    prepared = []
+    for labels, exit_logits, final_logits in datasets:
+        labels = np.asarray(labels)
+        exit_logits = np.asarray(exit_logits)
+        final_logits = np.asarray(final_logits)
+        if labels.ndim != 1 or exit_logits.shape != final_logits.shape:
+            raise ValueError("labels must be one-dimensional and logits must have identical shapes")
+        if exit_logits.ndim != 2 or len(labels) != len(exit_logits):
+            raise ValueError("logits must have shape [samples, classes] matching labels")
+        prepared.append(
+            {
+                "labels": labels,
+                "confidence": softmax_confidence(exit_logits),
+                "exit_predictions": exit_logits.argmax(axis=1),
+                "final_predictions": final_logits.argmax(axis=1),
+            }
+        )
+
+    best = None
+    tolerance = 1e-12
+    for threshold in candidates:
+        metrics_by_dataset = []
+        for values in prepared:
+            early = values["confidence"] >= threshold
+            predictions = np.where(
+                early, values["exit_predictions"], values["final_predictions"],
+            )
+            paths = np.where(early, 0, 1)
+            metrics = policy_metrics(
+                values["labels"],
+                predictions,
+                values["final_predictions"],
+                paths,
+                path_costs,
+            )
+            early_fraction = metrics["route_fractions"][0]
+            feasible = (
+                metrics["accuracy_drop"] <= max_accuracy_drop + tolerance
+                and metrics["balanced_accuracy_drop"] <= max_balanced_accuracy_drop + tolerance
+                and metrics["worst_class_accuracy_drop"] <= max_worst_class_drop + tolerance
+                and min_early_fraction <= early_fraction <= max_early_fraction
+            )
+            if not feasible:
+                break
+            metrics_by_dataset.append(metrics)
+        if len(metrics_by_dataset) != len(prepared):
+            continue
+        savings = [metrics["cost_saving_fraction"] for metrics in metrics_by_dataset]
+        score = (
+            min(savings),
+            float(np.mean(savings)),
+            -max(metrics["worst_class_accuracy_drop"] for metrics in metrics_by_dataset),
+            -max(metrics["accuracy_drop"] for metrics in metrics_by_dataset),
+            threshold,
+        )
+        if best is None or score > best[0]:
+            best = (score, threshold, metrics_by_dataset)
+
+    if best is None:
+        return None
+    return {
+        "confidence_threshold": best[1],
+        "calibration_metrics": best[2],
+        "constraints": {
+            "max_accuracy_drop": max_accuracy_drop,
+            "max_balanced_accuracy_drop": max_balanced_accuracy_drop,
+            "max_worst_class_accuracy_drop": max_worst_class_drop,
+            "min_early_fraction": min_early_fraction,
+            "max_early_fraction": max_early_fraction,
+        },
+        "candidate_threshold_count": len(candidates),
+        "objective": "maximize minimum per-dataset cost saving, then mean saving",
+    }

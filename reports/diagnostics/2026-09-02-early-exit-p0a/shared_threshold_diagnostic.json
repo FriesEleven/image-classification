@@ -1,0 +1,349 @@
+{
+  "schema_version": 1,
+  "status": "class_guard_feasible_exploratory",
+  "scope": "Post-failure P0 diagnostic only; not independent paper evidence.",
+  "manifest": "/root/autodl-tmp/image-classification/artifacts/sweeps/cifar10_early_exit_p0_serial_p0a_20260902_110000/manifest.json",
+  "manifest_sha256": "49a40fc1afb007d7a357c4bc54fd4b96f7618cebaf6a290955bfb8fe19327cd6",
+  "device": "cuda",
+  "search_contract": {
+    "shared_across_seeds": true,
+    "calibration_max_accuracy_drop": 0.0,
+    "calibration_max_balanced_accuracy_drop": 0.0,
+    "calibration_max_worst_class_drop": 0.0,
+    "calibration_route_fraction_range": [
+      0.15,
+      0.95
+    ],
+    "candidate_protected_sets": 1024,
+    "threshold_grid_size": 43
+  },
+  "selected_policy": {
+    "exit_position": 8,
+    "confidence_threshold": 0.9410777530842098,
+    "protected_predicted_class_ids": [],
+    "protected_predicted_class_names": [],
+    "fallback": "final",
+    "path_cost_fractions": [
+      0.4370441579068358,
+      1.0
+    ]
+  },
+  "calibration_metrics": {
+    "51": {
+      "accuracy": 0.8816,
+      "reference_accuracy": 0.8808,
+      "accuracy_drop": -0.0008000000000000229,
+      "balanced_accuracy": 0.8816,
+      "reference_balanced_accuracy": 0.8808,
+      "balanced_accuracy_drop": -0.0008000000000000229,
+      "worst_class_accuracy_drop": 0.0,
+      "route_fractions": [
+        0.7496,
+        0.2504
+      ],
+      "expected_cost_fraction": 0.5780083007669642,
+      "cost_saving_fraction": 0.4219916992330358
+    },
+    "52": {
+      "accuracy": 0.884,
+      "reference_accuracy": 0.8836,
+      "accuracy_drop": -0.00039999999999995595,
+      "balanced_accuracy": 0.884,
+      "reference_balanced_accuracy": 0.8836,
+      "balanced_accuracy_drop": -0.00039999999999995595,
+      "worst_class_accuracy_drop": 0.0,
+      "route_fractions": [
+        0.7592,
+        0.2408
+      ],
+      "expected_cost_fraction": 0.5726039246828698,
+      "cost_saving_fraction": 0.4273960753171302
+    },
+    "53": {
+      "accuracy": 0.8792,
+      "reference_accuracy": 0.8792,
+      "accuracy_drop": 0.0,
+      "balanced_accuracy": 0.8792,
+      "reference_balanced_accuracy": 0.8792,
+      "balanced_accuracy_drop": 0.0,
+      "worst_class_accuracy_drop": 0.0,
+      "route_fractions": [
+        0.7412,
+        0.2588
+      ],
+      "expected_cost_fraction": 0.5827371298405468,
+      "cost_saving_fraction": 0.4172628701594532
+    }
+  },
+  "holdout_metrics": {
+    "51": {
+      "accuracy": 0.8916,
+      "reference_accuracy": 0.8916,
+      "accuracy_drop": 0.0,
+      "balanced_accuracy": 0.8916000000000001,
+      "reference_balanced_accuracy": 0.8916000000000001,
+      "balanced_accuracy_drop": 0.0,
+      "worst_class_accuracy_drop": 0.0,
+      "route_fractions": [
+        0.7544,
+        0.2456
+      ],
+      "expected_cost_fraction": 0.5753061127249169,
+      "cost_saving_fraction": 0.42469388727508306
+    },
+    "52": {
+      "accuracy": 0.8856,
+      "reference_accuracy": 0.8856,
+      "accuracy_drop": 0.0,
+      "balanced_accuracy": 0.8855999999999999,
+      "reference_balanced_accuracy": 0.8855999999999999,
+      "balanced_accuracy_drop": 0.0,
+      "worst_class_accuracy_drop": 0.0,
+      "route_fractions": [
+        0.7712,
+        0.2288
+      ],
+      "expected_cost_fraction": 0.5658484545777519,
+      "cost_saving_fraction": 0.4341515454222481
+    },
+    "53": {
+      "accuracy": 0.8868,
+      "reference_accuracy": 0.8868,
+      "accuracy_drop": 0.0,
+      "balanced_accuracy": 0.8868,
+      "reference_balanced_accuracy": 0.8868,
+      "balanced_accuracy_drop": 0.0,
+      "worst_class_accuracy_drop": 0.0,
+      "route_fractions": [
+        0.758,
+        0.242
+      ],
+      "expected_cost_fraction": 0.5732794716933817,
+      "cost_saving_fraction": 0.42672052830661833
+    }
+  },
+  "holdout_class_risk": {
+    "51": [
+      {
+        "class_id": 0,
+        "class_name": "airplane",
+        "exit_accuracy": 0.936,
+        "final_accuracy": 0.936,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 1,
+        "class_name": "automobile",
+        "exit_accuracy": 0.956,
+        "final_accuracy": 0.956,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 2,
+        "class_name": "bird",
+        "exit_accuracy": 0.856,
+        "final_accuracy": 0.856,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 3,
+        "class_name": "cat",
+        "exit_accuracy": 0.816,
+        "final_accuracy": 0.816,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 4,
+        "class_name": "deer",
+        "exit_accuracy": 0.864,
+        "final_accuracy": 0.864,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 5,
+        "class_name": "dog",
+        "exit_accuracy": 0.82,
+        "final_accuracy": 0.82,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 6,
+        "class_name": "frog",
+        "exit_accuracy": 0.912,
+        "final_accuracy": 0.912,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 7,
+        "class_name": "horse",
+        "exit_accuracy": 0.876,
+        "final_accuracy": 0.876,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 8,
+        "class_name": "ship",
+        "exit_accuracy": 0.948,
+        "final_accuracy": 0.948,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 9,
+        "class_name": "truck",
+        "exit_accuracy": 0.932,
+        "final_accuracy": 0.932,
+        "accuracy_drop": 0.0
+      }
+    ],
+    "52": [
+      {
+        "class_id": 0,
+        "class_name": "airplane",
+        "exit_accuracy": 0.912,
+        "final_accuracy": 0.912,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 1,
+        "class_name": "automobile",
+        "exit_accuracy": 0.936,
+        "final_accuracy": 0.936,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 2,
+        "class_name": "bird",
+        "exit_accuracy": 0.868,
+        "final_accuracy": 0.868,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 3,
+        "class_name": "cat",
+        "exit_accuracy": 0.776,
+        "final_accuracy": 0.776,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 4,
+        "class_name": "deer",
+        "exit_accuracy": 0.9,
+        "final_accuracy": 0.9,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 5,
+        "class_name": "dog",
+        "exit_accuracy": 0.8,
+        "final_accuracy": 0.8,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 6,
+        "class_name": "frog",
+        "exit_accuracy": 0.916,
+        "final_accuracy": 0.916,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 7,
+        "class_name": "horse",
+        "exit_accuracy": 0.892,
+        "final_accuracy": 0.892,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 8,
+        "class_name": "ship",
+        "exit_accuracy": 0.928,
+        "final_accuracy": 0.928,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 9,
+        "class_name": "truck",
+        "exit_accuracy": 0.928,
+        "final_accuracy": 0.928,
+        "accuracy_drop": 0.0
+      }
+    ],
+    "53": [
+      {
+        "class_id": 0,
+        "class_name": "airplane",
+        "exit_accuracy": 0.872,
+        "final_accuracy": 0.872,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 1,
+        "class_name": "automobile",
+        "exit_accuracy": 0.932,
+        "final_accuracy": 0.932,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 2,
+        "class_name": "bird",
+        "exit_accuracy": 0.844,
+        "final_accuracy": 0.844,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 3,
+        "class_name": "cat",
+        "exit_accuracy": 0.776,
+        "final_accuracy": 0.776,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 4,
+        "class_name": "deer",
+        "exit_accuracy": 0.916,
+        "final_accuracy": 0.916,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 5,
+        "class_name": "dog",
+        "exit_accuracy": 0.828,
+        "final_accuracy": 0.828,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 6,
+        "class_name": "frog",
+        "exit_accuracy": 0.916,
+        "final_accuracy": 0.916,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 7,
+        "class_name": "horse",
+        "exit_accuracy": 0.916,
+        "final_accuracy": 0.916,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 8,
+        "class_name": "ship",
+        "exit_accuracy": 0.94,
+        "final_accuracy": 0.94,
+        "accuracy_drop": 0.0
+      },
+      {
+        "class_id": 9,
+        "class_name": "truck",
+        "exit_accuracy": 0.928,
+        "final_accuracy": 0.928,
+        "accuracy_drop": 0.0
+      }
+    ]
+  },
+  "holdout_gates": {
+    "each_saving_at_least_0_15": true,
+    "each_accuracy_drop_at_most_0_01": true,
+    "each_worst_class_drop_at_most_0_03": true,
+    "each_route_is_dynamic": true
+  }
+}

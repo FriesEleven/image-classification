@@ -84,6 +84,37 @@ def test_multi_exit_config_records_training_contract():
     assert "exit_positions" not in ExperimentConfig().to_dict()
 
 
+def test_formal_development_split_is_explicit_without_changing_historical_schema():
+    config = load_config(
+        [
+            "--validation_size", "5000",
+            "--calibration_size", "5000",
+            "--split_seed", "20260902",
+        ]
+    )
+
+    assert config.calibration_size == 5000
+    assert config.split_seed == 20260902
+    assert config.to_dict()["calibration_size"] == 5000
+    assert config.to_dict()["split_seed"] == 20260902
+    assert "calibration_size" not in ExperimentConfig().to_dict()
+    assert "split_seed" not in ExperimentConfig().to_dict()
+
+
+@pytest.mark.parametrize(
+    "values",
+    [
+        {"calibration_size": -1},
+        {"validation_size": 45_000, "calibration_size": 5000},
+        {"calibration_size": 9},
+        {"split_seed": -1},
+    ],
+)
+def test_development_split_contract_is_validated(values):
+    with pytest.raises(ValueError):
+        ExperimentConfig(**values)
+
+
 @pytest.mark.parametrize(
     ("positions", "weights", "message"),
     [

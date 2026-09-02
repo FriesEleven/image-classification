@@ -105,8 +105,14 @@ def train(config: ExperimentConfig) -> dict:
     _save_resolved_config(paths.root / "config.yaml", config, device)
     provenance = {
         **runtime_provenance(), "architecture_version": config.architecture_version,
-        "command": sys.argv, "split_seed": config.seed, "training_seed": config.seed,
-        "seed_protocol": "split and training seeds are intentionally coupled; historical protocol unchanged",
+        "command": sys.argv,
+        "split_seed": config.seed if config.split_seed is None else config.split_seed,
+        "training_seed": config.seed,
+        "seed_protocol": (
+            "split and training seeds are intentionally coupled; historical protocol unchanged"
+            if config.split_seed is None
+            else "fixed data split seed is independent of model/training seed"
+        ),
         "training_implementation": "deferred_metrics_post_step_hook_v1",
         "execution_backend": "cuda_graph_training_v1" if config.cuda_graph else "eager",
         "amp_cache_enabled": not config.cuda_graph,
@@ -132,20 +138,33 @@ def train(config: ExperimentConfig) -> dict:
         _write_json(paths.root / "provenance.json", provenance)
         print(f"Training graph prepared in {capture['capture_seconds']:.2f}s", flush=True)
 
+    resolved_split_seed = config.seed if config.split_seed is None else config.split_seed
     loaders = build_dataloaders(
         dataset=config.dataset,
         batch_size=config.batch_size,
         num_workers=config.num_workers,
         prefetch_factor=config.prefetch_factor,
         validation_size=config.validation_size,
-        split_seed=config.seed,
+        split_seed=resolved_split_seed,
+        calibration_size=config.calibration_size,
+        shuffle_seed=config.seed,
     )
     split_path = paths.root / "split_indices.json"
-    _write_json(split_path, {
-        "dataset": config.dataset, "split_seed": config.seed,
+    calibration_loader = getattr(loaders, "calibration", None)
+    split_record = {
+        "dataset": config.dataset,
+        "split_seed": resolved_split_seed,
         "train_indices": getattr(loaders.train.dataset, "indices", None),
         "validation_indices": getattr(loaders.validation.dataset, "indices", None),
-    })
+    }
+    if config.calibration_size or config.split_seed is not None:
+        split_record["training_seed"] = config.seed
+        split_record["calibration_indices"] = (
+            getattr(calibration_loader.dataset, "indices", None)
+            if calibration_loader is not None
+            else None
+        )
+    _write_json(split_path, split_record)
     optimizer = optim.AdamW(model.parameters(), lr=config.lr, weight_decay=1e-4, betas=(0.9, 0.999))
     criterion = nn.CrossEntropyLoss()
     scaler = GradScaler("cuda", enabled=config.amp and device.type == "cuda")
@@ -208,6 +227,8 @@ def train(config: ExperimentConfig) -> dict:
         "split_indices_sha256": file_sha256(split_path),
         "run_directory": str(paths.root),
     }
+    if calibration_loader is not None:
+        summary["calibration_samples"] = len(calibration_loader.dataset)
     if config.evaluate_test:
         model.load_state_dict(
             torch.load(paths.checkpoints / "model_best.pth", map_location=device, weights_only=True)

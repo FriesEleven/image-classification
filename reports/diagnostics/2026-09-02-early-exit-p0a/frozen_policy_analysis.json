@@ -1,0 +1,233 @@
+{
+  "schema_version": 1,
+  "status": "stop_or_redesign",
+  "scope": "exploratory P0; validation split only; official test not evaluated",
+  "manifest": "/root/autodl-tmp/image-classification/artifacts/sweeps/cifar10_early_exit_p0_serial_p0a_20260902_110000/manifest.json",
+  "manifest_sha256": "49a40fc1afb007d7a357c4bc54fd4b96f7618cebaf6a290955bfb8fe19327cd6",
+  "device": "cuda",
+  "cost_profile": {
+    "method": "conv_linear_macs_per_sample_v1",
+    "exit_positions": [
+      8,
+      16
+    ],
+    "path_macs": [
+      2676864,
+      5234688,
+      6124928
+    ],
+    "path_cost_fractions": [
+      0.4370441579068358,
+      0.854652985308562,
+      1.0
+    ],
+    "ignored_operations": [
+      "batch_norm",
+      "activations",
+      "pooling",
+      "memory_traffic"
+    ],
+    "paper_evidence": false
+  },
+  "policy_calibration": {
+    "split": "class-stratified 50/50 within each run's 5k validation set",
+    "selection_constraints": {
+      "overall_accuracy_drop": 0.005,
+      "balanced_accuracy_drop": 0.005,
+      "worst_class_accuracy_drop": 0.02
+    },
+    "caveat": "Best checkpoints were selected on the parent 5k validation set; this P0 holdout is exploratory and cannot be reported as independent paper evidence."
+  },
+  "seed_results": [
+    {
+      "seed": 51,
+      "baseline_experiment_id": "early_exit_p0_baseline_p0a_seed51_mobilenetv2_cifar10",
+      "multi_exit_experiment_id": "early_exit_p0_multi_p0a_seed51_multi_exit_pos8-16_cifar10",
+      "baseline_accuracy": 0.8796,
+      "multi_exit_final_accuracy": 0.8862,
+      "paired_final_gain": 0.006599999999999939,
+      "exit8_accuracy": 0.8814,
+      "exit16_accuracy": 0.8856,
+      "calibration_samples": 2500,
+      "holdout_samples": 2500,
+      "selected_policy": {
+        "thresholds": [
+          0.21618653285588674,
+          0.9999999999998633
+        ],
+        "calibration_metrics": {
+          "accuracy": 0.8784,
+          "reference_accuracy": 0.8808,
+          "accuracy_drop": 0.0024000000000000687,
+          "balanced_accuracy": 0.8784000000000001,
+          "reference_balanced_accuracy": 0.8808,
+          "balanced_accuracy_drop": 0.0023999999999999577,
+          "worst_class_accuracy_drop": 0.015999999999999903,
+          "route_fractions": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "expected_cost_fraction": 0.4370441579068358,
+          "cost_saving_fraction": 0.5629558420931642
+        },
+        "constraints": {
+          "max_accuracy_drop": 0.005,
+          "max_balanced_accuracy_drop": 0.005,
+          "max_worst_class_drop": 0.02
+        },
+        "grid_points": 41
+      },
+      "holdout_policy_metrics": {
+        "accuracy": 0.8844,
+        "reference_accuracy": 0.8916,
+        "accuracy_drop": 0.007199999999999984,
+        "balanced_accuracy": 0.8844000000000001,
+        "reference_balanced_accuracy": 0.8916000000000001,
+        "balanced_accuracy_drop": 0.007199999999999984,
+        "worst_class_accuracy_drop": 0.039999999999999925,
+        "route_fractions": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "expected_cost_fraction": 0.4370441579068358,
+        "cost_saving_fraction": 0.5629558420931642,
+        "matched_baseline_accuracy": 0.888,
+        "accuracy_vs_matched_baseline": -0.0036000000000000476
+      }
+    },
+    {
+      "seed": 52,
+      "baseline_experiment_id": "early_exit_p0_baseline_p0a_seed52_mobilenetv2_cifar10",
+      "multi_exit_experiment_id": "early_exit_p0_multi_p0a_seed52_multi_exit_pos8-16_cifar10",
+      "baseline_accuracy": 0.8816,
+      "multi_exit_final_accuracy": 0.8846,
+      "paired_final_gain": 0.0030000000000000027,
+      "exit8_accuracy": 0.8818,
+      "exit16_accuracy": 0.883,
+      "calibration_samples": 2500,
+      "holdout_samples": 2500,
+      "selected_policy": {
+        "thresholds": [
+          0.2437474091665035,
+          0.9999999998515244
+        ],
+        "calibration_metrics": {
+          "accuracy": 0.8808,
+          "reference_accuracy": 0.8836,
+          "accuracy_drop": 0.0028000000000000247,
+          "balanced_accuracy": 0.8808000000000001,
+          "reference_balanced_accuracy": 0.8836,
+          "balanced_accuracy_drop": 0.0027999999999999137,
+          "worst_class_accuracy_drop": 0.016000000000000014,
+          "route_fractions": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "expected_cost_fraction": 0.4370441579068358,
+          "cost_saving_fraction": 0.5629558420931642
+        },
+        "constraints": {
+          "max_accuracy_drop": 0.005,
+          "max_balanced_accuracy_drop": 0.005,
+          "max_worst_class_drop": 0.02
+        },
+        "grid_points": 41
+      },
+      "holdout_policy_metrics": {
+        "accuracy": 0.8828,
+        "reference_accuracy": 0.8856,
+        "accuracy_drop": 0.0028000000000000247,
+        "balanced_accuracy": 0.8827999999999999,
+        "reference_balanced_accuracy": 0.8855999999999999,
+        "balanced_accuracy_drop": 0.0028000000000000247,
+        "worst_class_accuracy_drop": 0.03600000000000003,
+        "route_fractions": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "expected_cost_fraction": 0.4370441579068358,
+        "cost_saving_fraction": 0.5629558420931642,
+        "matched_baseline_accuracy": 0.8832,
+        "accuracy_vs_matched_baseline": -0.00039999999999995595
+      }
+    },
+    {
+      "seed": 53,
+      "baseline_experiment_id": "early_exit_p0_baseline_p0a_seed53_mobilenetv2_cifar10",
+      "multi_exit_experiment_id": "early_exit_p0_multi_p0a_seed53_multi_exit_pos8-16_cifar10",
+      "baseline_accuracy": 0.8816,
+      "multi_exit_final_accuracy": 0.883,
+      "paired_final_gain": 0.0013999999999999568,
+      "exit8_accuracy": 0.881,
+      "exit16_accuracy": 0.8788,
+      "calibration_samples": 2500,
+      "holdout_samples": 2500,
+      "selected_policy": {
+        "thresholds": [
+          0.27642011026779273,
+          1.0000000000000002
+        ],
+        "calibration_metrics": {
+          "accuracy": 0.8784,
+          "reference_accuracy": 0.8792,
+          "accuracy_drop": 0.0008000000000000229,
+          "balanced_accuracy": 0.8784000000000001,
+          "reference_balanced_accuracy": 0.8792,
+          "balanced_accuracy_drop": 0.0007999999999999119,
+          "worst_class_accuracy_drop": 0.016000000000000014,
+          "route_fractions": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "expected_cost_fraction": 0.4370441579068358,
+          "cost_saving_fraction": 0.5629558420931642
+        },
+        "constraints": {
+          "max_accuracy_drop": 0.005,
+          "max_balanced_accuracy_drop": 0.005,
+          "max_worst_class_drop": 0.02
+        },
+        "grid_points": 41
+      },
+      "holdout_policy_metrics": {
+        "accuracy": 0.8836,
+        "reference_accuracy": 0.8868,
+        "accuracy_drop": 0.0031999999999999806,
+        "balanced_accuracy": 0.8836,
+        "reference_balanced_accuracy": 0.8868,
+        "balanced_accuracy_drop": 0.0031999999999999806,
+        "worst_class_accuracy_drop": 0.01200000000000001,
+        "route_fractions": [
+          0.9992,
+          0.0,
+          0.0008
+        ],
+        "expected_cost_fraction": 0.4374945225805103,
+        "cost_saving_fraction": 0.5625054774194898,
+        "matched_baseline_accuracy": 0.888,
+        "accuracy_vs_matched_baseline": -0.0043999999999999595
+      }
+    }
+  ],
+  "aggregate": {
+    "paired_final_gain_mean": 0.0036666666666666328,
+    "paired_final_gain_sample_std": 0.0026633312473917418,
+    "holdout_mac_saving_mean": 0.5628057205352727,
+    "holdout_mac_saving_sample_std": 0.00026001816557943036,
+    "holdout_policy_accuracy_drop_mean": 0.004399999999999997,
+    "holdout_worst_class_drop_max": 0.039999999999999925
+  },
+  "gates": {
+    "mean_final_gain_at_least_minus_0_003": true,
+    "each_final_gain_at_least_minus_0_0075": true,
+    "each_holdout_mac_saving_at_least_0_15": true,
+    "each_holdout_accuracy_drop_at_most_0_01": true,
+    "each_holdout_worst_class_drop_at_most_0_03": false
+  },
+  "recommended_next_step": "Do not expand early-exit training; inspect the failed gate before redesign."
+}

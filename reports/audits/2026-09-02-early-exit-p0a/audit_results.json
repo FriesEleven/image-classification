@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "manifest_path": "artifacts/sweeps/cifar10_early_exit_p0_serial_p0a_20260902_110000/manifest.json",
+  "manifest_sha256": "49a40fc1afb007d7a357c4bc54fd4b96f7618cebaf6a290955bfb8fe19327cd6",
+  "runs": [
+    {
+      "run_id": "early_exit_p0_baseline_p0a_seed51_mobilenetv2_cifar10",
+      "model_type": "mobilenetv2",
+      "seed": 51,
+      "best_validation_percent": 87.96000000000001,
+      "final_validation_percent": 87.83999999999999,
+      "best_epoch": 181,
+      "parameters_total": 2236682,
+      "parameters_exit_heads": 0,
+      "best_checkpoint_sha256": "466c2defbac337c6066a55591d26196c9fa8e1ef7c8222f47ee2c94b7197958f",
+      "split_indices_sha256": "8c158b23f46d6a25b11d25f6b7809a44823ddae10b2582d758d66dae1de87726",
+      "periodic_checkpoint_count": 20,
+      "issues": []
+    },
+    {
+      "run_id": "early_exit_p0_baseline_p0a_seed52_mobilenetv2_cifar10",
+      "model_type": "mobilenetv2",
+      "seed": 52,
+      "best_validation_percent": 88.16000000000001,
+      "final_validation_percent": 87.78,
+      "best_epoch": 154,
+      "parameters_total": 2236682,
+      "parameters_exit_heads": 0,
+      "best_checkpoint_sha256": "234fa014cbc30be0476104e8f8dde5e2e27880f8ad72740ebd31d5b9ea6dbec1",
+      "split_indices_sha256": "aab7b75e278de95f7eb3d823ffc13a9797fdc62220063249dc60f59851e41e0b",
+      "periodic_checkpoint_count": 20,
+      "issues": []
+    },
+    {
+      "run_id": "early_exit_p0_baseline_p0a_seed53_mobilenetv2_cifar10",
+      "model_type": "mobilenetv2",
+      "seed": 53,
+      "best_validation_percent": 88.16000000000001,
+      "final_validation_percent": 87.98,
+      "best_epoch": 175,
+      "parameters_total": 2236682,
+      "parameters_exit_heads": 0,
+      "best_checkpoint_sha256": "fc7fdf3ac7536ff8ebd162de5b0413f1cdc26040501f97c0fb814f80346b409a",
+      "split_indices_sha256": "6b4a6241c2854b5dbefcbebe32f022c610fb0bcd8fe5482f897b86d54f5d80c5",
+      "periodic_checkpoint_count": 20,
+      "issues": []
+    },
+    {
+      "run_id": "early_exit_p0_multi_p0a_seed51_multi_exit_pos8-16_cifar10",
+      "model_type": "multi_exit",
+      "seed": 51,
+      "best_validation_percent": 88.62,
+      "final_validation_percent": 88.28,
+      "best_epoch": 177,
+      "parameters_total": 2238942,
+      "parameters_exit_heads": 2260,
+      "best_checkpoint_sha256": "a6017cb2303545fc174e9169fc04fc6aef4a93997c3959f1dbd713856d44a510",
+      "split_indices_sha256": "8c158b23f46d6a25b11d25f6b7809a44823ddae10b2582d758d66dae1de87726",
+      "periodic_checkpoint_count": 20,
+      "issues": []
+    },
+    {
+      "run_id": "early_exit_p0_multi_p0a_seed52_multi_exit_pos8-16_cifar10",
+      "model_type": "multi_exit",
+      "seed": 52,
+      "best_validation_percent": 88.46000000000001,
+      "final_validation_percent": 88.36,
+      "best_epoch": 195,
+      "parameters_total": 2238942,
+      "parameters_exit_heads": 2260,
+      "best_checkpoint_sha256": "a31a6602ec588a2d640aece656a08436d173ae8813c75311ad2d38f28cf63f0e",
+      "split_indices_sha256": "aab7b75e278de95f7eb3d823ffc13a9797fdc62220063249dc60f59851e41e0b",
+      "periodic_checkpoint_count": 20,
+      "issues": []
+    },
+    {
+      "run_id": "early_exit_p0_multi_p0a_seed53_multi_exit_pos8-16_cifar10",
+      "model_type": "multi_exit",
+      "seed": 53,
+      "best_validation_percent": 88.3,
+      "final_validation_percent": 88.03999999999999,
+      "best_epoch": 183,
+      "parameters_total": 2238942,
+      "parameters_exit_heads": 2260,
+      "best_checkpoint_sha256": "a54f3bf4415876f439fdfc0dfa7efba2128f11cca2d825a6d210d81ef090f723",
+      "split_indices_sha256": "6b4a6241c2854b5dbefcbebe32f022c610fb0bcd8fe5482f897b86d54f5d80c5",
+      "periodic_checkpoint_count": 20,
+      "issues": []
+    }
+  ],
+  "groups": {
+    "mobilenetv2": {
+      "seeds": [
+        51,
+        52,
+        53
+      ],
+      "best_validation": {
+        "n": 3,
+        "mean_percent": 88.09333333333335,
+        "sample_sd_percent": 0.1154700538379268
+      },
+      "parameters_total": 2236682,
+      "parameters_exit_heads": 0
+    },
+    "multi_exit": {
+      "seeds": [
+        51,
+        52,
+        53
+      ],
+      "best_validation": {
+        "n": 3,
+        "mean_percent": 88.46,
+        "sample_sd_percent": 0.1600000000000037
+      },
+      "parameters_total": 2238942,
+      "parameters_exit_heads": 2260
+    }
+  },
+  "paired": {
+    "comparison": "multi_exit_final - mobilenetv2",
+    "unit": "percentage_points",
+    "seeds": [
+      51,
+      52,
+      53
+    ],
+    "deltas": [
+      0.6599999999999966,
+      0.29999999999999716,
+      0.13999999999998636
+    ],
+    "statistics": {
+      "n": 3,
+      "mean_percent": 0.36666666666666003,
+      "sample_sd_percent": 0.26633312473918
+    },
+    "wins": 3
+  },
+  "issues": {}
+}

@@ -2,9 +2,9 @@
 
 本文用于让新的对话接续当前代码、GPU服务器实验和论文计划。**先读本文件，再检查实时状态；不要把历史建议、短测或旧清单的残留字段当成当前正式结果。**
 
-最新状态见第18、19节；第1、7、9、15、16节保留CSGHA阶段的历史计划，若冲突，以第18、19节为准。当前没有由Codex启动新的正式训练。
+最新状态见第20、21节；第1、7、9、15、16、18、19节保留此前阶段的历史计划，若冲突，以第21节为准。当前没有由Codex启动新的正式训练。
 
-> **2026-09-01当前状态：** v6六组已完成正式审计和版本匹配诊断，三个seed全部落后matched control；CSGHA v3–v6已作为负结果/机制消融归档，不进入v7。服务器上不存在v7文件、v7进程或其他训练进程。当前正向路线改为“预算约束下的阶段感知稀疏注意力部署”；代码、硬件成本档案、30组最小校准矩阵、串行后台启动器和选择脚本均已准备并验证，下一步只需用户启动第19节的`probe1`批次。
+> **2026-09-02当前状态：** 早退 P0a 六组已完成正式审计；multi-exit 最终头三 seed 均胜 baseline，但原双出口策略因最差类别下降超门槛判为失败。后验诊断发现约 42% MAC 节省的跨 seed 共享 exit8 阈值信号，现已按严格数据边界重设计为 P1：固定 40k train / 5k model-selection / 5k policy-calibration、新 seeds54/55/56、共6组串行 validation/calibration-only 训练。P0 周期 checkpoint 已清理，关键证据完整；服务器无训练进程。下一步只需用户启动第21节的 P1 批次。
 
 ## 1. 一分钟了解当前进度
 
@@ -713,3 +713,43 @@ P0完成后必须先审计唯一manifest，再运行预置分析器。只有最�
 ```bash
 cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/launch_early_exit_p0.py
 ```
+
+## 21. 2026-09-02 P0a完成、风险失败诊断与P1入口
+
+### 21.1 P0a正式审计
+
+唯一正式 manifest 为 `artifacts/sweeps/cifar10_early_exit_p0_serial_p0a_20260902_110000/manifest.json`，SHA-256 为 `49a40fc1afb007d7a357c4bc54fd4b96f7618cebaf6a290955bfb8fe19327cd6`。launcher log 为 `artifacts/launcher_logs/early_exit_p0_serial_p0a_20260902_105955_649249.log`。六组均 completed/return_code=0、串行、连续 200 epochs，无 termination signal、无 test 评估或预测文件。
+
+正式审计位于 `reports/audits/2026-09-02-early-exit-p0a/`；`audit_results.json` SHA-256 为 `00fa166543f60771838516a143f5689961fb0917f278506127e36b8ed9ea991c`，issues 为空。审计核对了 manifest/config/summary 完全相等、首次 best epoch、best/latest/final、checkpoint 与 split 哈希、同 seed 划分、45k/5k 覆盖与不重叠、源码快照、CUDA Graph provenance 及 benchmark skipped/null。
+
+matched baseline seeds51/52/53 best validation 为 87.96/88.16/88.16%，multi-exit 最终头为 88.62/88.46/88.30%；配对差值 `+0.66/+0.30/+0.14 pp`，均值 `+0.367 ± 0.266 pp`（样本标准差），胜出 3/3。multi-exit 仅增加 2,260 个出口头参数。
+
+### 21.2 原冻结策略失败与后验机制定位
+
+原 P0 分析位于 `reports/diagnostics/2026-09-02-early-exit-p0a/frozen_policy_analysis.json`，SHA-256 为 `015ff5d68a0ceaf2d21b00e2ab3450567c580f63f027622a969392a776378e68`，严格结果为 `stop_or_redesign`。最终头两个 gate、每 seed MAC 节省 ≥15% 和总体下降 ≤1pp 都通过；唯一失败项是最差类别下降，seed51/52/53 分别为 4.0/3.6/1.2pp，前两者超过 3pp。原阈值把约 100% 样本送到 exit8，实际退化为静态截断，不能作为动态路由正结果。
+
+失败后只为定位机制，遍历 1,024 个预测类别保护集合和 43 个跨 seed 共享阈值。原始结果已版本化为 `reports/diagnostics/2026-09-02-early-exit-p0a/shared_threshold_diagnostic.json`，SHA-256 为 `443345f5bb4de678a6e3757bcb8835ca803cd89f4dc235c2a621c801219b2f5e`。选中策略为 exit8 阈值 `0.9410777530842098`、无类别保护、fallback final；三个后验检查子集早退 75.44%/77.12%/75.80%，MAC 代理节省 42.47%/43.42%/42.67%，相对最终头的总体、均衡和最差类别经验下降均为 0。
+
+这项诊断是在看到原失败后进行，且父 5k validation 已选择 checkpoint；只能支持下一次独立确认，不能反改 P0 失败判定或写作独立论文证据。早退、蒸馏、普通风险控制和类别专属出口均已有先例，当前候选主张只能收窄为“最差类别经验风险约束 + 跨训练 seed 共享稳健策略 + 严格数据边界 + 目标硬件预算”，仍需精确查新；经验零下降不等于统计零风险保证。
+
+### 21.3 安全清理
+
+在正式审计和诊断完成后，只删除上述六个 P0 run 的 120 个 `checkpoints/epoch_*.pth` 周期优化器快照，共 3,268,915,452 bytes；同时清理项目 Python/pytest/Ruff 缓存及本轮 `/tmp` 冒烟目录。清理回执为 `reports/audits/2026-09-02-early-exit-p0a/cleanup_receipt.json`，SHA-256 为 `7bfa3153e3355ea52989f298959d13a56e5f8c2850ee41dfc9d238366edae6fd`。
+
+六组的 best/latest/final 各 6 个、训练 CSV、TensorBoard、config、provenance、split、metrics、benchmark、summary、manifest/source snapshot、审计和诊断均保留。周期快照本身在服务器不可恢复，但其删除不影响论文绘图、best-checkpoint 诊断或最终评估。清理后 `/root/autodl-tmp` 可用约 45GB。
+
+### 21.4 P1独立校准确认批次
+
+完整冻结设计见 `docs/early_exit_p1_plan.md`。P1 不修改 P0 模型或损失，只使用新 training seeds54/55/56，比较 baseline 与 multi-exit，共 6 次 200-epoch 串行训练。固定 `split_seed=20260902`，所有 run 共用 40k train / 5k model-selection validation / 5k policy calibration；训练 seed 只控制初始化、增强和 shuffle。calibration loader 在训练过程中绝不迭代，官方 CIFAR-10 test 本批不评估。
+
+完成后策略已在训练前冻结：只允许 exit8→final；三个 seed 共用一个最大 softmax 阈值；固定网格 0.000–1.000、步长 0.001 加 final-only 哨兵；不使用类别排除；每个 calibration 集的总体/balanced/最差类别经验下降都必须 ≤0，早退率必须在 15%–95%；目标先最大化最差 seed MAC 节省。最终头仍要求三 seed 平均相对 baseline ≥−0.30pp、每 seed ≥−0.75pp。实现为 `scripts/analysis/analyze_early_exit_p1.py`。任一 gate 失败便停止且不打开 test；全部通过才哈希锁定策略并进行一次最终 test 评估。
+
+入口为 `configs/sweeps/early_exit_p1.yaml` 和 `scripts/launch_early_exit_p1.py`，默认 tag=`p1a`、`jobs=1`。配置、三分数据加载、训练记录、共享策略和历史诊断兼容性均有测试。服务器修改文件 Ruff、compileall、diff-check 通过；13 种模型前向和 CIFAR-10/100 数据边界检查通过；完整测试为 158 passed + 3 subtests passed，只有已知 CUDA Graph 首次 cuBLAS context warning。真实 GPU 一轮 P1 冒烟验证 40k/5k/5k 两两不重叠、覆盖 50k、calibration 不参与训练、test 未评估。dry-run 已确认六个 `_p1a_seed{54,55,56}` 新目录均不存在且没有启动训练。
+
+当前服务器没有 `train.py`、`run_baselines.py` 或 P1 launcher 训练进程，GPU 无 compute process。启动前不要再修改 `src/`、`scripts/` 或 `configs/`，避免 runner 的源码指纹检查中止后续 run。用户下一步唯一需要执行的一行后台命令为：
+
+```bash
+cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/launch_early_exit_p1.py
+```
+
+命令会自行创建后台 session 并返回 PID、日志和监控命令，不要额外套 `nohup`、不要并发第二批。预计约 2 小时。完成后先审计唯一 completed P1 manifest，再运行预置 P1 分析器；不得根据 test 反向改阈值或选模型。

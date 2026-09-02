@@ -58,6 +58,8 @@ class ExperimentConfig:
     model_type: str = "mobilenetv2"
     dataset: str = "cifar10"
     validation_size: int = 5000
+    calibration_size: int = 0
+    split_seed: int | None = None
     batch_size: int = 128
     epochs: int = 200
     lr: float = 0.01
@@ -88,6 +90,14 @@ class ExperimentConfig:
             raise ValueError(f"Unsupported dataset: {self.dataset}")
         if not 0 < self.validation_size < 50_000:
             raise ValueError("validation_size must be between 1 and 49,999")
+        if self.calibration_size < 0:
+            raise ValueError("calibration_size cannot be negative")
+        if self.validation_size + self.calibration_size >= 50_000:
+            raise ValueError("validation_size plus calibration_size must be below 50,000")
+        if self.calibration_size and self.calibration_size < self.num_classes:
+            raise ValueError("calibration_size must include at least one sample per class")
+        if self.split_seed is not None and self.split_seed < 0:
+            raise ValueError("split_seed cannot be negative")
         if self.epochs < 1:
             raise ValueError("epochs must be at least 1")
         if self.batch_size < 1:
@@ -199,6 +209,10 @@ class ExperimentConfig:
                 "exit_temperature",
             ):
                 data.pop(key)
+        if self.calibration_size == 0 and self.split_seed is None:
+            # Preserve every historical resolved-config schema and split protocol.
+            data.pop("calibration_size")
+            data.pop("split_seed")
         return data
 
 
@@ -209,6 +223,8 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--model_type", choices=MODEL_TYPES)
     parser.add_argument("--dataset", choices=DATASETS)
     parser.add_argument("--validation_size", type=int)
+    parser.add_argument("--calibration_size", type=int)
+    parser.add_argument("--split_seed", type=int)
     parser.add_argument("--batch_size", type=int)
     parser.add_argument("--epochs", type=int)
     parser.add_argument("--lr", type=float)

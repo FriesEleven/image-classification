@@ -29,6 +29,7 @@ class DatasetLoaders:
     validation: DataLoader
     test: DataLoader
     class_names: tuple[str, ...]
+    calibration: DataLoader | None = None
 
 
 DATASET_SPECS = {
@@ -69,6 +70,45 @@ def stratified_split_indices(
     return train_indices.tolist(), validation_indices.tolist()
 
 
+def stratified_development_split_indices(
+    targets: Sequence[int],
+    validation_size: int,
+    calibration_size: int,
+    seed: int,
+) -> tuple[list[int], list[int], list[int]]:
+    """Return deterministic train/model-selection/calibration indices."""
+
+    labels = torch.as_tensor(targets, dtype=torch.long)
+    classes = torch.unique(labels, sorted=True)
+    if validation_size < len(classes) or calibration_size < len(classes):
+        raise ValueError("validation and calibration splits need at least one sample per class")
+    if validation_size + calibration_size >= len(labels):
+        raise ValueError("development splits must leave training samples")
+    validation_per_class, validation_remainder = divmod(validation_size, len(classes))
+    calibration_per_class, calibration_remainder = divmod(calibration_size, len(classes))
+    generator = torch.Generator().manual_seed(seed)
+    train_parts = []
+    validation_parts = []
+    calibration_parts = []
+    for offset, class_id in enumerate(classes):
+        class_indices = torch.nonzero(labels == class_id, as_tuple=False).flatten()
+        class_indices = class_indices[torch.randperm(len(class_indices), generator=generator)]
+        class_validation_size = validation_per_class + int(offset < validation_remainder)
+        class_calibration_size = calibration_per_class + int(offset < calibration_remainder)
+        held_out = class_validation_size + class_calibration_size
+        if held_out >= len(class_indices):
+            raise ValueError("development splits leave no training samples for a class")
+        validation_parts.append(class_indices[:class_validation_size])
+        calibration_parts.append(class_indices[class_validation_size:held_out])
+        train_parts.append(class_indices[held_out:])
+
+    def shuffled(parts):
+        indices = torch.cat(parts)
+        return indices[torch.randperm(len(indices), generator=generator)].tolist()
+
+    return shuffled(train_parts), shuffled(validation_parts), shuffled(calibration_parts)
+
+
 def _transforms(spec: DatasetSpec) -> tuple[transforms.Compose, transforms.Compose]:
     train_transform = transforms.Compose(
         [
@@ -94,8 +134,10 @@ def build_dataloaders(
     prefetch_factor: int = 4,
     validation_size: int = 5000,
     split_seed: int = 42,
+    calibration_size: int = 0,
+    shuffle_seed: int | None = None,
 ) -> DatasetLoaders:
-    """Build 45k/5k train/validation loaders and the untouched 10k test loader."""
+    """Build disjoint train/development loaders and the untouched 10k test loader."""
 
     try:
         spec = DATASET_SPECS[dataset]
@@ -105,9 +147,20 @@ def build_dataloaders(
     training_data = spec.dataset_class(root=DATA_DIR, train=True, download=True, transform=train_transform)
     validation_data = spec.dataset_class(root=DATA_DIR, train=True, download=False, transform=evaluation_transform)
     test_data = spec.dataset_class(root=DATA_DIR, train=False, download=True, transform=evaluation_transform)
-    train_indices, validation_indices = stratified_split_indices(
-        training_data.targets, validation_size=validation_size, seed=split_seed,
-    )
+    if calibration_size:
+        train_indices, validation_indices, calibration_indices = (
+            stratified_development_split_indices(
+                training_data.targets,
+                validation_size=validation_size,
+                calibration_size=calibration_size,
+                seed=split_seed,
+            )
+        )
+    else:
+        train_indices, validation_indices = stratified_split_indices(
+            training_data.targets, validation_size=validation_size, seed=split_seed,
+        )
+        calibration_indices = []
 
     loader_options = {
         "batch_size": batch_size,
@@ -117,7 +170,9 @@ def build_dataloaders(
     }
     if num_workers > 0:
         loader_options["prefetch_factor"] = prefetch_factor
-    shuffle_generator = torch.Generator().manual_seed(split_seed)
+    shuffle_generator = torch.Generator().manual_seed(
+        split_seed if shuffle_seed is None else shuffle_seed
+    )
     return DatasetLoaders(
         train=DataLoader(
             Subset(training_data, train_indices), shuffle=True, generator=shuffle_generator, **loader_options,
@@ -125,4 +180,11 @@ def build_dataloaders(
         validation=DataLoader(Subset(validation_data, validation_indices), shuffle=False, **loader_options),
         test=DataLoader(test_data, shuffle=False, **loader_options),
         class_names=tuple(training_data.classes),
+        calibration=(
+            DataLoader(
+                Subset(validation_data, calibration_indices), shuffle=False, **loader_options,
+            )
+            if calibration_indices
+            else None
+        ),
     )

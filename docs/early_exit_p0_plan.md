@@ -1,5 +1,7 @@
 # 类别风险约束、跨种子稳健的阶段早退：P0 可行性计划
 
+> **2026-09-02完成状态：** P0a 六组已完成并通过文件级审计。multi-exit 最终头相对 matched baseline 三个 seed 均胜，平均 `+0.367 ± 0.266 pp`；但原冻结双出口策略几乎把全部样本送到 exit8，最差类别下降在 seed51/52 达 `4.0/3.6 pp`，因此原 P0 gate 判定为 `stop_or_redesign`。事后共享阈值诊断只用于定位重设计方向，不反改 P0 结论。当前执行计划已切换到 [P1 独立校准确认计划](early_exit_p1_plan.md)，本文件以下内容作为已执行的冻结 P0 协议保留。
+
 ## 1. 方向决定
 
 30 组预算阶段稀疏注意力探测已经否定当前静态注意力路线：九个“模块×阶段”单元相对 matched all-none 的三 seed 平均增益全部为负，冻结选择器在三档预算均返回 all-none。继续扫描注意力类型、位置或预算只会在同一负证据上扩大搜索，不再训练。
@@ -72,7 +74,7 @@ P0 是探索实验。每个 seed 的5k validation 在分析时按类别分成2.5
 
 服务器验证记录：修改文件 Ruff、compileall、`git diff --check` 均通过；13种模型前向通过；完整测试为143 passed、3 subtests passed；真实 GPU 上的 CUDA Graph 多输出训练测试通过；另完成一轮写入 `/tmp` 的45k/5k、1-epoch multi-exit 冒烟，未评估 test。
 
-唯一正式启动命令：
+已执行的 P0 启动命令（不要重复运行）：
 
 ```bash
 cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/launch_early_exit_p0.py

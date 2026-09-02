@@ -1,5 +1,6 @@
 """Historical CSGHA loading and paired guidance interventions (no training)."""
 
+import ast
 import hashlib
 import importlib.util
 import json
@@ -29,6 +30,33 @@ def array_sha256(array) -> str:
     return hashlib.sha256(np.asarray(array, dtype="<i8").tobytes()).hexdigest()
 
 
+def _data_contract_sha256(source: bytes) -> str:
+    """Hash only the preprocessing/split contract needed by historical diagnostics."""
+
+    required_functions = {"_transforms", "stratified_split_indices"}
+    required_assignments = {
+        "CIFAR10_MEAN", "CIFAR10_STD", "CIFAR100_MEAN", "CIFAR100_STD", "DATASET_SPECS",
+    }
+    selected = []
+    found_functions = set()
+    found_assignments = set()
+    for node in ast.parse(source).body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name in required_functions:
+            selected.append(node)
+            found_functions.add(node.name)
+        elif isinstance(node, ast.Assign):
+            names = {
+                target.id for target in node.targets if isinstance(target, ast.Name)
+            } & required_assignments
+            if names:
+                selected.append(node)
+                found_assignments.update(names)
+    if found_functions != required_functions or found_assignments != required_assignments:
+        raise ValueError("CIFAR source is missing a required historical data-contract component")
+    canonical = ast.dump(ast.Module(body=selected, type_ignores=[]), include_attributes=False)
+    return hashlib.sha256(canonical.encode()).hexdigest()
+
+
 def load_historical_model(revision: str, config: dict):
     """Execute the actual two model source files from Git, not a new approximation."""
     revision = subprocess.check_output(
@@ -56,13 +84,21 @@ def load_historical_model(revision: str, config: dict):
         se_positions=tuple(config["se_positions"]), cbam_positions=tuple(config["cbam_positions"]),
         guidance_position=config["guidance_position"], guidance_reduction=config["guidance_reduction"],
     )
-    # Evaluation transforms and split algorithm must agree with the historical source.
+    # Only the evaluation/training transforms, dataset constants and historical
+    # 45k/5k split algorithm must remain equal. New independent split helpers do
+    # not invalidate these old diagnostics.
     data_path = "src/image_classification/data/cifar.py"
     historical_data = subprocess.check_output(["git", "show", f"{revision}:{data_path}"], cwd=PROJECT_ROOT)
-    if historical_data != (PROJECT_ROOT / data_path).read_bytes():
-        raise ValueError("Current CIFAR preprocessing differs from historical code")
+    current_data = (PROJECT_ROOT / data_path).read_bytes()
+    historical_contract = _data_contract_sha256(historical_data)
+    if historical_contract != _data_contract_sha256(current_data):
+        raise ValueError("Current CIFAR preprocessing/split contract differs from historical code")
     sources[data_path] = hashlib.sha256(historical_data).hexdigest()
-    return model, {"reference_commit": revision, "source_sha256": sources}
+    return model, {
+        "reference_commit": revision,
+        "source_sha256": sources,
+        "data_contract_sha256": historical_contract,
+    }
 
 
 def diagnostic_loaders(config: dict, batch_size: int, workers: int):

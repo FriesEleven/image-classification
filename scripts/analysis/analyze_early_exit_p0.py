@@ -87,7 +87,9 @@ def _run_paths(run: dict) -> tuple[Path, Path]:
     return root, checkpoint_path
 
 
-def _collect_logits(run: dict, device: torch.device) -> tuple[np.ndarray, list[np.ndarray]]:
+def _collect_logits(
+    run: dict, device: torch.device, split: str = "validation",
+) -> tuple[np.ndarray, list[np.ndarray]]:
     config = _config(run["resolved_config"])
     _root, checkpoint_path = _run_paths(run)
     model = build_model(config).to(device)
@@ -99,12 +101,17 @@ def _collect_logits(run: dict, device: torch.device) -> tuple[np.ndarray, list[n
         num_workers=config.num_workers,
         prefetch_factor=config.prefetch_factor,
         validation_size=config.validation_size,
-        split_seed=config.seed,
+        split_seed=config.seed if config.split_seed is None else config.split_seed,
+        calibration_size=config.calibration_size,
+        shuffle_seed=config.seed,
     )
+    loader = getattr(loaders, split, None)
+    if loader is None:
+        raise ValueError(f"Requested unavailable data split: {split}")
     labels = []
     logits = defaultdict(list)
     with torch.no_grad():
-        for inputs, targets in loaders.validation:
+        for inputs, targets in loader:
             outputs = model(inputs.to(device, non_blocking=True))
             values = outputs if isinstance(outputs, tuple) else (outputs,)
             labels.append(targets.numpy())
