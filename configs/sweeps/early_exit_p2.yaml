@@ -1,0 +1,11 @@
+name: cifar10_early_exit_p2_transfer_serial
+description: >-
+  Locked-policy transfer test on unseen retrained model versions. Train matched
+  MobileNetV2 and detached-final KD multi-exit models on seeds 57/58/59 with
+  the exact P1b 40k/5k/5k split and training recipe. Threshold 0.984 remains
+  frozen from P1b and is not used during training or selected on this batch.
+  Execute serially and never evaluate the official CIFAR-10 test.
+seeds: [57, 58, 59]
+experiments:
+  - configs/experiments/early_exit_p2_baseline.yaml
+  - configs/experiments/early_exit_p2_multi.yaml

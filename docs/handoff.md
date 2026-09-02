@@ -2,9 +2,9 @@
 
 本文用于让新的对话接续当前代码、GPU服务器实验和论文计划。**先读本文件，再检查实时状态；不要把历史建议、短测或旧清单的残留字段当成当前正式结果。**
 
-最新状态见第23节；第7、9、15、16、18–22节保留此前阶段的历史计划，若冲突，以第23节为准。当前没有正式训练进程。
+最新状态见第24节；第7、9、15、16、18–23节保留此前阶段的历史计划，若冲突，以第24节为准。当前没有正式训练进程。
 
-> **2026-09-02当前状态：** P1b 六组已完成并通过零问题文件级审计。共享 exit8 阈值 `0.984` 在三个独立 calibration 集均满足总体、balanced、最差类别经验下降≤0，约64.4%–65.3%早退。随后已按一次性锁执行官方 CIFAR-10 test：锁定策略准确率 `87.04±0.18%`，相对各自最终头没有任何类别下降，早退 `64.85±0.30%`，MAC代理节省 `36.51±0.17%`。官方test不得重跑或用于调参。精确查新表明普通风险控制/蒸馏/逐类校准已有更强先例，当前证据尚不足以单独投稿；下一主张收窄为“策略跨模型重训版本直接迁移、无需逐版本重校准”。真实分阶段续算已实现并通过定向测试，RTX4090D空闲剖析待在干净提交上执行，然后准备P2未见seed迁移确认批次。
+> **2026-09-02当前状态：** P1b 六组已完成并通过零问题文件级审计。共享 exit8 阈值 `0.984` 在三个独立 calibration 集均满足总体、balanced、最差类别经验下降≤0，约64.4%–65.3%早退。随后已按一次性锁执行官方 CIFAR-10 test：锁定策略准确率 `87.04±0.18%`，相对各自最终头没有任何类别下降，早退 `64.85±0.30%`，MAC代理节省 `36.51±0.17%`。真实分阶段续算在空闲RTX4090D、batch1的期望时延由4.3545ms降至3.3073ms，节省24.91%、加速1.334×。官方test不得重跑或用于调参。精确查新表明普通风险控制/蒸馏/逐类校准已有更强先例，当前证据尚不足以单独投稿；主张已收窄为“策略跨模型重训版本直接迁移、无需逐版本重校准”。P2最小未见seed确认协议、启动器、审计与冻结分析均已准备，下一步只需用户启动六组串行训练。
 
 ## 1. 一分钟了解当前进度
 
@@ -15,7 +15,7 @@
 - 代码已具有真正的分阶段续算路径：exit8只计算一次，fallback从缓存特征继续，未使用的exit16不执行。
 - 当前无训练进程；不要重跑官方test，不要根据test更改阈值0.984。
 - 精确查新后的候选创新不是“早退+KD+阈值”，而是**冻结策略对未参与校准的新训练seed/模型版本的无重校准迁移**，辅以最差类别风险和真实部署测量。
-- 下一步先在干净源码提交上做无数据、batch1、空闲RTX4090D配对时延剖析；随后只启动P2最小未见seed确认批次。
+- RTX4090D配对时延剖析已完成；P2最小未见seed确认批次已冻结，下一步由用户启动。
 
 用户此前的固定偏好：需要新实验时，准备可运行的后台Python脚本，给出**一行启动命令**，由用户启动；不要在读完交接后自行启动长训练。用户如果明确授权启动，再执行。
 
@@ -28,20 +28,20 @@
 | GPU服务器代码与产物根目录 | `/root/autodl-tmp/image-classification` |
 | 本交接文件服务器位置 | `/root/autodl-tmp/image-classification/docs/handoff.md` |
 | 服务器Python | `/root/miniconda3/bin/python` |
-| 本地代码目录 | `/Users/salt/Jlu/paper/classification-code` |
+| 本地代码目录（当前Codex工作区） | `/Users/heyi.suo/out/image-classification` |
 | 本地论文目录（另一个项目） | `/Users/salt/Jlu/paper/sn-article-template` |
 | 论文原始大修交接 | `/Users/salt/Jlu/paper/sn-article-template/docs/handoff.md` |
 | 论文主文件 / 参考文献 | `sn-article.tex` / `sn-bibliography.bib`，位于论文目录 |
 
-本机已配置并验证SSH公钥登录。连接使用现有SSH配置的host：
+本机已配置并验证SSH公钥登录。当前实例连接为：
 
 ```bash
-ssh -o BatchMode=yes -o ConnectTimeout=15 connect.westb.seetacloud.com
+ssh -p 19478 root@connect.westb.seetacloud.com
 ```
 
-端口与IdentityFile以本机SSH配置为准，实例曾迁移，不沿用旧聊天中的端口。文档和Git中不要保存密码、私钥内容或令牌。VSCode终端已经位于服务器项目目录时，不需要再SSH一次。
+实例迁移后端口可能再次变化，若连接失败以用户最新提供的端口为准。文档和Git中不要保存密码、私钥内容或令牌。VSCode终端已经位于服务器项目目录时，不需要再SSH一次。
 
-已验证环境：Python3.12.3，Torch2.8.0+cu128，RTX3080Ti 12GB。容器CPU配额为12核，尽管可见逻辑CPU更多。`nvidia-smi`显示的CUDA13.0是驱动支持上限，不是当前PyTorch使用的运行时；`torch.version.cuda`为12.8。不要因为这个显示差异重装环境。
+当前已验证环境：Python3.12.3，Torch2.8.0+cu128，RTX4090D 24GB，容器CPU配额16核。实例曾更换，历史章节中的RTX3080Ti/12核只描述当时运行环境。`nvidia-smi`显示的CUDA驱动支持上限可能高于当前PyTorch运行时；`torch.version.cuda`为12.8，不要因为这个显示差异重装环境。
 
 ```bash
 cd /root/autodl-tmp/image-classification
@@ -51,7 +51,7 @@ cd /root/autodl-tmp/image-classification
 ### 2.2 Git与发布约定
 
 - GitHub：`https://github.com/FriesEleven/image-classification`；发布目标为`main`。
-- 本地开发分支为`feature/support-remote-deploy`，服务器使用`main`。不要仅凭本地分支名误判服务器版本。
+- 当前本地与服务器均使用`main`；开始操作前仍应实时检查分支和提交，不要依赖历史描述。
 - 此轮工作前共同历史起点为`64b79160b6a582086443eb45533311bfc1aaf1f0`。新的v4、诊断、Graph和并行队列并不是这个旧commit自带的代码。
 - 本次发布使用普通快进推送，不强推。不把旧审计JSON中记录的commit替换为当前commit。
 - 进入新对话后执行以下命令了解实际提交；不要猜测发布哈希或默认工作区干净：
@@ -98,7 +98,7 @@ image-classification/
 │   └── sweeps/                       # baseline/位置/stability/v4批次清单
 ├── scripts/
 │   ├── train.py                      # 推荐训练入口
-│   ├── launch_csgha_v4.py            # 当前唯一推荐的正式新实验启动器
+│   ├── launch_early_exit_p2.py        # 当前唯一推荐的正式新实验启动器
 │   ├── run_baselines.py              # 通用记录型runner，支持--jobs 1/2/3
 │   ├── launch_*.py / launch_baselines.sh  # 历史批次入口，先确认是否真的要重跑
 │   ├── run_experiments.py            # 历史全矩阵入口，当前不要直接运行全矩阵
@@ -803,10 +803,64 @@ checkpoint-selection validation上，baseline seeds54/55/56为87.36/87.10/87.36%
 
 审计、策略锁和test证据固化后，只删除P1b六组共120个`epoch_*.pth`周期优化器快照，3,268,915,068 bytes；18个best/latest/final checkpoint、日志、配置、划分、manifest/source snapshot、锁文件和test logits全部保留。清理回执为`reports/audits/2026-09-02-early-exit-p1b/cleanup_receipt.json`。P1a中断负证据未删除。清理后六个P1b run共约265MB，`/root/autodl-tmp`约44GB可用。
 
-`MultiExitMobileNetV2.forward_with_policy`现已实现真实按样本分阶段续算：计算exit8置信度后，仅未退出子集从缓存特征继续到最终头，不重复前缀且跳过exit16。定向测试同时覆盖混合路由、全早退、全fallback、数值等价和训练模式拒绝。硬件剖析器为`scripts/diagnostics/profile_early_exit_p1_deployment.py`；必须先把实现提交成干净源码，再在无训练进程时运行，剖析器不加载任何数据集。
+`MultiExitMobileNetV2.forward_with_policy`现已实现真实按样本分阶段续算：计算exit8置信度后，仅未退出子集从缓存特征继续到最终头，不重复前缀且跳过exit16。定向测试同时覆盖混合路由、全早退、全fallback、数值等价和训练模式拒绝。
+
+硬件剖析已在干净提交`2169f2404cda95a31745df14c391cf16bab794a8`、空闲RTX4090D上执行；版本化结果位于`reports/profiles/2026-09-02-early-exit-p1b-rtx4090d/`，`profile.json` SHA-256为`07e5efe1733b4f0e82ac80cfe849c9625f5b3bb2acc7e6b47a6c5ca460c18687`。batch1逐请求同步wall-clock下，三seed按锁定test路由率加权的final-only/策略期望时延平均为4.3545/3.3073ms，即节省24.91%、加速1.334×。计时使用合成输入，不重新读取任何数据集；路径阈值0/2只用于隔离early/fallback执行成本，权重仍来自冻结阈值0.984的既有路由率。该结果证明实现有真实收益，但RTX4090D不是手机、未测能耗，不能替代目标端证据。
 
 ### 23.4 查新结论与下一主张
 
 P1b证明了一个可复现的经验事实，但尚不足以单独投稿：NeurIPS 2024 Fast yet Safe已经给出早退的分布无关风险控制和多模型任务验证；PCEE已有单一性能阈值；2026年SAFE-KD已直接覆盖视觉backbone的蒸馏加conformal风险控制；CalexNet已覆盖逐类校准、多seed、多数据集/backbone、延迟和能耗。因此不得把“KD+softmax阈值+风险约束”写成创新，经验零下降也不是统计零风险保证。
 
-下一候选主张收窄为：**一个在源模型版本上冻结的路由策略，能否直接迁移到未参与阈值校准的新训练seed/模型版本，而无需逐版本重新校准，同时保持最差类别无退化和真实部署收益。** 精确检索尚未发现早退论文直接把跨重训版本的阈值迁移作为主要问题。下一批P2应使用全新training seeds，只在训练前冻结的gate下检验阈值`0.984`，不得用新seed输出重新选阈值；若失败即归档，若通过才进入外部数据/第二backbone确认。P2入口与唯一启动命令必须在RTX4090D剖析完成后冻结。
+下一候选主张收窄为：**一个在源模型版本上冻结的路由策略，能否直接迁移到未参与阈值校准的新训练seed/模型版本，而无需逐版本重新校准，同时保持最差类别无退化和真实部署收益。** 精确检索尚未发现早退论文直接把跨重训版本的阈值迁移作为主要问题。下一批P2应使用全新training seeds，只在训练前冻结的gate下检验阈值`0.984`，不得用新seed输出重新选阈值；若失败即归档，若通过才进入外部数据/第二backbone确认。RTX4090D剖析已通过，现可冻结P2入口与唯一启动命令。
+
+## 24. 2026-09-02 P2跨重训版本迁移入口
+
+### 24.1 为什么还不能直接写论文
+
+P1b已经是严格、可复现且带真实服务器GPU时延的正结果，可以进入论文结果表；但它仍只有
+CIFAR-10、MobileNetV2和三个参与策略选择的source模型版本。现有文献已经覆盖风险控制早退、
+单性能阈值、蒸馏、逐类校准、多seed/数据集/backbone及硬件测量，因而“KD+softmax阈值+
+经验风险约束”不能作为创新点。当前证据不足以停止实验并转入整篇论文写作。
+
+下一可检验主张严格限定为：**P1b在source seeds54/55/56上冻结的单一阈值，能否原样迁移到
+未参与阈值校准的重训模型seeds57/58/59，无需逐模型校准。** 完整预注册设计见
+`docs/early_exit_p2_plan.md`。
+
+### 24.2 冻结矩阵、策略和数据边界
+
+P2a仍训练baseline/multi-exit × seeds57/58/59共六组，200 epochs、`jobs=1`串行。模型、损失、
+batch128、AdamW、OneCycleLR、AMP、CUDA Graph、8 workers、prefetch8和固定
+`split_seed=20260902`均不变。40k train只训练，5k validation只选best，5k transfer训练过程
+不迭代；`evaluate_test=false`、`measure_inference=false`，原始CIFAR-10官方test绝不重开。
+
+source selection固定为版本化文件
+`reports/experiments/2026-09-02-early-exit-p1b/locked_selection.json`，SHA-256
+`8dce5d938e06ae9d7432bd6baafd0c0ed9f978678fb53767ab02eeafecc723ab`。P2只应用exit8最大
+softmax阈值`0.984`、无类别保护、fallback final；在target数据上考虑0个候选阈值，不允许按seed
+重新校准。启动器会在训练前校验source policy哈希和字段，并拒绝有实验源码/config改动、已有训练
+进程、已有目标目录或重复锁的启动。
+
+P2 transfer图像与P1 calibration索引相同，只验证跨模型版本，不是独立数据分布。若全部gate通过，
+下一步预先固定为一次性CIFAR-10.1 v6外部分布验证；若任一seed的总体/balanced/最差类别经验
+下降大于0、早退不在15%–95%、MAC节省小于15%，或最终头gate失败，则归档并停止，不得在
+target seeds上补调阈值，也不打开外部数据。
+
+### 24.3 完成后的审计入口
+
+完成后先运行`scripts/analysis/audit_early_exit_p2.py`审计唯一completed manifest和launcher log，生成ignored
+immutable snapshot及版本化报告。只有`issues={}`才运行
+`scripts/analysis/analyze_early_exit_p2_transfer.py`；分析器再次校验source selection、manifest、audit、
+checkpoint和split fingerprint，再输出`ready_for_external_shift_test`或
+`stop_archive_transfer_failure`。在这些证据固化前不删除任何P2周期checkpoint。
+
+P2代码和配置已通过Ruff、compileall、diff-check、180 tests + 3 subtests；唯一warning仍是已知的
+CUDA Graph首次建立cuBLAS context。13种模型前向及CIFAR-10/100数据边界检查通过，dry-run确认
+六个全新`_p2a_seed{57,58,59}`任务、`jobs=1`且未启动训练。推送后服务器必须保持无训练进程、
+GPU无compute process、六个目标目录不存在。预计六组串行约2.2小时。唯一后台启动命令为：
+
+```bash
+cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/launch_early_exit_p2.py
+```
+
+启动器自身后台化并返回PID、log和监控命令，不要另加`nohup`，不要并发第二批；运行期间不要修改
+`src/`、`scripts/`或`configs/`。
