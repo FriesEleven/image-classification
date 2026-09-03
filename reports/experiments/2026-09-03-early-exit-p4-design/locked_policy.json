@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "status": "ready_for_independent_p4_confirmation",
+  "scope": "A post-P3 global exit8 policy frozen before P4 training. P4 uses new training seeds and a new stratified development split; no P3 or P4 CIFAR-100 test access is authorized by this file.",
+  "p3_frozen_result": {
+    "status": "stop_without_test",
+    "manifest_sha256": "ae20bcb4d988b5e44fd1112bd8935caa12ec0086e2c50617be33b49a9237a3a2",
+    "audit_path": "reports/audits/2026-09-03-early-exit-p3a/audit_results.json",
+    "audit_sha256": "1f9415e8c3e81cd6e16bcdc6c10fd6f008a0e2d7681a5129f9d978a4968645fa",
+    "selection_path": "reports/experiments/2026-09-03-early-exit-p3-cifar100/selection.json",
+    "selection_sha256": "c71ad43122d5fec4a08679f80a616b7e3015ef730d4c0465829a51329edb6bfe",
+    "official_test_accessed": false
+  },
+  "development_evidence": {
+    "boundary_path": "reports/diagnostics/2026-09-03-early-exit-p3-boundary-v2/diagnostic.json",
+    "boundary_sha256": "25bbcf5365be9b860b0919b3b1160cfefe5b1adfd609e54f158bf4803fb73910",
+    "class_guard_path": "reports/diagnostics/2026-09-03-early-exit-p3-class-guard-v2/diagnostic.json",
+    "class_guard_sha256": "ece0c80b6790245715440991a57e109b62ee61f1fc66b208546397f7fbd603dc",
+    "threshold_selected_from_source_seeds": [60, 61, 62],
+    "exploratory_transfer_seeds": [63, 64, 65],
+    "selection_used_official_test": false
+  },
+  "frozen_policy": {
+    "policy_version": "shared_exit8_softmax_threshold_p4_v1",
+    "exit_position": 8,
+    "confidence": "maximum softmax probability",
+    "confidence_threshold": 0.903,
+    "protected_predicted_classes": [],
+    "fallback": "final head",
+    "path_cost_fractions": [0.42989887386925396, 1.0],
+    "p4_threshold_candidates": 0,
+    "per_model_recalibration": false
+  },
+  "confirmation_protocol": {
+    "dataset": "cifar100",
+    "training_seeds": [66, 67, 68],
+    "split_seed": 20260904,
+    "train_samples": 40000,
+    "model_selection_validation_samples": 5000,
+    "policy_confirmation_samples": 5000,
+    "samples_per_class_in_policy_confirmation": 50,
+    "final_head_mean_gain_minimum": -0.003,
+    "final_head_each_gain_minimum": -0.0075,
+    "maximum_accuracy_drop": 0.0,
+    "maximum_balanced_accuracy_drop": 0.0,
+    "maximum_worst_class_accuracy_drop": 0.04,
+    "minimum_early_fraction": 0.15,
+    "maximum_early_fraction": 0.95,
+    "minimum_mac_saving_fraction": 0.15
+  },
+  "if_confirmation_passes": "Freeze all hashes, commit the method lock, and perform one method-locked CIFAR-100 official-test evaluation on P4 exactly once.",
+  "if_confirmation_fails": "Archive P4 without opening CIFAR-100 official test; do not tune this policy on seeds 66/67/68 or rerun with replacement seeds."
+}

@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "status": "stop_without_test",
+  "scope": "CIFAR-100 P3: source-only shared-threshold selection on seeds 60/61/62, followed by no-recalibration transfer to unseen seeds 63/64/65; the official CIFAR-100 test loader is not iterated",
+  "manifest": "/root/autodl-tmp/image-classification/artifacts/sweeps/cifar100_early_exit_p3_serial_p3a_20260903_110049/manifest.json",
+  "manifest_sha256": "ae20bcb4d988b5e44fd1112bd8935caa12ec0086e2c50617be33b49a9237a3a2",
+  "audit": "/root/autodl-tmp/image-classification/reports/audits/2026-09-03-early-exit-p3a/audit_results.json",
+  "audit_sha256": "1f9415e8c3e81cd6e16bcdc6c10fd6f008a0e2d7681a5129f9d978a4968645fa",
+  "runtime_commit": "816f10df0a531fd0a860e5de302b1950e56bae38",
+  "device": "cuda",
+  "data_protocol": {
+    "dataset": "cifar100",
+    "train_samples": 40000,
+    "model_selection_validation_samples": 5000,
+    "policy_calibration_or_transfer_samples": 5000,
+    "samples_per_class_in_each_development_partition": 50,
+    "split_seed": 20260903,
+    "split_fingerprint": "2e723e32830098a584478393c7b928b4c0cd8e5bdc75d36a84d48901d031100b",
+    "source_training_seeds": [
+      60,
+      61,
+      62
+    ],
+    "target_training_seeds": [
+      63,
+      64,
+      65
+    ]
+  },
+  "threshold_grid": {
+    "frozen_before_training": true,
+    "start": 0.0,
+    "stop": 1.0,
+    "step": 0.001,
+    "includes_final_only_sentinel": true,
+    "candidate_count": 1002,
+    "target_candidate_count": 0
+  },
+  "cost_profile": {
+    "method": "conv_linear_macs_per_sample_v1",
+    "dataset": "cifar100",
+    "num_classes": 100,
+    "exit_positions": [
+      8,
+      16
+    ],
+    "path_macs": [
+      2682624,
+      5249088,
+      6240128
+    ],
+    "path_cost_fractions": [
+      0.42989887386925396,
+      0.841182744969334,
+      1.0
+    ],
+    "ignored_operations": [
+      "batch_norm",
+      "activations",
+      "pooling",
+      "memory_traffic"
+    ],
+    "paper_evidence": false
+  },
+  "best_checkpoint_sha256": {
+    "early_exit_p3_baseline_p3a_seed60_mobilenetv2_cifar100": "bc00269d133a01e392cb8bedb334c5cdcc297b6003a735313983a74bf1a6d77f",
+    "early_exit_p3_multi_p3a_seed60_multi_exit_pos8-16_cifar100": "1def49a9d7cd9f1bc0fc063d5a07284b9d69909ea256175dc76763d5eaad8c84",
+    "early_exit_p3_baseline_p3a_seed61_mobilenetv2_cifar100": "70ec60ad06fc42410ebd7676c1c0a72369e2b7955f00def813b7657a9d30647b",
+    "early_exit_p3_multi_p3a_seed61_multi_exit_pos8-16_cifar100": "d2ec4cf879169d1ced6ed51c0e25f8e00cc73c6188bbc277c7e0f1fa7afbe04d",
+    "early_exit_p3_baseline_p3a_seed62_mobilenetv2_cifar100": "099d30cae0f2be5d0c922b8e1a9e978fdc071f19b67d9333ba73ebd15d42f92e",
+    "early_exit_p3_multi_p3a_seed62_multi_exit_pos8-16_cifar100": "7decbcfa143355d5926176b0d2e070393d7a9abdb68c316c730e35619ef3026b",
+    "early_exit_p3_baseline_p3a_seed63_mobilenetv2_cifar100": "2a0bca2e0209c45c922b297007c84adc7d7959666e64ef6117293bb5c4abf939",
+    "early_exit_p3_multi_p3a_seed63_multi_exit_pos8-16_cifar100": "022421af9da378362eaa9493e73936aa7607dd6f5eaac4896475abbc3df22e23",
+    "early_exit_p3_baseline_p3a_seed64_mobilenetv2_cifar100": "2faa74fd215c32c9f78c111a3f7853e1fe2baa320f5cf32ebee556eb5961ba4c",
+    "early_exit_p3_multi_p3a_seed64_multi_exit_pos8-16_cifar100": "7429dc587c03525e43fe864a8dd742ce3a532a59baf74efb29e179b30d29fd83",
+    "early_exit_p3_baseline_p3a_seed65_mobilenetv2_cifar100": "f2ab26ef9c071afbd68dc91254899894deaed59557a4312402b577b1c8d33225",
+    "early_exit_p3_multi_p3a_seed65_multi_exit_pos8-16_cifar100": "8da5b7ed6f270d2911cf4cd3415ec94acb8e6eafe2db790cee451249f271f77d"
+  },
+  "seed_results": [
+    {
+      "cohort": "source",
+      "seed": 60,
+      "baseline_experiment_id": "early_exit_p3_baseline_p3a_seed60_mobilenetv2_cifar100",
+      "multi_exit_experiment_id": "early_exit_p3_multi_p3a_seed60_multi_exit_pos8-16_cifar100",
+      "baseline_validation_accuracy": 0.555,
+      "multi_exit_final_validation_accuracy": 0.5698,
+      "paired_final_validation_gain": 0.014799999999999924,
+      "exit8_validation_accuracy": 0.571,
+      "exit16_validation_accuracy": 0.5716,
+      "policy_calibration_metrics": null
+    },
+    {
+      "cohort": "source",
+      "seed": 61,
+      "baseline_experiment_id": "early_exit_p3_baseline_p3a_seed61_mobilenetv2_cifar100",
+      "multi_exit_experiment_id": "early_exit_p3_multi_p3a_seed61_multi_exit_pos8-16_cifar100",
+      "baseline_validation_accuracy": 0.5482,
+      "multi_exit_final_validation_accuracy": 0.568,
+      "paired_final_validation_gain": 0.01979999999999993,
+      "exit8_validation_accuracy": 0.5696,
+      "exit16_validation_accuracy": 0.5634,
+      "policy_calibration_metrics": null
+    },
+    {
+      "cohort": "source",
+      "seed": 62,
+      "baseline_experiment_id": "early_exit_p3_baseline_p3a_seed62_mobilenetv2_cifar100",
+      "multi_exit_experiment_id": "early_exit_p3_multi_p3a_seed62_multi_exit_pos8-16_cifar100",
+      "baseline_validation_accuracy": 0.5518,
+      "multi_exit_final_validation_accuracy": 0.5738,
+      "paired_final_validation_gain": 0.02200000000000002,
+      "exit8_validation_accuracy": 0.5776,
+      "exit16_validation_accuracy": 0.5712,
+      "policy_calibration_metrics": null
+    },
+    {
+      "cohort": "target",
+      "seed": 63,
+      "baseline_experiment_id": "early_exit_p3_baseline_p3a_seed63_mobilenetv2_cifar100",
+      "multi_exit_experiment_id": "early_exit_p3_multi_p3a_seed63_multi_exit_pos8-16_cifar100",
+      "baseline_validation_accuracy": 0.5494,
+      "multi_exit_final_validation_accuracy": 0.5744,
+      "paired_final_validation_gain": 0.025000000000000022,
+      "exit8_validation_accuracy": 0.5706,
+      "exit16_validation_accuracy": 0.5724,
+      "policy_calibration_metrics": null
+    },
+    {
+      "cohort": "target",
+      "seed": 64,
+      "baseline_experiment_id": "early_exit_p3_baseline_p3a_seed64_mobilenetv2_cifar100",
+      "multi_exit_experiment_id": "early_exit_p3_multi_p3a_seed64_multi_exit_pos8-16_cifar100",
+      "baseline_validation_accuracy": 0.5482,
+      "multi_exit_final_validation_accuracy": 0.5736,
+      "paired_final_validation_gain": 0.025399999999999978,
+      "exit8_validation_accuracy": 0.5704,
+      "exit16_validation_accuracy": 0.5734,
+      "policy_calibration_metrics": null
+    },
+    {
+      "cohort": "target",
+      "seed": 65,
+      "baseline_experiment_id": "early_exit_p3_baseline_p3a_seed65_mobilenetv2_cifar100",
+      "multi_exit_experiment_id": "early_exit_p3_multi_p3a_seed65_multi_exit_pos8-16_cifar100",
+      "baseline_validation_accuracy": 0.5532,
+      "multi_exit_final_validation_accuracy": 0.5766,
+      "paired_final_validation_gain": 0.023399999999999976,
+      "exit8_validation_accuracy": 0.5788,
+      "exit16_validation_accuracy": 0.5784,
+      "policy_calibration_metrics": null
+    }
+  ],
+  "aggregate": {
+    "paired_final_validation_gain_mean": 0.02173333333333331,
+    "paired_final_validation_gain_sample_std": 0.003969214867787699,
+    "source_calibration_mac_saving_mean": null,
+    "target_transfer_mac_saving_mean": null
+  },
+  "locked_policy": null,
+  "gates": {
+    "mean_final_validation_gain_at_least_minus_0_003": true,
+    "each_final_validation_gain_at_least_minus_0_0075": true,
+    "shared_source_dynamic_policy_found": false,
+    "each_source_accuracy_drop_at_most_0": false,
+    "each_source_balanced_drop_at_most_0": false,
+    "each_source_worst_class_drop_at_most_0": false,
+    "each_source_route_is_dynamic": false,
+    "each_source_mac_saving_at_least_0_15": false,
+    "each_target_accuracy_drop_at_most_0": false,
+    "each_target_balanced_drop_at_most_0": false,
+    "each_target_worst_class_drop_at_most_0": false,
+    "each_target_route_is_dynamic": false,
+    "each_target_mac_saving_at_least_0_15": false
+  },
+  "historical_test_disclosure": "Legacy baseline-only CIFAR-100 runs viewed official-test metrics before P3. P3 does not use those runs, and no P3 checkpoint or early-exit policy has been evaluated on the official test. Describe a later pass as method-locked, not globally blind.",
+  "recommended_next_step": "Archive P3 as a second-dataset boundary result; do not inspect official CIFAR-100 test."
+}

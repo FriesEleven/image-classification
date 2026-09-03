@@ -1,0 +1,12 @@
+name: cifar100_early_exit_p4_confirmation_serial
+description: >-
+  Independent confirmation of the post-P3 frozen global exit8 threshold on
+  new model versions and a new stratified development split. Train matched
+  MobileNetV2 and detached-final KD multi-exit models for seeds 66/67/68.
+  Threshold 0.903 is not used during training and may not be recalibrated on
+  these runs. Execute serially and never evaluate CIFAR-100 official test
+  during training.
+seeds: [66, 67, 68]
+experiments:
+  - configs/experiments/early_exit_p4_baseline.yaml
+  - configs/experiments/early_exit_p4_multi.yaml

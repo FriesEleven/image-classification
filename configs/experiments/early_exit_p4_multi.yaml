@@ -1,0 +1,21 @@
+experiment_name: early_exit_p4_multi
+model_type: multi_exit
+dataset: cifar100
+validation_size: 5000
+calibration_size: 5000
+split_seed: 20260904
+evaluate_test: false
+epochs: 200
+batch_size: 128
+lr: 0.01
+amp: true
+cuda_graph: true
+torch_num_threads: 1
+measure_inference: false
+accumulation_steps: 1
+num_workers: 8
+prefetch_factor: 8
+exit_positions: [8, 16]
+exit_loss_weights: [0.2, 0.3]
+exit_distillation_alpha: 0.5
+exit_temperature: 3.0

@@ -1,4 +1,4 @@
-"""Create an immutable manifest-driven audit of the CIFAR-100 P3a batch."""
+"""Create an immutable manifest-driven audit of the CIFAR-100 P4 batch."""
 
 import argparse
 import csv
@@ -25,9 +25,16 @@ from scripts.analysis.audit_early_exit_p2 import (
     sha256_bytes,
     split_fingerprint,
 )
-from scripts.launch_early_exit_p3 import SEEDS, SOURCE_SEEDS, SPLIT_SEED, TARGET_SEEDS
+from scripts.launch_early_exit_p4 import (
+    EXPECTED_SOURCE_HASHES,
+    LOCKED_THRESHOLD,
+    POLICY_LOCK,
+    SEEDS,
+    SPLIT_SEED,
+    _sha256,
+)
 
-EXPECTED_SWEEP_NAME = "cifar100_early_exit_p3_serial_p3a"
+EXPECTED_SWEEP_NAME = "cifar100_early_exit_p4_confirmation_serial_p4a"
 EXPECTED_PROTOCOL = {
     "dataset": "cifar100",
     "validation_size": 5000,
@@ -58,22 +65,20 @@ EXPECTED_ARCHITECTURES = {
 
 
 def collect(manifest_path: Path, launcher_log_path: Path) -> dict:
-    """Snapshot all small evidence before interpreting the batch."""
-
     manifest_record = file_record(manifest_path)
     manifest = json.loads(manifest_record["text"])
     if manifest.get("sweep_name") != EXPECTED_SWEEP_NAME:
-        raise ValueError("Select the exact CIFAR-100 P3a manifest")
+        raise ValueError("Select the exact CIFAR-100 P4a manifest")
     if manifest.get("status") != "completed" or manifest.get("concurrent_jobs") != 1:
-        raise ValueError("CIFAR-100 P3a manifest is not a completed serial sweep")
-    if len(manifest.get("runs", [])) != 12:
-        raise ValueError("CIFAR-100 P3a manifest must contain exactly twelve runs")
+        raise ValueError("CIFAR-100 P4a manifest is not a completed serial sweep")
+    if len(manifest.get("runs", [])) != 6:
+        raise ValueError("CIFAR-100 P4a manifest must contain exactly six runs")
 
     runs = []
     for manifest_run in manifest["runs"]:
         run_id = manifest_run["experiment_id"]
-        if "_p3a_seed" not in run_id:
-            raise ValueError(f"Unexpected P3a ID: {run_id}")
+        if "_p4a_seed" not in run_id:
+            raise ValueError(f"Unexpected P4a ID: {run_id}")
         directory = PROJECT_ROOT / "artifacts/runs" / run_id
         runs.append(
             {
@@ -81,10 +86,7 @@ def collect(manifest_path: Path, launcher_log_path: Path) -> dict:
                 "manifest_run": manifest_run,
                 "files": {name: file_record(directory / name) for name in SMALL_FILES},
                 "checkpoints": {
-                    name: file_record(
-                        directory / "checkpoints" / name,
-                        include_text=False,
-                    )
+                    name: file_record(directory / "checkpoints" / name, include_text=False)
                     for name in ("model_best.pth", "model_latest.pth", "final.pth")
                 },
                 "periodic_checkpoints": sorted(
@@ -99,7 +101,6 @@ def collect(manifest_path: Path, launcher_log_path: Path) -> dict:
                 ),
             }
         )
-
     source_root = manifest_path.parent / "source_snapshot"
     source_snapshot = {
         relative: file_record(source_root / relative, include_text=False)
@@ -110,19 +111,18 @@ def collect(manifest_path: Path, launcher_log_path: Path) -> dict:
         "collected_at_utc": datetime.now(timezone.utc).isoformat(),
         "manifest": manifest_record,
         "launcher_log": file_record(launcher_log_path),
+        "policy_lock": file_record(POLICY_LOCK),
         "runs": runs,
         "source_snapshot_root": str(source_root.relative_to(PROJECT_ROOT)),
         "source_snapshot": source_snapshot,
         "scope": (
-            "Exact completed CIFAR-100 P3a manifest only; source seeds 60/61/62 and "
-            "target seeds 63/64/65; validation/calibration only; no P3 test evaluation."
+            "Exact completed CIFAR-100 P4a manifest only; seeds 66/67/68; frozen "
+            "threshold 0.903; validation/confirmation only; no official-test evaluation."
         ),
     }
 
 
 def analyze(snapshot: dict) -> dict:
-    """Verify completion, provenance, data boundaries and paired evidence."""
-
     manifest = json.loads(_decode(snapshot["manifest"]))
     runtime = manifest.get("runtime", {})
     global_issues = []
@@ -133,13 +133,30 @@ def analyze(snapshot: dict) -> dict:
         launcher_text = _decode(launcher_log)
         required_markers = (
             "Sweep status: completed",
-            "source seeds 60/61/62",
-            "target seeds 63/64/65",
+            "Threshold 0.903",
+            "new seeds 66/67/68",
+            "split seed 20260904",
             "Official CIFAR-100 test evaluation is disabled",
         )
         for marker in required_markers:
             if marker not in launcher_text:
                 global_issues.append(f"launcher_log_missing:{marker}")
+        policy_hash = snapshot["policy_lock"].get("sha256")
+        if policy_hash and f"Frozen P4 policy SHA-256: {policy_hash}" not in launcher_text:
+            global_issues.append("launcher_policy_hash_mismatch")
+    if not snapshot["policy_lock"].get("exists"):
+        global_issues.append("missing_policy_lock")
+    else:
+        policy = json.loads(_decode(snapshot["policy_lock"]))
+        if policy.get("status") != "ready_for_independent_p4_confirmation":
+            global_issues.append("policy_lock_status_mismatch")
+        if policy.get("frozen_policy", {}).get("confidence_threshold") != LOCKED_THRESHOLD:
+            global_issues.append("policy_lock_threshold_mismatch")
+        if policy.get("frozen_policy", {}).get("p4_threshold_candidates") != 0:
+            global_issues.append("policy_lock_target_candidates_nonzero")
+        for relative, expected_hash in EXPECTED_SOURCE_HASHES.items():
+            if not (PROJECT_ROOT / relative).is_file() or _sha256(PROJECT_ROOT / relative) != expected_hash:
+                global_issues.append(f"policy_source_mismatch:{relative}")
     if not runtime.get("git_commit") or runtime.get("git_commit") == "unavailable":
         global_issues.append("missing_runtime_commit")
     if runtime.get("git_status") != "":
@@ -198,7 +215,6 @@ def analyze(snapshot: dict) -> dict:
         for key, expected in EXPECTED_PROTOCOL.items():
             if config.get(key) != expected:
                 issues.append(f"protocol_mismatch:{key}")
-
         model_type = config.get("model_type")
         seed = config.get("seed")
         matrix_keys.add((model_type, seed))
@@ -264,7 +280,6 @@ def analyze(snapshot: dict) -> dict:
             issues.append("best_checkpoint_hash_mismatch")
         if len(entry["periodic_checkpoints"]) != 20:
             issues.append("periodic_checkpoint_count_mismatch")
-
         split_record = entry["files"]["split_indices.json"]
         if split_record["sha256"] != summary.get("split_indices_sha256"):
             issues.append("split_hash_mismatch")
@@ -296,7 +311,6 @@ def analyze(snapshot: dict) -> dict:
             for key in ("inference_latency_mean", "inference_latency_std", "throughput_fps")
         ):
             issues.append("benchmark_null_mismatch")
-
         if provenance.get("git_commit") != runtime.get("git_commit"):
             issues.append("provenance_commit_mismatch")
         if provenance.get("git_status") != "":
@@ -323,7 +337,6 @@ def analyze(snapshot: dict) -> dict:
         rows.append(
             {
                 "run_id": run_id,
-                "cohort": "source" if seed in SOURCE_SEEDS else "target",
                 "model_type": model_type,
                 "seed": seed,
                 "best_validation_percent": 100 * summary["best_validation_accuracy"],
@@ -372,6 +385,7 @@ def analyze(snapshot: dict) -> dict:
         "manifest_path": snapshot["manifest"]["path"],
         "manifest_sha256": snapshot["manifest"]["sha256"],
         "launcher_log": {key: launcher_log.get(key) for key in ("path", "size_bytes", "sha256")},
+        "policy_lock": {key: snapshot["policy_lock"].get(key) for key in ("path", "size_bytes", "sha256")},
         "runtime_commit": runtime.get("git_commit"),
         "canonical_split_sha256": next(iter(canonical_split_hashes), None),
         "runs": rows,
@@ -379,12 +393,8 @@ def analyze(snapshot: dict) -> dict:
             "comparison": "multi_exit_final - mobilenetv2",
             "unit": "percentage_points",
             "seeds": list(SEEDS),
-            "source_seeds": list(SOURCE_SEEDS),
-            "target_seeds": list(TARGET_SEEDS),
             "deltas": deltas,
             "statistics": sample_stats(deltas) if deltas else None,
-            "source_statistics": sample_stats(deltas[:3]) if deltas else None,
-            "target_statistics": sample_stats(deltas[3:]) if deltas else None,
             "wins": sum(delta > 0 for delta in deltas),
         },
         "elapsed_seconds": _elapsed_seconds(manifest["created_at"], manifest["finished_at"]),
@@ -397,7 +407,7 @@ def write_outputs(snapshot: dict, snapshot_path: Path, output: Path) -> dict:
     if result["issues"]:
         raise ValueError(f"Audit issues: {result['issues']}")
     if snapshot_path.exists() or output.exists():
-        raise FileExistsError("P3 audit evidence is immutable; choose fresh output paths")
+        raise FileExistsError("P4 audit evidence is immutable; choose fresh output paths")
     snapshot_path.parent.mkdir(parents=True)
     snapshot_path.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n")
     output.mkdir(parents=True)
@@ -406,6 +416,7 @@ def write_outputs(snapshot: dict, snapshot_path: Path, output: Path) -> dict:
         "snapshot_sha256": sha256_bytes(snapshot_path.read_bytes()),
         "manifest": {key: snapshot["manifest"][key] for key in ("path", "sha256", "size_bytes")},
         "launcher_log": result["launcher_log"],
+        "policy_lock": result["policy_lock"],
         "checkpoint_hashes": {
             row["run_id"]: {
                 "best": row["best_checkpoint_sha256"],
@@ -420,21 +431,19 @@ def write_outputs(snapshot: dict, snapshot_path: Path, output: Path) -> dict:
         "scope": snapshot["scope"],
     }
     (output / "source_index.json").write_text(json.dumps(source_index, ensure_ascii=False, indent=2) + "\n")
-
     controls = {row["seed"]: row for row in result["runs"] if row["model_type"] == "mobilenetv2"}
     exits = {row["seed"]: row for row in result["runs"] if row["model_type"] == "multi_exit"}
     lines = [
-        "# CIFAR-100 early-exit P3a formal audit",
+        "# CIFAR-100 early-exit P4a formal audit",
         "",
-        "This report audits only the completed serial P3a manifest; P3 test data are excluded.",
+        "This report audits only the completed serial P4a manifest; official test data are excluded.",
         "",
-        "| cohort | seed | baseline validation | multi-exit final validation | paired delta |",
-        "|---|---:|---:|---:|---:|",
+        "| seed | baseline validation | multi-exit final validation | paired delta |",
+        "|---:|---:|---:|---:|",
     ]
     for seed, delta in zip(result["paired"]["seeds"], result["paired"]["deltas"]):
-        cohort = "source" if seed in SOURCE_SEEDS else "target"
         lines.append(
-            f"| {cohort} | {seed} | {controls[seed]['best_validation_percent']:.2f}% | "
+            f"| {seed} | {controls[seed]['best_validation_percent']:.2f}% | "
             f"{exits[seed]['best_validation_percent']:.2f}% | {delta:+.2f} pp |"
         )
     stats = result["paired"]["statistics"]
@@ -444,7 +453,7 @@ def write_outputs(snapshot: dict, snapshot_path: Path, output: Path) -> dict:
             (
                 f"Paired gain: `{stats['mean_percent']:+.3f} ± "
                 f"{stats['sample_sd_percent']:.3f} pp` (sample SD); "
-                f"wins `{result['paired']['wins']}/6`."
+                f"wins `{result['paired']['wins']}/3`."
             ),
             f"Total serial duration: `{result['elapsed_seconds'] / 3600:.3f}` hours.",
             f"Manifest SHA-256: `{result['manifest_sha256']}`.",

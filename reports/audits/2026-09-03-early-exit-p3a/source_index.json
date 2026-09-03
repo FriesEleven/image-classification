@@ -1,0 +1,92 @@
+{
+  "snapshot_sha256": "d71d2126f10ee0049c56c7cd444d6476361b061be8d61c58d282dff79bfa108c",
+  "manifest": {
+    "path": "artifacts/sweeps/cifar100_early_exit_p3_serial_p3a_20260903_110049/manifest.json",
+    "sha256": "ae20bcb4d988b5e44fd1112bd8935caa12ec0086e2c50617be33b49a9237a3a2",
+    "size_bytes": 48094
+  },
+  "launcher_log": {
+    "path": "artifacts/launcher_logs/early_exit_p3_serial_p3a_20260903_110045_706156.log",
+    "size_bytes": 188338,
+    "sha256": "e274875aee84e36c5e0f95136cdf9dd2c46b15494b0b6f9140c3fd41a1788532"
+  },
+  "checkpoint_hashes": {
+    "early_exit_p3_baseline_p3a_seed60_mobilenetv2_cifar100": {
+      "best": "bc00269d133a01e392cb8bedb334c5cdcc297b6003a735313983a74bf1a6d77f",
+      "latest": "32cdd23739e368e16f4e66cca3d4b9be096b09a6cefbea33341c2c0681cb5bdf",
+      "final": "d9dda2ebc26036b1d8e9a6449ca8ebcf24b12e01c3413c0715f05d01478c4ca8"
+    },
+    "early_exit_p3_baseline_p3a_seed61_mobilenetv2_cifar100": {
+      "best": "70ec60ad06fc42410ebd7676c1c0a72369e2b7955f00def813b7657a9d30647b",
+      "latest": "192986915cc4c87a9b42f1034c05c59e470d8fa6f41f663b2e1bed543ca46801",
+      "final": "6d39cfa36f1e8ff025c03d67fceb5b572a9e2ca148a03699061d04755f8f0268"
+    },
+    "early_exit_p3_baseline_p3a_seed62_mobilenetv2_cifar100": {
+      "best": "099d30cae0f2be5d0c922b8e1a9e978fdc071f19b67d9333ba73ebd15d42f92e",
+      "latest": "556dd1c0d4ce62fa32c54b8ead3bae4c30811e5eb6cdd253603457df90362a17",
+      "final": "ed7dd9561751cd9589388a76e38f12803dac215666e43aecf6407dcc06b29138"
+    },
+    "early_exit_p3_baseline_p3a_seed63_mobilenetv2_cifar100": {
+      "best": "2a0bca2e0209c45c922b297007c84adc7d7959666e64ef6117293bb5c4abf939",
+      "latest": "d35328616ae933607999c59036f63f56791fa1694a85aeae484eea002bcb5ce0",
+      "final": "3e2391a32b52f5af2ebdd42a064e065019aac2884c559b482cd1b323d4baf73b"
+    },
+    "early_exit_p3_baseline_p3a_seed64_mobilenetv2_cifar100": {
+      "best": "2faa74fd215c32c9f78c111a3f7853e1fe2baa320f5cf32ebee556eb5961ba4c",
+      "latest": "4735d019020ab3add21643ff83264f0dee83863143a535ace97c02303bbc5961",
+      "final": "d65c4f2076d07c4c09ff80054725a5a794109f4fdad7483cd487ffa76dc2f397"
+    },
+    "early_exit_p3_baseline_p3a_seed65_mobilenetv2_cifar100": {
+      "best": "f2ab26ef9c071afbd68dc91254899894deaed59557a4312402b577b1c8d33225",
+      "latest": "e599826c326de83472592321dfa71c8e35de8ccbfeedc2cdc1e301baa7305ee3",
+      "final": "5f9c8f2fccd6660ad71474067a66741c0bd365de5c00edf87b72fc1369ff2eb4"
+    },
+    "early_exit_p3_multi_p3a_seed60_multi_exit_pos8-16_cifar100": {
+      "best": "1def49a9d7cd9f1bc0fc063d5a07284b9d69909ea256175dc76763d5eaad8c84",
+      "latest": "e573b425a856dfa004e110f2ee0831194b29f3e083a925e0a35a95b7e76aafa3",
+      "final": "8b6da9c34b40d2e0e8a420cd2c30b1259d0542e362211e98ba6f92591815c74d"
+    },
+    "early_exit_p3_multi_p3a_seed61_multi_exit_pos8-16_cifar100": {
+      "best": "d2ec4cf879169d1ced6ed51c0e25f8e00cc73c6188bbc277c7e0f1fa7afbe04d",
+      "latest": "a23461e2ea185d720d702453e2bbb1e948ac72d8fa93b3ebd6d1496dd4d6ad7d",
+      "final": "2c8f725a45972e63caf71f8ac582da02b10fd7e92ba8918131665ac6586df02d"
+    },
+    "early_exit_p3_multi_p3a_seed62_multi_exit_pos8-16_cifar100": {
+      "best": "7decbcfa143355d5926176b0d2e070393d7a9abdb68c316c730e35619ef3026b",
+      "latest": "937cb2f540faaad49f7d010d9115418386894b2ae379a2f25382307315f624af",
+      "final": "a083ab5f1ab434573a567d53f647598bc92eabe184c3b676da2502c925c7e470"
+    },
+    "early_exit_p3_multi_p3a_seed63_multi_exit_pos8-16_cifar100": {
+      "best": "022421af9da378362eaa9493e73936aa7607dd6f5eaac4896475abbc3df22e23",
+      "latest": "5f76a4dfa71b8b08d9cf2fccfa8df59b09850a6669cd0cf46152a5ac0342fae3",
+      "final": "b0d2e8ad8eb8a5d23ece50857f2e37a09b7f1c93693995de6c2981ef1747cb1a"
+    },
+    "early_exit_p3_multi_p3a_seed64_multi_exit_pos8-16_cifar100": {
+      "best": "7429dc587c03525e43fe864a8dd742ce3a532a59baf74efb29e179b30d29fd83",
+      "latest": "563de85c4805c742cdc228ca61d0e34aa069eb23d8470c54921a15c1c3c289eb",
+      "final": "1019c8e2f369ba0ad11e6853e8390c9cf0f5d28fb55b29874e2a4a35fcc9699c"
+    },
+    "early_exit_p3_multi_p3a_seed65_multi_exit_pos8-16_cifar100": {
+      "best": "8da5b7ed6f270d2911cf4cd3415ec94acb8e6eafe2db790cee451249f271f77d",
+      "latest": "1a0378308492bcd0e9062445033a2c9d9f8d38f0d45e72a27901fa088ebb0c33",
+      "final": "a56e30eebeb0f197d43da621df094dacbbbb859dfcb28ec3dee75c332a2dd27c"
+    }
+  },
+  "split_hashes": {
+    "early_exit_p3_baseline_p3a_seed60_mobilenetv2_cifar100": "cf72e0e17f33ca2789a6e0e5cba9e0b4a7be2acb7941b47307d051c3de27083b",
+    "early_exit_p3_baseline_p3a_seed61_mobilenetv2_cifar100": "e5430d8fd6de43d6b3d774e338a85b54607270a6f52c99bd8bc75e3d136ae8e8",
+    "early_exit_p3_baseline_p3a_seed62_mobilenetv2_cifar100": "3ab9773c28dc7c2fea8d7714177e73e3d7708426cabd3e2e53d4e39a35444dd4",
+    "early_exit_p3_baseline_p3a_seed63_mobilenetv2_cifar100": "db33638d4ae7b44e1135344bec725413233ef8425fdfbfb348e0c0bc2e2720ba",
+    "early_exit_p3_baseline_p3a_seed64_mobilenetv2_cifar100": "7f6fb588dd6cd11e283d35b8d8cc1dc4e10bd15f86806dbf3083b15840a7da10",
+    "early_exit_p3_baseline_p3a_seed65_mobilenetv2_cifar100": "798321626b545e106e1c79f3ab33e84fa5df5f265b345497c53cd0b1e07111fd",
+    "early_exit_p3_multi_p3a_seed60_multi_exit_pos8-16_cifar100": "cf72e0e17f33ca2789a6e0e5cba9e0b4a7be2acb7941b47307d051c3de27083b",
+    "early_exit_p3_multi_p3a_seed61_multi_exit_pos8-16_cifar100": "e5430d8fd6de43d6b3d774e338a85b54607270a6f52c99bd8bc75e3d136ae8e8",
+    "early_exit_p3_multi_p3a_seed62_multi_exit_pos8-16_cifar100": "3ab9773c28dc7c2fea8d7714177e73e3d7708426cabd3e2e53d4e39a35444dd4",
+    "early_exit_p3_multi_p3a_seed63_multi_exit_pos8-16_cifar100": "db33638d4ae7b44e1135344bec725413233ef8425fdfbfb348e0c0bc2e2720ba",
+    "early_exit_p3_multi_p3a_seed64_multi_exit_pos8-16_cifar100": "7f6fb588dd6cd11e283d35b8d8cc1dc4e10bd15f86806dbf3083b15840a7da10",
+    "early_exit_p3_multi_p3a_seed65_multi_exit_pos8-16_cifar100": "798321626b545e106e1c79f3ab33e84fa5df5f265b345497c53cd0b1e07111fd"
+  },
+  "canonical_split_sha256": "2e723e32830098a584478393c7b928b4c0cd8e5bdc75d36a84d48901d031100b",
+  "runtime_commit": "816f10df0a531fd0a860e5de302b1950e56bae38",
+  "scope": "Exact completed CIFAR-100 P3a manifest only; source seeds 60/61/62 and target seeds 63/64/65; validation/calibration only; no P3 test evaluation."
+}

@@ -2,9 +2,9 @@
 
 本文用于让新的对话接续当前代码、GPU服务器实验和论文计划。**先读本文件，再检查实时状态；不要把历史建议、短测或旧清单的残留字段当成当前正式结果。**
 
-最新状态见第26节；第7、9、15、16、18–25节保留此前阶段的历史计划，若冲突，以第26节为准。当前没有正式训练进程。
+最新状态见第27节；第7、9、15、16、18–26节保留此前阶段的历史计划，若冲突，以第27节为准。当前没有正式训练进程。
 
-> **2026-09-03当前状态：** P2a审计和冻结阈值跨重训迁移均已通过。唯一一次CIFAR-10.1 v6外部分布评测也已完成，source/target共六个模型版本全部通过：平均早退`49.01±1.93%`、MAC代理节省`27.59±1.09%`，相对最终头平均`+0.008±0.020 pp`，总体/balanced/worst-class没有任何模型退化。一次性access marker和六份logits/routes均已保留，禁止重跑。当前已准备CIFAR-100 P3最终复现批次：baseline/multi-exit × seeds60–65共12组串行训练，source60–62选择共享阈值，target63–65只做零重校准迁移。下一步只需用户启动P3；原始CIFAR-10 test永久禁止重跑。
+> **2026-09-03当前状态：** P3的12组CIFAR-100训练全部成功，审计问题为零；multi-exit最终头相对baseline六seed全胜，平均`+2.173±0.397 pp`。但原预注册的零最差类别下降与≥15% MAC节省不能同时满足，正式结论固定为`stop_without_test`，P3 official test禁止打开。后验calibration-only诊断把边界定位为类别粒度：阈值`0.903`在source和target均约40%早退、约22.8% MAC节省、总体提升，但最差类别下降需放宽至4pp；预测类别保护不能恢复严格零风险迁移。P3周期快照已安全清理。当前已冻结P4最小独立确认：新seeds66/67/68、新split seed20260904、baseline/multi-exit共6组串行，阈值0.903且零重校准。下一步只需用户启动P4；原始CIFAR-10 test、CIFAR-10.1和P3 CIFAR-100 test均禁止重跑/打开。
 
 ## 1. 一分钟了解当前进度
 
@@ -12,10 +12,11 @@
 - 当前方向：最差类别风险约束、跨模型重训版本可迁移的阶段早退。
 - P0 是探索/失败定位；P1b 是首个严格独立 calibration + 锁定 test 正结果，完整证据见第23节。
 - P1b test 的策略相对最终头平均 `+0.01±0.01 pp`，约65%样本在exit8退出，MAC代理节省约36.5%；P2a在三个未见重训模型上复现，CIFAR-10.1 v6又验证自然分布迁移。
+- P3已完成并作为严格门槛下的第二数据集边界保留：最终头显著改善，但零最差类别下降与预算门槛不能同时满足，因此没有打开P3 test。
 - 代码已具有真正的分阶段续算路径：exit8只计算一次，fallback从缓存特征继续，未使用的exit16不执行。
-- 当前无训练进程；不要重跑原始CIFAR-10 test或CIFAR-10.1评测，不要根据后续结果更改CIFAR-10阈值0.984。
+- 当前无训练进程；不要重跑原始CIFAR-10 test或CIFAR-10.1评测，不要打开P3 CIFAR-100 test，也不要根据后续结果更改CIFAR-10阈值0.984。
 - 精确查新后的候选创新不是“早退+KD+阈值”，而是**冻结策略对未参与校准的新训练seed/模型版本的无重校准迁移**，辅以最差类别风险和真实部署测量。
-- RTX4090D配对时延剖析、P2a迁移和CIFAR-10.1外部验证均已完成；当前只缺P3 CIFAR-100最终复现。
+- RTX4090D配对时延剖析、P2a迁移和CIFAR-10.1外部验证均已完成；当前只缺P4的最小独立CIFAR-100边界确认。
 
 用户此前的固定偏好：需要新实验时，准备可运行的后台Python脚本，给出**一行启动命令**，由用户启动；不要在读完交接后自行启动长训练。用户如果明确授权启动，再执行。
 
@@ -990,3 +991,94 @@ cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/
 完成后先审计唯一`cifar100_early_exit_p3_serial_p3a_<timestamp>/manifest.json`及对应launcher log，再
 运行预注册分析器。若`stop_without_test`，不打开P3 test；若通过，固化哈希后执行一次短test推理，
 随后停止新增训练并进入论文表格、图和写作。
+
+## 27. 2026-09-03 P3完成、失败边界与P4独立确认入口
+
+### 27.1 P3正式审计与最终头结果
+
+唯一completed manifest为
+`artifacts/sweeps/cifar100_early_exit_p3_serial_p3a_20260903_110049/manifest.json`，SHA-256为
+`ae20bcb4d988b5e44fd1112bd8935caa12ec0086e2c50617be33b49a9237a3a2`；launcher log SHA-256为
+`e274875aee84e36c5e0f95136cdf9dd2c46b15494b0b6f9140c3fd41a1788532`。12/12组均
+completed/return0，严格串行、连续200 epochs，无termination signal、无test评估或预测文件；总时长
+约3.2小时。当前没有训练或GPU compute process。
+
+不可变snapshot为`artifacts/audits/2026-09-03-early-exit-p3a/snapshot.json`，SHA-256为
+`d71d2126f10ee0049c56c7cd444d6476361b061be8d61c58d282dff79bfa108c`。版本化审计位于
+`reports/audits/2026-09-03-early-exit-p3a/`；`audit_results.json` SHA-256为
+`1f9415e8c3e81cd6e16bcdc6c10fd6f008a0e2d7681a5129f9d978a4968645fa`，issues为空。
+multi-exit最终头相对matched baseline的seeds60–65配对差值为
+`+1.48/+1.98/+2.20/+2.50/+2.54/+2.34 pp`，平均`+2.173±0.397 pp`，胜出6/6。这是很强的
+辅助头训练收益，但不能单独当作早退路由创新。
+
+审计脚本直接入口原先遗漏仓库根路径，首次调用在导入阶段以`ModuleNotFoundError`退出，未生成文件、
+未读取任何数据；模块入口完成正式审计。随后直接入口已修复并有回归测试。
+
+### 27.2 冻结P3失败与calibration-only边界
+
+冻结分析位于`reports/experiments/2026-09-03-early-exit-p3-cifar100/`；`selection.json` SHA-256为
+`c71ad43122d5fec4a08679f80a616b7e3015ef730d4c0465829a51329edb6bfe`，正式状态
+`stop_without_test`。最终头两个gate通过，但source seeds60/61/62上没有共享阈值同时满足总体、
+balanced、最差类别下降均≤0、动态路由和≥15% MAC节省。因此`locked_policy=null`，target不参与
+正式选择，P3 official CIFAR-100 test永久不打开；不能用后验结果反改这个结论。
+
+后验边界诊断只重新读取六个calibration集合，规范结果位于
+`reports/diagnostics/2026-09-03-early-exit-p3-boundary-v2/`，`diagnostic.json` SHA-256为
+`25bbcf5365be9b860b0919b3b1160cfefe5b1adfd609e54f158bf4803fb73910`：
+
+- 严格零风险共享阈值`0.999`的最小早退率仅11.76%，最小MAC节省仅6.70%；seed62单独也没有满足
+  15%早退下限的严格零风险策略。
+- 最低暴露的动态阈值`0.997`已出现2pp最差类别下降；在2pp上限内最优阈值`0.987`的最小MAC节省
+  只有13.01%，仍过不了15%预算门槛。
+- 强制≥15% MAC节省时，最低风险阈值为`0.903`；source和target均约40%早退、约22.8%节省，
+  六seed总体与balanced准确率反而提高约0.70–1.18pp，但最差类别下降需允许4pp，即每类50张中的
+  2张净下降。
+
+预测类别保护的source-only MILP诊断位于
+`reports/diagnostics/2026-09-03-early-exit-p3-class-guard-v2/`，`diagnostic.json` SHA-256为
+`ece0c80b6790245715440991a57e109b62ee61f1fc66b208546397f7fbd603dc`。固定0.005阈值粗网格上，严格
+零风险加15%预算没有可行保护集合；允许每类1张下降时source可行，但同一策略迁移到target的最差
+类别下降达到6pp。
+因此不增加类别保护，也不把后验诊断写成独立正结果。
+
+### 27.3 P3清理
+
+在审计和两份诊断固化后，只删除12个P3 run的240个`epoch_*.pth`周期优化器快照，共
+6,899,190,648 bytes。36个best/latest/final、训练CSV/TensorBoard、config、provenance、split、
+manifest/source snapshot、审计和诊断全部保留；周期快照剩余0，`/root/autodl-tmp`可用约43GB。
+删除不可在服务器恢复，但不影响论文复算、绘图或best-checkpoint诊断。回执为
+`reports/audits/2026-09-03-early-exit-p3a/cleanup_receipt.json`。
+
+### 27.4 P4为何仍值得做且不改写P3
+
+若现在直接写论文，主机制在第二训练数据集只有正式失败，CCF-C投稿仍有明显证据缺口。P3同时表明
+失败来自100类×每类50张条件下的严格零下降粒度，而不是早退头整体失效；阈值0.903在六个既有
+模型版本上表现一致。因此只追加一次独立确认是合理的最小代价，不再做阈值扫描、class guard、出口
+位置、损失或backbone搜索。
+
+完整冻结协议见`docs/early_exit_p4_plan.md`，机器可读锁为
+`reports/experiments/2026-09-03-early-exit-p4-design/locked_policy.json`。P4使用新seeds66/67/68、
+全新`split_seed=20260904`，每seed一对baseline/multi-exit，共6组200 epochs、`jobs=1`串行。
+训练配方和模型完全不变；策略固定为exit8最大softmax阈值`0.903`、无类别保护、fallback final，
+P4候选阈值数为0。训练与分析都不访问official test。
+
+开发确认要求最终头平均配对差值≥−0.30pp且每seed≥−0.75pp；策略每seed总体/balanced下降≤0、
+最差类别下降≤4pp、早退15%–95%、MAC节省≥15%。失败即归档，不调阈值、不换seed、不打开test。
+通过后才提交精确test lock并执行一次短评估；test门槛为每seed总体/balanced下降≤0.50pp、最差类别
+下降≤4pp、早退15%–95%、MAC节省≥15%，且平均总体下降≤0.20pp。无论test正负都禁止重跑。
+
+新增启动、审计、确认、锁和一次性评估入口已通过202 tests + 3 subtests；唯一warning是已知的首次
+cuBLAS context初始化。13种模型前向、CIFAR-10/100数据边界、Ruff、compileall和diff-check通过；
+dry-run精确打印6个全新`_p4a_seed{66,67,68}`任务且未训练。预计串行约1.6小时。
+
+### 27.5 用户下一步只需启动
+
+启动器自身后台化并返回PID、log和监控命令；不要另加`nohup`，不要并发第二批，运行期间不要修改
+`src/`、`scripts/`或`configs/`。唯一命令：
+
+```bash
+cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/launch_early_exit_p4.py
+```
+
+完成后先审计唯一`cifar100_early_exit_p4_confirmation_serial_p4a_<timestamp>/manifest.json`，再执行
+冻结确认分析。只有`ready_for_method_locked_cifar100_test`才准备并提交一次性test lock；否则停止。

@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "performed_on": "2026-09-03",
+  "scope": "Exact twelve CIFAR-100 P3a run directories from the audited completed manifest.",
+  "manifest_sha256": "ae20bcb4d988b5e44fd1112bd8935caa12ec0086e2c50617be33b49a9237a3a2",
+  "audit_results_sha256": "1f9415e8c3e81cd6e16bcdc6c10fd6f008a0e2d7681a5129f9d978a4968645fa",
+  "selection_sha256": "c71ad43122d5fec4a08679f80a616b7e3015ef730d4c0465829a51329edb6bfe",
+  "preconditions": {
+    "manifest_status": "completed",
+    "audited_runs": 12,
+    "audit_issues": {},
+    "training_processes": 0,
+    "periodic_checkpoint_count": 240,
+    "periodic_checkpoint_bytes": 6899190648,
+    "core_checkpoint_count": 36
+  },
+  "deleted": {
+    "pattern": "checkpoints/epoch_*.pth within the exact twelve audited P3a run directories",
+    "files": 240,
+    "bytes": 6899190648,
+    "recoverable_on_server": false
+  },
+  "preserved": {
+    "model_best_model_latest_final_checkpoints": 36,
+    "training_csv_and_tensorboard": true,
+    "config_provenance_split_metrics_benchmark_summary": true,
+    "sweep_manifest_launcher_log_and_source_snapshot": true,
+    "immutable_audit_snapshot": true,
+    "versioned_audit_selection_and_diagnostics": true
+  },
+  "postconditions": {
+    "periodic_checkpoint_count": 0,
+    "core_checkpoint_count": 36,
+    "filesystem_available_human": "43G",
+    "official_cifar100_test_accessed": false
+  },
+  "reason": "Periodic optimizer snapshots are not required for the frozen P3 audit, calibration-only boundary diagnostics, paper tables, figures, or best-checkpoint analysis."
+}
