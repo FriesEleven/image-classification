@@ -1,0 +1,3445 @@
+{
+  "schema_version": 1,
+  "status": "paper_evidence_complete",
+  "scope": "One method-locked CIFAR-100 official-test evaluation of six P4 best checkpoints and threshold 0.903; no test-time tuning.",
+  "started_at_utc": "2026-09-03T09:00:28.236062+00:00",
+  "finished_at_utc": "2026-09-03T09:00:56.695692+00:00",
+  "device": "cuda",
+  "runtime": {
+    "git_commit": "e7cc9a48aaac823d427eeaa553a51e4594a8e1f0",
+    "git_status": "",
+    "tracked_source_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_sha256": {
+      "pyproject.toml": "920f19c1cca4cfdb02de4b18f5dde9eefef84a145e67c5f9fbbd1e2e5fafadc0",
+      "src/image_classification/__init__.py": "68bba55df0f9c6b59dd9116d977c34935225e98e9b25dee0d23e6e0633fbd602",
+      "src/image_classification/cli/__init__.py": "6b3ca07563f59ac62e6b66bd29ae8d89472a3a3dbe5b1faa8dc88600d9c3cf66",
+      "src/image_classification/cli/train.py": "045e5467b7a1603480537a276e555be340d0e6653e44805b7898df88dac67689",
+      "src/image_classification/config.py": "b812ceaf3d23392c97efc2dafae184255d660ff6903e2f9175c3ec319174daab",
+      "src/image_classification/data/__init__.py": "273c477d1c869de269e8a7cee9341610ea178c3d04e6ffe8e64f67da1263e0b4",
+      "src/image_classification/data/cifar.py": "229879e49c1735eea178abc4ac143e83076c214e8e58141eb1881f36c4d367ac",
+      "src/image_classification/data/cifar10.py": "66aa34ecc834fdb0290f3d979209268f3b0b97e6256a7e279e3a708b164294b5",
+      "src/image_classification/data/cifar10_1.py": "b610f525fffccf09822c3bcae85195be0a631b8838bd6df2835f641eb2be73df",
+      "src/image_classification/diagnostics/__init__.py": "5903baead6b9415a4a3f67a194cf30c1afd887985a95c9e2ce335069a616200d",
+      "src/image_classification/diagnostics/guidance.py": "43753361ca380a07ed26008aeb4f59a5a346215d2f0e87bb99fd509906a92c91",
+      "src/image_classification/diagnostics/guidance_v4.py": "21fcf69f9ceee163d0bc60993220c01a9e9e86aa48cb287e5eea51e39514be2b",
+      "src/image_classification/models/__init__.py": "a621d0432eaa8c96500659271a1d63749c9ae5976670e37f95fd13c2bcf090a9",
+      "src/image_classification/models/attention.py": "7c4e2819f286d75d634a7901265857eb98c2fa00594cc4979de741ad1a082214",
+      "src/image_classification/models/eca.py": "31e946d0bfed46936581e792f257903b55e2064b63612c3933d7b21c695d438b",
+      "src/image_classification/models/factory.py": "1d7d941f0ed465df82c45ebea4ffef7c7da8dc844c21ee37f4d0933f148bd04a",
+      "src/image_classification/models/mobilenetv2.py": "a221cb8efdaee51b321de08b038c7a4e7a46a32065506e333ebced58b8964d2e",
+      "src/image_classification/paths.py": "a4ed577d6aa1aeaa13f30192e286bce71dfa26884941e24be174ca0be97315d0",
+      "src/image_classification/selection/__init__.py": "acd3c9e5d60311ba571e40a60e5fc6a7fa6c60a3a385eb982110ba3e266ad5b9",
+      "src/image_classification/selection/budget.py": "7a16e7dfdffaca0c8f25a5c48bd6ce32f60534371def5e3a99a52f2e3f1a2953",
+      "src/image_classification/selection/early_exit.py": "335681e3331d709bd6b285359fc2bdc199dc88cd74a3fd0c258e7cf2ecb82d95",
+      "src/image_classification/training/__init__.py": "54d8562d219ac3121620e1f6facbe9729a419d40beaaf8632a3f17d59254cb5a",
+      "src/image_classification/training/benchmark.py": "6512727ca807ea370f0e99f04c50c80816ac266332bb793cd11004a6abca70b6",
+      "src/image_classification/training/checkpoint.py": "c99028cfa5fd50a2dbfdff5ec701ed4afb8ffc7401d7831541ea3579dfbe8a4e",
+      "src/image_classification/training/cuda_graph.py": "c1a8b2bd8771f3c64e347978359b7d862954ea3000755c3884753856038a766a",
+      "src/image_classification/training/engine.py": "31288ec281e9fc38355c7f811bc7a89aa6348053bc48e7f9d7ce58a931d1b0a2",
+      "src/image_classification/training/evaluate.py": "23384b57c2f5da5455b61fd52cda2b0351afc8ad42beee662f4e7d051b3635b5",
+      "src/image_classification/training/objectives.py": "23aa7c0eb1991f22cfecc6240c39220d05ae5a39dadec74befb447d9b8add019",
+      "src/image_classification/training/optimizer_step.py": "e863eae8364892d4a1d8d8034b016d2b5dc2d61884fc2b1541e6ea541c3cf8d3",
+      "src/image_classification/training/provenance.py": "18d7d87bb75daa0dcbd6c597d38365aa52223acf05f47f107c3c9391ec421fbe",
+      "src/image_classification/training/sweep.py": "289243fae675c68efd322b04d1b73ddf92e7be440726bd55b3c407449a189335",
+      "src/image_classification/utils/__init__.py": "1cbffe4e7af83f8a6cbc10642e227fec0b1f6d7c25be102daaf1bea333082960",
+      "src/image_classification/utils/reproducibility.py": "796aa29bab07d27609cf2e60eca2f72871802008e8cd16fb952d3ffc14acb217",
+      "scripts/analysis/analyze_early_exit_p0.py": "3e82778195f8e6ab90b03d709df3ebb502c749e812622e73a4cbdfcc12e29303",
+      "scripts/analysis/analyze_early_exit_p1.py": "44351cd15a309cf067a9292357d55145c6f939234d3a78fac803cdfdb15f6e30",
+      "scripts/analysis/analyze_early_exit_p2_transfer.py": "d5cea2c9eb193ae0adb65af50ebbdfc1f2ab0bb0047bfac45a1381a711b87b25",
+      "scripts/analysis/analyze_early_exit_p3.py": "b46e956861cf1207563fb6f048380bb27cdc797d9271ce75c6deb6492e705c6a",
+      "scripts/analysis/analyze_early_exit_p4_confirmation.py": "a070839349fe3d291849b8a4a922cf2ad9f2eb911ccef6fa1e8bb3484e498e1c",
+      "scripts/analysis/audit_csgha_v4_retry1.py": "dc20e2b00c509147f4772f88d3a9a66bac19c7aa51b46d92c98ed506d3add6bd",
+      "scripts/analysis/audit_csgha_v5_serial.py": "fbbd82ee779481f6e0c0b92d950b3b9a6fc427e84ade67e03401466d27f38c0b",
+      "scripts/analysis/audit_csgha_v6_serial.py": "a6ee4b2bc82049c0e41b86ddda91e49be894819f1993768a9bd09a1fa3fa1828",
+      "scripts/analysis/audit_early_exit_p0.py": "be4df5f43563c907dbeee029180a1c2d409823ca645257b9a070c4fe938ad47e",
+      "scripts/analysis/audit_early_exit_p1.py": "7ec9539e1489d66ab555a08e4ee09eb8382f8a932631e0f74d666a04a9761694",
+      "scripts/analysis/audit_early_exit_p2.py": "d9fb7de4919d6200f461530e22e01c1283c7b33e7264f9129817ea0f4555cb97",
+      "scripts/analysis/audit_early_exit_p3.py": "6cf0982288308d54d8e6bb998aaaf74444a23f7c5d548bf1c6e089a34fc0bfdc",
+      "scripts/analysis/audit_early_exit_p4.py": "fd9b20ff6bbb6745d2577c2a49627a873c763ba4976cf50547aa2c3862116378",
+      "scripts/analysis/audit_experiments.py": "3c0d55fe56e56115e1ce7330545268c9badad40c18d0e48782fca78dacbcce77",
+      "scripts/analysis/diagnose_early_exit_p0_class_risk.py": "0dcce72deb6e3198329b4e2ed74eca383cdc0c496bc22dc57f269f789095051f",
+      "scripts/analysis/diagnose_early_exit_p3_boundary.py": "b1a777d5d18ae69f5dd7fe02b5264b250de2ffc3d0efbb472bb16593fe273ee1",
+      "scripts/analysis/diagnose_early_exit_p3_class_guard.py": "ec4c9c76ce4bbbd2ee8e8478f9f3cdc369feac966dfdac870ede98f6e53433a6",
+      "scripts/analysis/evaluate_early_exit_cifar10_1_v6.py": "cd3c053077b805c39e8ccd89b8eb8dc4ebd35aee3ab02b1d4dd5930bc52e9a9f",
+      "scripts/analysis/evaluate_early_exit_p1_locked_test.py": "e78a5cfcca9c52f2677d84c5aa1444a9cda4e108f1127a5c6d05df0d29b8e12f",
+      "scripts/analysis/evaluate_early_exit_p3_locked_test.py": "55a423118e7b34b21afbc004d7d5981012f6b3361238583dff25a5a3373572d2",
+      "scripts/analysis/evaluate_early_exit_p4_locked_test.py": "ddbdc681c35ff6708d8c09a399d1eb4dd0a8a3e77f623dd5aef249eef434aa9a",
+      "scripts/analysis/freeze_early_exit_p3_test.py": "66ea49ff51da4d6a2248329fe213dadfaf72e1fb4b36478027e9b6db8f6e523f",
+      "scripts/analysis/freeze_early_exit_p4_test.py": "b78af66a26d0231c8050af265922e56f3df85997a0255acbc3ecf2b32f6f9db3",
+      "scripts/analysis/generate_tables.py": "5f0b12c19a938dfa34acad1d372db0f7c7c5ece4b006690c45685f4cf9c2ad38",
+      "scripts/analysis/plot_performance.py": "f1d22a3d1a7cdcd5b0529b615a609268238be8e315820501deae34e4d23c8348",
+      "scripts/analysis/select_budget_stage_attention.py": "b52793a3108ff6e75607bfd033eb1766cb4fb2ad05068022167da2a3fcdd68da",
+      "scripts/analysis/statistics.py": "d10ce5e20911a3e443b8aeb69f84f4dfd991a1525758df9784c26c6814815421",
+      "scripts/analysis/summarize_csgha_v4_retry1_diagnostics.py": "ca353be1d4e6cf2a36fd5f6f7ac505715a8dd0157ffab92df251b2f52445bb5d",
+      "scripts/analysis/summarize_csgha_v5_serial_diagnostics.py": "288c447b29064a1770e4910d61f9ee5216c25b3da5aab4532e84f7e98c53947d",
+      "scripts/analysis/summarize_csgha_v6_serial_diagnostics.py": "8273238d7c5142e8c14359f6b264a459f990744475d5b378e8c22b8919b32ff6",
+      "scripts/analysis/summarize_guidance_information.py": "ea53e035b0d1537574103851bddd050ed61d52f331eff6765b3cd9e87aeb2737",
+      "scripts/analysis/summarize_results.py": "903adede1ed65e578450ab28c811b604a18b57478d1569aa09f8232293e1dd43",
+      "scripts/diagnostics/audit_csgha_information.py": "f948fbc88485cf754e0de55da914f2c19e4dc0b91966fab284e48ee3d0016c1f",
+      "scripts/diagnostics/audit_csgha_v4_retry1.py": "921a47e083219e80af4792ecb3f310270aa18181a35a44bda98335070c8f3e25",
+      "scripts/diagnostics/audit_csgha_v5_serial.py": "83b87335fb636dd50ccb4896207eabbd16f508c5e09bd5581dc42d7bb078af3a",
+      "scripts/diagnostics/audit_csgha_v6_serial.py": "9e0c523fa77552ea959665fb646d90f45e4a0a3c74d26d0e86756d4c6da362f9",
+      "scripts/diagnostics/benchmark_gpu_pipeline.py": "1c15ffe6e6814ddd44ac40d9581f8e3fe9ae46c29881cd408de9e2055743f25f",
+      "scripts/diagnostics/benchmark_training_loop.py": "2d97a6c1d6f40fb56fdb04315e2d6ec6def0ed909844be7ca668e45c6e6d418e",
+      "scripts/diagnostics/check_csgha_guidance.py": "e75290ef86054590585c1c66f8705bc57fd6e3f6fb1264fb594bf0fe4312da5e",
+      "scripts/diagnostics/check_cuda.py": "fd59b75f92f89c5b0f6f07c6a9fdb349f6eb485c54e02cc14ba71e90f11d0d2d",
+      "scripts/diagnostics/check_data.py": "f025eadde4d6f83b480614acdd4ae260d970ca8c7d8be2ef43dce58152435e65",
+      "scripts/diagnostics/check_model.py": "af53dbea91f9e35e818bb9c2d988db23b7df535390482a78fdeb984bacecf7cf",
+      "scripts/diagnostics/profile_early_exit_p1_deployment.py": "8bd0669315e688cf955a06beb5c125d4228bb09bc225ad902d58172002308041",
+      "scripts/diagnostics/profile_stage_sparse_candidates.py": "3b7a8c5031788a439fec09a9cec5a7f7286989c7dc606666e6d89e335f6d7d96",
+      "scripts/launch_budget_stage_probe.py": "1b3b8f3c3bda452667869ea41b41fbebb7c4d05d532675e8b5560e121b45f353",
+      "scripts/launch_cifar10_stability.py": "f196baf129ef3a0bec4fa3ea4b853c7bd1dd58b0df2ebafd87e88229961f23c3",
+      "scripts/launch_csgha_v4.py": "eb9c8b8c0f392193a331c0f55bd9bce3cd8711b08bf88b28940cf5faa730dcc9",
+      "scripts/launch_csgha_v4_diagnostics.py": "883b9de94ffc4288d6a7b4f06e6000ab9ed4f9fc04290774c7c10a3dec16b3b6",
+      "scripts/launch_csgha_v5.py": "d2050a602aa37d9ab6cdfa7b346109845e748191a587b74c641bbc0412cf2959",
+      "scripts/launch_csgha_v6.py": "4ed9aa5ac8710b0a2277d8855542213773f54c04d746166d207acb7282b8290c",
+      "scripts/launch_csgha_validation.py": "c033ed2127219272c06c74d1a330e01d89c009d6b0b67d77995503625872e425",
+      "scripts/launch_early_exit_p0.py": "f3da2932d4a5aa9c53c0b508a126de4530b2bfba2960ef2b5a05c32c33a8bea2",
+      "scripts/launch_early_exit_p1.py": "b17f5803ec07b763d74f108c6b3d455f553f1c67d0edc5e5ea24dde290f8a52b",
+      "scripts/launch_early_exit_p2.py": "d76e4ac7243370c739f4cad4fb2a21e0a878ef00e66f669db5042af903fae1e2",
+      "scripts/launch_early_exit_p3.py": "93f05d42495a1e4c4097916daf39665f5fb9be709666df20ce0afcbef9585941",
+      "scripts/launch_early_exit_p4.py": "224f62583246a52f38c705b6b055c3e4e3dadc24b57d70a79dfb66f29c9be414",
+      "scripts/launch_position_screening.py": "e2c8d9f3d4125b337df0b9b0b3851d418e0b1046dadcf94bcf0ea6918ed07c9a",
+      "scripts/run_baselines.py": "9930a9ccb59d3099d6683a5d3c889c43fe6249c30660a2493a9449e339373f9d",
+      "scripts/run_experiments.py": "7240387e5b020faf9348514e20cc11dc8016a90e75b1011faf291733036512d3",
+      "scripts/train.py": "5a1a4e6114de0e3089d2ed619a195bf47e69fc7c97e1e9f7899d61db261ee391",
+      "scripts/visualization/confusion_matrix.py": "ba0a8f93051926f410230b5019a517aaaa9ba963f05bbcd86bf0e0b15b5da315",
+      "scripts/visualization/gradcam.py": "e9bdadda15dcc7752960160d36f06a594270dc476fac55fd69a0cfe88898d740",
+      "scripts/visualization/roc_curve.py": "d3fec924b3222687eaf3c28fcc00c171a8871ca11467a1b05c7892089afb3e01",
+      "scripts/visualization/tsne.py": "e5a36c709103f0d2f39d5a2a2746f599afb0c2b45e6ff3200c8e51c694c341fe",
+      "configs/budgets/stage_sparse_mobilenetv2.yaml": "d7adffb0d25089dcd8adb4f247839fe56cefd0deadadab22daabbe280cccad36",
+      "configs/experiments/baseline.yaml": "470fa3fca7fb2ce20a3a28ebf780e58bba2102cb34843f0fffc52cb56bdf3290",
+      "configs/experiments/baseline_cifar100.yaml": "0f249d2f290084d0a679f4899a371676106c9249467e56fb88d89ecc8555adfe",
+      "configs/experiments/budget_probe_cbam_deep.yaml": "73e34f67f2e5b406c9fdd48988744a0c715c4426898c637bd1039d25e1067114",
+      "configs/experiments/budget_probe_cbam_middle.yaml": "3cef5e1b1ba5b5151d09b80eb2ad3bfc5c3a48fb8ba778297c14b3052515b0db",
+      "configs/experiments/budget_probe_cbam_shallow.yaml": "e5287a95011135e50795c738a5989b1b988b50eb100fa59fe3578bfc1c4dbc47",
+      "configs/experiments/budget_probe_eca_deep.yaml": "9a148950145ca65f8714a8392944329335b93212d79e372e88a7755f3dd69f24",
+      "configs/experiments/budget_probe_eca_middle.yaml": "fbdef95a1c7b5f029afb36ed22396b3038362bae9ba18f29aaa8b06079fdef1d",
+      "configs/experiments/budget_probe_eca_shallow.yaml": "e00df74756994401d06d8c707706a1c3b2d1aa4355ee262859f193040fba16aa",
+      "configs/experiments/budget_probe_none.yaml": "a9a9e746214ae188468310b9bb36b30f6f7a2ca1e19ed9ed7e77d3d8fdd1d25d",
+      "configs/experiments/budget_probe_se_deep.yaml": "02a37d2710135d1a86b280ef24ff60bdc068ea72d0330ff7997c6c92bb7dd755",
+      "configs/experiments/budget_probe_se_middle.yaml": "53682b1d835bdf3b7074cc2f55acc91ed1d740a199dcf33fe9448a0f6e2790bb",
+      "configs/experiments/budget_probe_se_shallow.yaml": "0a89df9dab46e2a1b13af5e4118e5b81517367db783818414fc25b2199fea313",
+      "configs/experiments/cbam_deep.yaml": "a8e0fbc89f6046ec3997976110136dde827cb313b86f97cd596e7e458dafac34",
+      "configs/experiments/cbam_middle.yaml": "0f1e4d44e5ae8f7b1e5a70a0c8c28b7ea9962dcf719bbfef860bb861045c21a6",
+      "configs/experiments/cbam_shallow.yaml": "d42e687ecc5620476d584fb5d1ca96d0b2126e9744306b462593c215da4b2e7a",
+      "configs/experiments/csgha_se_shallow_cbam_middle.yaml": "3f3aab4f8a09f9b2509db398356e3c8ee2f23049a34e31e314e049ba9bde51d9",
+      "configs/experiments/csgha_v4_leaky_middle.yaml": "94eecec593d1828d7e59187a1a2ac0fcb24cf02f0ac8ca1264e30a58be10b02f",
+      "configs/experiments/csgha_v5_rms_middle.yaml": "a374c626884a28b440184b99c19ea28a0d62d9d91d2ea996a54b217e63d6fad2",
+      "configs/experiments/csgha_v5_rms_middle_serial.yaml": "3d717b12c26e8039037ba0671c7d3fb52b9c85f4196f26a69c553f687ae75aed",
+      "configs/experiments/csgha_v6_capped_middle_serial.yaml": "ff7016c3d129d26fd77a8d3df58a1db9cf0b9736ef0ee3b6f599c6f11b3356c0",
+      "configs/experiments/early_exit_p0_baseline.yaml": "29fb67840d079ac75b34804fbd8115268fcb23f9a4f554d6218b0ff64d0a9bbb",
+      "configs/experiments/early_exit_p0_multi.yaml": "960a92faea9b2f5f3120c90073412f6818fa467c3e77d074d80f0dba13fcdeed",
+      "configs/experiments/early_exit_p1_baseline.yaml": "2d9ae1326c814702cf73b571c650f1918e1d4dd4bf2e2fc9e852f07788bfbbe6",
+      "configs/experiments/early_exit_p1_multi.yaml": "e1cd54e589e3579ae094db5036dac163fe5c404ae3cab9cef7bc81fd47e41e94",
+      "configs/experiments/early_exit_p2_baseline.yaml": "7774af4d2d0c7e37ad4fb66339f32a935873e6741360fcfdd2c9d7da121edf42",
+      "configs/experiments/early_exit_p2_multi.yaml": "26bde8a93786aeae4bd79ca91fd85fa1b4dbe1cda35aa1af6c6e358a34ce9755",
+      "configs/experiments/early_exit_p3_baseline.yaml": "617b3049a5dbde74f1ae64b59ab2d92dfc8283d3999d134e660f324d701d9987",
+      "configs/experiments/early_exit_p3_multi.yaml": "d8c36ae55775a9615a5b3b4b17a1e72e3c2bf7662a6c7eb96c97da0dfe379e11",
+      "configs/experiments/early_exit_p4_baseline.yaml": "78c19f8b42fb46249d5342da64e34654fd4d344f6d91d4346434a3aad2e0d19e",
+      "configs/experiments/early_exit_p4_multi.yaml": "21dacb712642a9610c8d6512d58085597ca78948d08476b82c3f290382e9150b",
+      "configs/experiments/eca_global.yaml": "9d34763a75bc1d41ea5ec04b1d61c4985aac04ed1e2dc640907995554aad49e5",
+      "configs/experiments/hybrid_se_deep_cbam_shallow.yaml": "14f87644f2d614f991790c55b300c770e9a41c5f6f1a14f4b30e43e37462b817",
+      "configs/experiments/hybrid_se_shallow_cbam_deep.yaml": "c70881967f293e99f9d92cf03a77249801f637e83ffdb357a4b7b1bcdd703800",
+      "configs/experiments/independent_leaky_middle.yaml": "185be6871d31e8b4d8c51d16c1e8998fe4d6a8267fe5d5f0b5e50f17cbeb4254",
+      "configs/experiments/independent_leaky_middle_serial.yaml": "bb4fb30e05a923e1d624f69d945a67c138b47ef248b2c1f634eba8e05c7c3775",
+      "configs/experiments/position_se_shallow_cbam_deep.yaml": "bb3d322b438fc63bb7547bfe25f9bfbdb5e78895734478e5b730b9a9627d0e27",
+      "configs/experiments/position_se_shallow_cbam_middle.yaml": "0a54c54f115357b396929e0b542492661ef95279d7bf5287945f5d48b4316839",
+      "configs/experiments/position_se_shallow_cbam_shallow.yaml": "21d302603499d34f5281eba19378635822e93980ae2a65e771021a8081916a72",
+      "configs/experiments/se_deep.yaml": "91de914d964f6fd459718bcef7b4b3d5e8fe29a34fc68a91ec8ba0744ae8974c",
+      "configs/experiments/se_middle.yaml": "b70c78d7d2bfb4626050c1e3e7f124d84b4b7c302407227f9f7b2d1c4eac93bd",
+      "configs/experiments/se_shallow.yaml": "453f8a9868a7b3a52e1cb75276ee0fef45885f7498dfb20e604c4f6f54ccba6a",
+      "configs/sweeps/all_experiments.yaml": "386d77e15b14e5296b34313f87743b8f6f35741ad51ecf8e736140bde85555cc",
+      "configs/sweeps/baselines.yaml": "eb54b18491e28a4ace317e9551a8437957d1925b3b3f52fc80342530f205d571",
+      "configs/sweeps/budget_stage_probe.yaml": "f52f631e2ac83d63ee9f207760ce410b5f4115141bfea481f130538219e01121",
+      "configs/sweeps/cifar10_stability.yaml": "a48dd10ee65549e7b834799457c089d5da9fbb29329e144c103deadd1b217d69",
+      "configs/sweeps/csgha_v4_matched.yaml": "35301932d893946924f242a204dbdb75d96f47b44bbbaeeef1bf0697b2c264f2",
+      "configs/sweeps/csgha_v5_matched.yaml": "83af5f19ee6a40b0a52208a4b83162b41f932f57f63ffc4ab937e21601b23641",
+      "configs/sweeps/csgha_v5_matched_serial.yaml": "07f9942a516d747638a679fe435e66b087bd49a7c5bc5b780002167fd7547a15",
+      "configs/sweeps/csgha_v6_matched_serial.yaml": "7569848ebeede1c15743089d8b97ca26d428a30809a98b84bf4e83cd3ac6f468",
+      "configs/sweeps/early_exit_p0.yaml": "5c25e5f5aa8309c851bf667b92bc62008b7f82fffdba47d04c24b22d12f6aeb0",
+      "configs/sweeps/early_exit_p1.yaml": "ac97b20bf82cf3ee20a363481369c692e6a47cb3345d99996d212075ed5e44b0",
+      "configs/sweeps/early_exit_p2.yaml": "d30b973ab0bce38bb9bc4da3637ccbc72c0e1cc4f75209b2f72be284f9eed0ca",
+      "configs/sweeps/early_exit_p3.yaml": "a08900eae5283a92c5fd1281b048f32dfc286564a34a5627b8b7d2babdffb787",
+      "configs/sweeps/early_exit_p4.yaml": "4609f8ed3fa2a65fcc0898c1cc011cffff2e3a6839c6d283a2d4118c3806f26d",
+      "configs/sweeps/position_screening.yaml": "5b5971e7acd1aa39788491b3407e79b343a6cd16647d820987c7f79e92bee670"
+    },
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.8.0+cu128",
+      "torchvision": "0.23.0+cu128",
+      "numpy": "2.3.2",
+      "PyYAML": "6.0.2",
+      "scikit-learn": "1.9.0",
+      "tensorboard": "2.20.0"
+    },
+    "cuda_runtime": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "torch_num_threads": 24,
+    "torch_num_interop_threads": 24
+  },
+  "lock_sha256": "20f885a53f86e1be1e1b4a4136ecc5b48d718596e0b061f90480f6e99547841f",
+  "manifest_sha256": "f122758c8a62c4bd40ea4451097a138616745f979d595628daa003eaa866d2b7",
+  "audit_sha256": "d96cfea5aab71b90700fef3fecda99eff02e7de0570bdcdf55866489d44b1d2c",
+  "confirmation_sha256": "73f0a7f7645413856bfc9e43b1f7b5108c803773806bb7e59d9d128b1b8833d2",
+  "policy_lock_sha256": "69a94227cb2398f75913d09f4315da890e23983ef5a72dd78472ee6bf7060bfe",
+  "evaluator_sha256": "ddbdc681c35ff6708d8c09a399d1eb4dd0a8a3e77f623dd5aef249eef434aa9a",
+  "test_set": {
+    "dataset": "cifar100",
+    "samples": 10000,
+    "classes": 100,
+    "samples_per_class": 100,
+    "labels_evaluation_order_sha256": "9a40da43a13468b30acb67aa753633034cb0257ec2756f09b46efce5656064b7",
+    "raw_test_file_sha256": "4b67687d9933c4db8f0831104447f15b93774f4f464bd0516f0f0f2ac83b7864"
+  },
+  "locked_policy": {
+    "policy_version": "shared_exit8_softmax_threshold_p4_v1",
+    "exit_position": 8,
+    "confidence": "maximum softmax probability",
+    "confidence_threshold": 0.903,
+    "protected_predicted_classes": [],
+    "fallback": "final head",
+    "path_cost_fractions": [
+      0.42989887386925396,
+      1.0
+    ],
+    "selection_performed_on_test": false,
+    "test_threshold_candidates": 0,
+    "threshold_candidates_considered_on_test": 0
+  },
+  "seed_results": [
+    {
+      "seed": 66,
+      "samples": 10000,
+      "baseline_test_accuracy": 0.5578,
+      "multi_exit_final_test_accuracy": 0.5768,
+      "exit8_test_accuracy": 0.5755,
+      "exit16_test_accuracy": 0.58,
+      "paired_final_gain_vs_baseline": 0.019000000000000017,
+      "locked_policy": {
+        "accuracy": 0.5807,
+        "reference_accuracy": 0.5768,
+        "accuracy_drop": -0.0039000000000000146,
+        "balanced_accuracy": 0.5807,
+        "reference_balanced_accuracy": 0.5768,
+        "balanced_accuracy_drop": -0.0039000000000000146,
+        "worst_class_accuracy_drop": 0.030000000000000027,
+        "route_fractions": [
+          0.4205,
+          0.5795
+        ],
+        "expected_cost_fraction": 0.7602724764620212,
+        "cost_saving_fraction": 0.23972752353797877
+      },
+      "locked_policy_gain_vs_baseline": 0.02290000000000003,
+      "locked_policy_gain_vs_final": 0.0039000000000000146,
+      "decision_changes_vs_final": {
+        "changed": 226,
+        "harmed": 57,
+        "rescued": 96,
+        "net_correct": 39
+      },
+      "early_route_count": 4205,
+      "final_route_count": 5795,
+      "class_metrics": [
+        {
+          "class_id": 0,
+          "class_name": "apple",
+          "support": 100,
+          "baseline_accuracy": 0.78,
+          "multi_exit_final_accuracy": 0.77,
+          "locked_policy_accuracy": 0.79,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.010000000000000009
+        },
+        {
+          "class_id": 1,
+          "class_name": "aquarium_fish",
+          "support": 100,
+          "baseline_accuracy": 0.62,
+          "multi_exit_final_accuracy": 0.68,
+          "locked_policy_accuracy": 0.68,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.06000000000000005
+        },
+        {
+          "class_id": 2,
+          "class_name": "baby",
+          "support": 100,
+          "baseline_accuracy": 0.48,
+          "multi_exit_final_accuracy": 0.51,
+          "locked_policy_accuracy": 0.51,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 3,
+          "class_name": "bear",
+          "support": 100,
+          "baseline_accuracy": 0.34,
+          "multi_exit_final_accuracy": 0.37,
+          "locked_policy_accuracy": 0.36,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.019999999999999962
+        },
+        {
+          "class_id": 4,
+          "class_name": "beaver",
+          "support": 100,
+          "baseline_accuracy": 0.28,
+          "multi_exit_final_accuracy": 0.35,
+          "locked_policy_accuracy": 0.35,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.06999999999999995
+        },
+        {
+          "class_id": 5,
+          "class_name": "bed",
+          "support": 100,
+          "baseline_accuracy": 0.54,
+          "multi_exit_final_accuracy": 0.59,
+          "locked_policy_accuracy": 0.59,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.04999999999999993
+        },
+        {
+          "class_id": 6,
+          "class_name": "bee",
+          "support": 100,
+          "baseline_accuracy": 0.7,
+          "multi_exit_final_accuracy": 0.77,
+          "locked_policy_accuracy": 0.76,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.06000000000000005
+        },
+        {
+          "class_id": 7,
+          "class_name": "beetle",
+          "support": 100,
+          "baseline_accuracy": 0.64,
+          "multi_exit_final_accuracy": 0.65,
+          "locked_policy_accuracy": 0.66,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 8,
+          "class_name": "bicycle",
+          "support": 100,
+          "baseline_accuracy": 0.69,
+          "multi_exit_final_accuracy": 0.73,
+          "locked_policy_accuracy": 0.73,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.040000000000000036
+        },
+        {
+          "class_id": 9,
+          "class_name": "bottle",
+          "support": 100,
+          "baseline_accuracy": 0.65,
+          "multi_exit_final_accuracy": 0.66,
+          "locked_policy_accuracy": 0.66,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.010000000000000009
+        },
+        {
+          "class_id": 10,
+          "class_name": "bowl",
+          "support": 100,
+          "baseline_accuracy": 0.3,
+          "multi_exit_final_accuracy": 0.36,
+          "locked_policy_accuracy": 0.39,
+          "locked_policy_drop_vs_final": -0.030000000000000027,
+          "locked_policy_gain_vs_baseline": 0.09000000000000002
+        },
+        {
+          "class_id": 11,
+          "class_name": "boy",
+          "support": 100,
+          "baseline_accuracy": 0.37,
+          "multi_exit_final_accuracy": 0.33,
+          "locked_policy_accuracy": 0.33,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.03999999999999998
+        },
+        {
+          "class_id": 12,
+          "class_name": "bridge",
+          "support": 100,
+          "baseline_accuracy": 0.66,
+          "multi_exit_final_accuracy": 0.7,
+          "locked_policy_accuracy": 0.68,
+          "locked_policy_drop_vs_final": 0.019999999999999907,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 13,
+          "class_name": "bus",
+          "support": 100,
+          "baseline_accuracy": 0.51,
+          "multi_exit_final_accuracy": 0.5,
+          "locked_policy_accuracy": 0.53,
+          "locked_policy_drop_vs_final": -0.030000000000000027,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 14,
+          "class_name": "butterfly",
+          "support": 100,
+          "baseline_accuracy": 0.43,
+          "multi_exit_final_accuracy": 0.53,
+          "locked_policy_accuracy": 0.53,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.10000000000000003
+        },
+        {
+          "class_id": 15,
+          "class_name": "camel",
+          "support": 100,
+          "baseline_accuracy": 0.58,
+          "multi_exit_final_accuracy": 0.58,
+          "locked_policy_accuracy": 0.58,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 16,
+          "class_name": "can",
+          "support": 100,
+          "baseline_accuracy": 0.61,
+          "multi_exit_final_accuracy": 0.62,
+          "locked_policy_accuracy": 0.62,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.010000000000000009
+        },
+        {
+          "class_id": 17,
+          "class_name": "castle",
+          "support": 100,
+          "baseline_accuracy": 0.71,
+          "multi_exit_final_accuracy": 0.71,
+          "locked_policy_accuracy": 0.71,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 18,
+          "class_name": "caterpillar",
+          "support": 100,
+          "baseline_accuracy": 0.53,
+          "multi_exit_final_accuracy": 0.51,
+          "locked_policy_accuracy": 0.52,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.010000000000000009
+        },
+        {
+          "class_id": 19,
+          "class_name": "cattle",
+          "support": 100,
+          "baseline_accuracy": 0.5,
+          "multi_exit_final_accuracy": 0.46,
+          "locked_policy_accuracy": 0.47,
+          "locked_policy_drop_vs_final": -0.009999999999999953,
+          "locked_policy_gain_vs_baseline": -0.030000000000000027
+        },
+        {
+          "class_id": 20,
+          "class_name": "chair",
+          "support": 100,
+          "baseline_accuracy": 0.79,
+          "multi_exit_final_accuracy": 0.82,
+          "locked_policy_accuracy": 0.81,
+          "locked_policy_drop_vs_final": 0.009999999999999898,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 21,
+          "class_name": "chimpanzee",
+          "support": 100,
+          "baseline_accuracy": 0.69,
+          "multi_exit_final_accuracy": 0.73,
+          "locked_policy_accuracy": 0.76,
+          "locked_policy_drop_vs_final": -0.030000000000000027,
+          "locked_policy_gain_vs_baseline": 0.07000000000000006
+        },
+        {
+          "class_id": 22,
+          "class_name": "clock",
+          "support": 100,
+          "baseline_accuracy": 0.44,
+          "multi_exit_final_accuracy": 0.47,
+          "locked_policy_accuracy": 0.47,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.02999999999999997
+        },
+        {
+          "class_id": 23,
+          "class_name": "cloud",
+          "support": 100,
+          "baseline_accuracy": 0.77,
+          "multi_exit_final_accuracy": 0.75,
+          "locked_policy_accuracy": 0.76,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.010000000000000009
+        },
+        {
+          "class_id": 24,
+          "class_name": "cockroach",
+          "support": 100,
+          "baseline_accuracy": 0.71,
+          "multi_exit_final_accuracy": 0.71,
+          "locked_policy_accuracy": 0.71,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 25,
+          "class_name": "couch",
+          "support": 100,
+          "baseline_accuracy": 0.43,
+          "multi_exit_final_accuracy": 0.45,
+          "locked_policy_accuracy": 0.45,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 26,
+          "class_name": "crab",
+          "support": 100,
+          "baseline_accuracy": 0.44,
+          "multi_exit_final_accuracy": 0.48,
+          "locked_policy_accuracy": 0.5,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.06
+        },
+        {
+          "class_id": 27,
+          "class_name": "crocodile",
+          "support": 100,
+          "baseline_accuracy": 0.41,
+          "multi_exit_final_accuracy": 0.46,
+          "locked_policy_accuracy": 0.46,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.050000000000000044
+        },
+        {
+          "class_id": 28,
+          "class_name": "cup",
+          "support": 100,
+          "baseline_accuracy": 0.67,
+          "multi_exit_final_accuracy": 0.74,
+          "locked_policy_accuracy": 0.75,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.07999999999999996
+        },
+        {
+          "class_id": 29,
+          "class_name": "dinosaur",
+          "support": 100,
+          "baseline_accuracy": 0.43,
+          "multi_exit_final_accuracy": 0.53,
+          "locked_policy_accuracy": 0.55,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.12000000000000005
+        },
+        {
+          "class_id": 30,
+          "class_name": "dolphin",
+          "support": 100,
+          "baseline_accuracy": 0.56,
+          "multi_exit_final_accuracy": 0.52,
+          "locked_policy_accuracy": 0.51,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.050000000000000044
+        },
+        {
+          "class_id": 31,
+          "class_name": "elephant",
+          "support": 100,
+          "baseline_accuracy": 0.57,
+          "multi_exit_final_accuracy": 0.54,
+          "locked_policy_accuracy": 0.55,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.019999999999999907
+        },
+        {
+          "class_id": 32,
+          "class_name": "flatfish",
+          "support": 100,
+          "baseline_accuracy": 0.49,
+          "multi_exit_final_accuracy": 0.5,
+          "locked_policy_accuracy": 0.51,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 33,
+          "class_name": "forest",
+          "support": 100,
+          "baseline_accuracy": 0.46,
+          "multi_exit_final_accuracy": 0.47,
+          "locked_policy_accuracy": 0.48,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.019999999999999962
+        },
+        {
+          "class_id": 34,
+          "class_name": "fox",
+          "support": 100,
+          "baseline_accuracy": 0.63,
+          "multi_exit_final_accuracy": 0.56,
+          "locked_policy_accuracy": 0.57,
+          "locked_policy_drop_vs_final": -0.009999999999999898,
+          "locked_policy_gain_vs_baseline": -0.06000000000000005
+        },
+        {
+          "class_id": 35,
+          "class_name": "girl",
+          "support": 100,
+          "baseline_accuracy": 0.25,
+          "multi_exit_final_accuracy": 0.33,
+          "locked_policy_accuracy": 0.33,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.08000000000000002
+        },
+        {
+          "class_id": 36,
+          "class_name": "hamster",
+          "support": 100,
+          "baseline_accuracy": 0.56,
+          "multi_exit_final_accuracy": 0.64,
+          "locked_policy_accuracy": 0.64,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.07999999999999996
+        },
+        {
+          "class_id": 37,
+          "class_name": "house",
+          "support": 100,
+          "baseline_accuracy": 0.65,
+          "multi_exit_final_accuracy": 0.59,
+          "locked_policy_accuracy": 0.61,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": -0.040000000000000036
+        },
+        {
+          "class_id": 38,
+          "class_name": "kangaroo",
+          "support": 100,
+          "baseline_accuracy": 0.41,
+          "multi_exit_final_accuracy": 0.46,
+          "locked_policy_accuracy": 0.45,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.040000000000000036
+        },
+        {
+          "class_id": 39,
+          "class_name": "keyboard",
+          "support": 100,
+          "baseline_accuracy": 0.71,
+          "multi_exit_final_accuracy": 0.68,
+          "locked_policy_accuracy": 0.71,
+          "locked_policy_drop_vs_final": -0.029999999999999916,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 40,
+          "class_name": "lamp",
+          "support": 100,
+          "baseline_accuracy": 0.53,
+          "multi_exit_final_accuracy": 0.53,
+          "locked_policy_accuracy": 0.55,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 41,
+          "class_name": "lawn_mower",
+          "support": 100,
+          "baseline_accuracy": 0.71,
+          "multi_exit_final_accuracy": 0.77,
+          "locked_policy_accuracy": 0.77,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.06000000000000005
+        },
+        {
+          "class_id": 42,
+          "class_name": "leopard",
+          "support": 100,
+          "baseline_accuracy": 0.47,
+          "multi_exit_final_accuracy": 0.56,
+          "locked_policy_accuracy": 0.57,
+          "locked_policy_drop_vs_final": -0.009999999999999898,
+          "locked_policy_gain_vs_baseline": 0.09999999999999998
+        },
+        {
+          "class_id": 43,
+          "class_name": "lion",
+          "support": 100,
+          "baseline_accuracy": 0.63,
+          "multi_exit_final_accuracy": 0.58,
+          "locked_policy_accuracy": 0.61,
+          "locked_policy_drop_vs_final": -0.030000000000000027,
+          "locked_policy_gain_vs_baseline": -0.020000000000000018
+        },
+        {
+          "class_id": 44,
+          "class_name": "lizard",
+          "support": 100,
+          "baseline_accuracy": 0.29,
+          "multi_exit_final_accuracy": 0.31,
+          "locked_policy_accuracy": 0.3,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.010000000000000009
+        },
+        {
+          "class_id": 45,
+          "class_name": "lobster",
+          "support": 100,
+          "baseline_accuracy": 0.39,
+          "multi_exit_final_accuracy": 0.41,
+          "locked_policy_accuracy": 0.42,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.02999999999999997
+        },
+        {
+          "class_id": 46,
+          "class_name": "man",
+          "support": 100,
+          "baseline_accuracy": 0.31,
+          "multi_exit_final_accuracy": 0.33,
+          "locked_policy_accuracy": 0.33,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 47,
+          "class_name": "maple_tree",
+          "support": 100,
+          "baseline_accuracy": 0.54,
+          "multi_exit_final_accuracy": 0.65,
+          "locked_policy_accuracy": 0.63,
+          "locked_policy_drop_vs_final": 0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.08999999999999997
+        },
+        {
+          "class_id": 48,
+          "class_name": "motorcycle",
+          "support": 100,
+          "baseline_accuracy": 0.78,
+          "multi_exit_final_accuracy": 0.84,
+          "locked_policy_accuracy": 0.83,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.04999999999999993
+        },
+        {
+          "class_id": 49,
+          "class_name": "mountain",
+          "support": 100,
+          "baseline_accuracy": 0.71,
+          "multi_exit_final_accuracy": 0.71,
+          "locked_policy_accuracy": 0.71,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 50,
+          "class_name": "mouse",
+          "support": 100,
+          "baseline_accuracy": 0.31,
+          "multi_exit_final_accuracy": 0.39,
+          "locked_policy_accuracy": 0.36,
+          "locked_policy_drop_vs_final": 0.030000000000000027,
+          "locked_policy_gain_vs_baseline": 0.04999999999999999
+        },
+        {
+          "class_id": 51,
+          "class_name": "mushroom",
+          "support": 100,
+          "baseline_accuracy": 0.44,
+          "multi_exit_final_accuracy": 0.63,
+          "locked_policy_accuracy": 0.63,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.19
+        },
+        {
+          "class_id": 52,
+          "class_name": "oak_tree",
+          "support": 100,
+          "baseline_accuracy": 0.74,
+          "multi_exit_final_accuracy": 0.66,
+          "locked_policy_accuracy": 0.66,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.07999999999999996
+        },
+        {
+          "class_id": 53,
+          "class_name": "orange",
+          "support": 100,
+          "baseline_accuracy": 0.86,
+          "multi_exit_final_accuracy": 0.78,
+          "locked_policy_accuracy": 0.8,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": -0.05999999999999994
+        },
+        {
+          "class_id": 54,
+          "class_name": "orchid",
+          "support": 100,
+          "baseline_accuracy": 0.66,
+          "multi_exit_final_accuracy": 0.67,
+          "locked_policy_accuracy": 0.67,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.010000000000000009
+        },
+        {
+          "class_id": 55,
+          "class_name": "otter",
+          "support": 100,
+          "baseline_accuracy": 0.19,
+          "multi_exit_final_accuracy": 0.27,
+          "locked_policy_accuracy": 0.27,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.08000000000000002
+        },
+        {
+          "class_id": 56,
+          "class_name": "palm_tree",
+          "support": 100,
+          "baseline_accuracy": 0.79,
+          "multi_exit_final_accuracy": 0.82,
+          "locked_policy_accuracy": 0.84,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.04999999999999993
+        },
+        {
+          "class_id": 57,
+          "class_name": "pear",
+          "support": 100,
+          "baseline_accuracy": 0.63,
+          "multi_exit_final_accuracy": 0.67,
+          "locked_policy_accuracy": 0.67,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.040000000000000036
+        },
+        {
+          "class_id": 58,
+          "class_name": "pickup_truck",
+          "support": 100,
+          "baseline_accuracy": 0.66,
+          "multi_exit_final_accuracy": 0.69,
+          "locked_policy_accuracy": 0.67,
+          "locked_policy_drop_vs_final": 0.019999999999999907,
+          "locked_policy_gain_vs_baseline": 0.010000000000000009
+        },
+        {
+          "class_id": 59,
+          "class_name": "pine_tree",
+          "support": 100,
+          "baseline_accuracy": 0.57,
+          "multi_exit_final_accuracy": 0.55,
+          "locked_policy_accuracy": 0.56,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.009999999999999898
+        },
+        {
+          "class_id": 60,
+          "class_name": "plain",
+          "support": 100,
+          "baseline_accuracy": 0.77,
+          "multi_exit_final_accuracy": 0.83,
+          "locked_policy_accuracy": 0.85,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.07999999999999996
+        },
+        {
+          "class_id": 61,
+          "class_name": "plate",
+          "support": 100,
+          "baseline_accuracy": 0.56,
+          "multi_exit_final_accuracy": 0.55,
+          "locked_policy_accuracy": 0.53,
+          "locked_policy_drop_vs_final": 0.020000000000000018,
+          "locked_policy_gain_vs_baseline": -0.030000000000000027
+        },
+        {
+          "class_id": 62,
+          "class_name": "poppy",
+          "support": 100,
+          "baseline_accuracy": 0.61,
+          "multi_exit_final_accuracy": 0.59,
+          "locked_policy_accuracy": 0.59,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.020000000000000018
+        },
+        {
+          "class_id": 63,
+          "class_name": "porcupine",
+          "support": 100,
+          "baseline_accuracy": 0.49,
+          "multi_exit_final_accuracy": 0.51,
+          "locked_policy_accuracy": 0.49,
+          "locked_policy_drop_vs_final": 0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 64,
+          "class_name": "possum",
+          "support": 100,
+          "baseline_accuracy": 0.36,
+          "multi_exit_final_accuracy": 0.34,
+          "locked_policy_accuracy": 0.33,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.02999999999999997
+        },
+        {
+          "class_id": 65,
+          "class_name": "rabbit",
+          "support": 100,
+          "baseline_accuracy": 0.39,
+          "multi_exit_final_accuracy": 0.41,
+          "locked_policy_accuracy": 0.41,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.019999999999999962
+        },
+        {
+          "class_id": 66,
+          "class_name": "raccoon",
+          "support": 100,
+          "baseline_accuracy": 0.42,
+          "multi_exit_final_accuracy": 0.58,
+          "locked_policy_accuracy": 0.6,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.18
+        },
+        {
+          "class_id": 67,
+          "class_name": "ray",
+          "support": 100,
+          "baseline_accuracy": 0.43,
+          "multi_exit_final_accuracy": 0.43,
+          "locked_policy_accuracy": 0.42,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.010000000000000009
+        },
+        {
+          "class_id": 68,
+          "class_name": "road",
+          "support": 100,
+          "baseline_accuracy": 0.91,
+          "multi_exit_final_accuracy": 0.91,
+          "locked_policy_accuracy": 0.91,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 69,
+          "class_name": "rocket",
+          "support": 100,
+          "baseline_accuracy": 0.74,
+          "multi_exit_final_accuracy": 0.74,
+          "locked_policy_accuracy": 0.74,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 70,
+          "class_name": "rose",
+          "support": 100,
+          "baseline_accuracy": 0.54,
+          "multi_exit_final_accuracy": 0.57,
+          "locked_policy_accuracy": 0.58,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.039999999999999925
+        },
+        {
+          "class_id": 71,
+          "class_name": "sea",
+          "support": 100,
+          "baseline_accuracy": 0.76,
+          "multi_exit_final_accuracy": 0.69,
+          "locked_policy_accuracy": 0.73,
+          "locked_policy_drop_vs_final": -0.040000000000000036,
+          "locked_policy_gain_vs_baseline": -0.030000000000000027
+        },
+        {
+          "class_id": 72,
+          "class_name": "seal",
+          "support": 100,
+          "baseline_accuracy": 0.31,
+          "multi_exit_final_accuracy": 0.34,
+          "locked_policy_accuracy": 0.34,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 73,
+          "class_name": "shark",
+          "support": 100,
+          "baseline_accuracy": 0.4,
+          "multi_exit_final_accuracy": 0.37,
+          "locked_policy_accuracy": 0.37,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.030000000000000027
+        },
+        {
+          "class_id": 74,
+          "class_name": "shrew",
+          "support": 100,
+          "baseline_accuracy": 0.35,
+          "multi_exit_final_accuracy": 0.34,
+          "locked_policy_accuracy": 0.33,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.019999999999999962
+        },
+        {
+          "class_id": 75,
+          "class_name": "skunk",
+          "support": 100,
+          "baseline_accuracy": 0.77,
+          "multi_exit_final_accuracy": 0.83,
+          "locked_policy_accuracy": 0.81,
+          "locked_policy_drop_vs_final": 0.019999999999999907,
+          "locked_policy_gain_vs_baseline": 0.040000000000000036
+        },
+        {
+          "class_id": 76,
+          "class_name": "skyscraper",
+          "support": 100,
+          "baseline_accuracy": 0.78,
+          "multi_exit_final_accuracy": 0.8,
+          "locked_policy_accuracy": 0.81,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 77,
+          "class_name": "snail",
+          "support": 100,
+          "baseline_accuracy": 0.46,
+          "multi_exit_final_accuracy": 0.44,
+          "locked_policy_accuracy": 0.43,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.030000000000000027
+        },
+        {
+          "class_id": 78,
+          "class_name": "snake",
+          "support": 100,
+          "baseline_accuracy": 0.46,
+          "multi_exit_final_accuracy": 0.48,
+          "locked_policy_accuracy": 0.48,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.019999999999999962
+        },
+        {
+          "class_id": 79,
+          "class_name": "spider",
+          "support": 100,
+          "baseline_accuracy": 0.51,
+          "multi_exit_final_accuracy": 0.57,
+          "locked_policy_accuracy": 0.58,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.06999999999999995
+        },
+        {
+          "class_id": 80,
+          "class_name": "squirrel",
+          "support": 100,
+          "baseline_accuracy": 0.39,
+          "multi_exit_final_accuracy": 0.36,
+          "locked_policy_accuracy": 0.36,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.030000000000000027
+        },
+        {
+          "class_id": 81,
+          "class_name": "streetcar",
+          "support": 100,
+          "baseline_accuracy": 0.63,
+          "multi_exit_final_accuracy": 0.64,
+          "locked_policy_accuracy": 0.64,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.010000000000000009
+        },
+        {
+          "class_id": 82,
+          "class_name": "sunflower",
+          "support": 100,
+          "baseline_accuracy": 0.86,
+          "multi_exit_final_accuracy": 0.85,
+          "locked_policy_accuracy": 0.87,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.010000000000000009
+        },
+        {
+          "class_id": 83,
+          "class_name": "sweet_pepper",
+          "support": 100,
+          "baseline_accuracy": 0.45,
+          "multi_exit_final_accuracy": 0.44,
+          "locked_policy_accuracy": 0.45,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 84,
+          "class_name": "table",
+          "support": 100,
+          "baseline_accuracy": 0.52,
+          "multi_exit_final_accuracy": 0.6,
+          "locked_policy_accuracy": 0.61,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.08999999999999997
+        },
+        {
+          "class_id": 85,
+          "class_name": "tank",
+          "support": 100,
+          "baseline_accuracy": 0.62,
+          "multi_exit_final_accuracy": 0.69,
+          "locked_policy_accuracy": 0.73,
+          "locked_policy_drop_vs_final": -0.040000000000000036,
+          "locked_policy_gain_vs_baseline": 0.10999999999999999
+        },
+        {
+          "class_id": 86,
+          "class_name": "telephone",
+          "support": 100,
+          "baseline_accuracy": 0.59,
+          "multi_exit_final_accuracy": 0.6,
+          "locked_policy_accuracy": 0.62,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 87,
+          "class_name": "television",
+          "support": 100,
+          "baseline_accuracy": 0.66,
+          "multi_exit_final_accuracy": 0.61,
+          "locked_policy_accuracy": 0.65,
+          "locked_policy_drop_vs_final": -0.040000000000000036,
+          "locked_policy_gain_vs_baseline": -0.010000000000000009
+        },
+        {
+          "class_id": 88,
+          "class_name": "tiger",
+          "support": 100,
+          "baseline_accuracy": 0.58,
+          "multi_exit_final_accuracy": 0.62,
+          "locked_policy_accuracy": 0.62,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.040000000000000036
+        },
+        {
+          "class_id": 89,
+          "class_name": "tractor",
+          "support": 100,
+          "baseline_accuracy": 0.73,
+          "multi_exit_final_accuracy": 0.7,
+          "locked_policy_accuracy": 0.71,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.020000000000000018
+        },
+        {
+          "class_id": 90,
+          "class_name": "train",
+          "support": 100,
+          "baseline_accuracy": 0.65,
+          "multi_exit_final_accuracy": 0.68,
+          "locked_policy_accuracy": 0.66,
+          "locked_policy_drop_vs_final": 0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.010000000000000009
+        },
+        {
+          "class_id": 91,
+          "class_name": "trout",
+          "support": 100,
+          "baseline_accuracy": 0.69,
+          "multi_exit_final_accuracy": 0.68,
+          "locked_policy_accuracy": 0.68,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.009999999999999898
+        },
+        {
+          "class_id": 92,
+          "class_name": "tulip",
+          "support": 100,
+          "baseline_accuracy": 0.43,
+          "multi_exit_final_accuracy": 0.47,
+          "locked_policy_accuracy": 0.47,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.03999999999999998
+        },
+        {
+          "class_id": 93,
+          "class_name": "turtle",
+          "support": 100,
+          "baseline_accuracy": 0.32,
+          "multi_exit_final_accuracy": 0.32,
+          "locked_policy_accuracy": 0.3,
+          "locked_policy_drop_vs_final": 0.020000000000000018,
+          "locked_policy_gain_vs_baseline": -0.020000000000000018
+        },
+        {
+          "class_id": 94,
+          "class_name": "wardrobe",
+          "support": 100,
+          "baseline_accuracy": 0.83,
+          "multi_exit_final_accuracy": 0.86,
+          "locked_policy_accuracy": 0.85,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 95,
+          "class_name": "whale",
+          "support": 100,
+          "baseline_accuracy": 0.59,
+          "multi_exit_final_accuracy": 0.57,
+          "locked_policy_accuracy": 0.58,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.010000000000000009
+        },
+        {
+          "class_id": 96,
+          "class_name": "willow_tree",
+          "support": 100,
+          "baseline_accuracy": 0.52,
+          "multi_exit_final_accuracy": 0.47,
+          "locked_policy_accuracy": 0.47,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.050000000000000044
+        },
+        {
+          "class_id": 97,
+          "class_name": "wolf",
+          "support": 100,
+          "baseline_accuracy": 0.54,
+          "multi_exit_final_accuracy": 0.62,
+          "locked_policy_accuracy": 0.62,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.07999999999999996
+        },
+        {
+          "class_id": 98,
+          "class_name": "woman",
+          "support": 100,
+          "baseline_accuracy": 0.33,
+          "multi_exit_final_accuracy": 0.34,
+          "locked_policy_accuracy": 0.34,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.010000000000000009
+        },
+        {
+          "class_id": 99,
+          "class_name": "worm",
+          "support": 100,
+          "baseline_accuracy": 0.63,
+          "multi_exit_final_accuracy": 0.61,
+          "locked_policy_accuracy": 0.63,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.0
+        }
+      ],
+      "baseline_experiment_id": "early_exit_p4_baseline_p4a_seed66_mobilenetv2_cifar100",
+      "multi_exit_experiment_id": "early_exit_p4_multi_p4a_seed66_multi_exit_pos8-16_cifar100"
+    },
+    {
+      "seed": 67,
+      "samples": 10000,
+      "baseline_test_accuracy": 0.5596,
+      "multi_exit_final_test_accuracy": 0.5754,
+      "exit8_test_accuracy": 0.5811,
+      "exit16_test_accuracy": 0.5805,
+      "paired_final_gain_vs_baseline": 0.015800000000000036,
+      "locked_policy": {
+        "accuracy": 0.5809,
+        "reference_accuracy": 0.5754,
+        "accuracy_drop": -0.005499999999999949,
+        "balanced_accuracy": 0.5809,
+        "reference_balanced_accuracy": 0.5754,
+        "balanced_accuracy_drop": -0.005499999999999949,
+        "worst_class_accuracy_drop": 0.040000000000000036,
+        "route_fractions": [
+          0.4263,
+          0.5737
+        ],
+        "expected_cost_fraction": 0.756965889930463,
+        "cost_saving_fraction": 0.243034110069537
+      },
+      "locked_policy_gain_vs_baseline": 0.021299999999999986,
+      "locked_policy_gain_vs_final": 0.005499999999999949,
+      "decision_changes_vs_final": {
+        "changed": 260,
+        "harmed": 61,
+        "rescued": 116,
+        "net_correct": 55
+      },
+      "early_route_count": 4263,
+      "final_route_count": 5737,
+      "class_metrics": [
+        {
+          "class_id": 0,
+          "class_name": "apple",
+          "support": 100,
+          "baseline_accuracy": 0.78,
+          "multi_exit_final_accuracy": 0.76,
+          "locked_policy_accuracy": 0.75,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.030000000000000027
+        },
+        {
+          "class_id": 1,
+          "class_name": "aquarium_fish",
+          "support": 100,
+          "baseline_accuracy": 0.69,
+          "multi_exit_final_accuracy": 0.66,
+          "locked_policy_accuracy": 0.67,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.019999999999999907
+        },
+        {
+          "class_id": 2,
+          "class_name": "baby",
+          "support": 100,
+          "baseline_accuracy": 0.41,
+          "multi_exit_final_accuracy": 0.48,
+          "locked_policy_accuracy": 0.48,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.07
+        },
+        {
+          "class_id": 3,
+          "class_name": "bear",
+          "support": 100,
+          "baseline_accuracy": 0.25,
+          "multi_exit_final_accuracy": 0.33,
+          "locked_policy_accuracy": 0.34,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.09000000000000002
+        },
+        {
+          "class_id": 4,
+          "class_name": "beaver",
+          "support": 100,
+          "baseline_accuracy": 0.36,
+          "multi_exit_final_accuracy": 0.4,
+          "locked_policy_accuracy": 0.39,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 5,
+          "class_name": "bed",
+          "support": 100,
+          "baseline_accuracy": 0.52,
+          "multi_exit_final_accuracy": 0.58,
+          "locked_policy_accuracy": 0.57,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.04999999999999993
+        },
+        {
+          "class_id": 6,
+          "class_name": "bee",
+          "support": 100,
+          "baseline_accuracy": 0.64,
+          "multi_exit_final_accuracy": 0.66,
+          "locked_policy_accuracy": 0.67,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 7,
+          "class_name": "beetle",
+          "support": 100,
+          "baseline_accuracy": 0.56,
+          "multi_exit_final_accuracy": 0.6,
+          "locked_policy_accuracy": 0.59,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.029999999999999916
+        },
+        {
+          "class_id": 8,
+          "class_name": "bicycle",
+          "support": 100,
+          "baseline_accuracy": 0.63,
+          "multi_exit_final_accuracy": 0.76,
+          "locked_policy_accuracy": 0.77,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.14
+        },
+        {
+          "class_id": 9,
+          "class_name": "bottle",
+          "support": 100,
+          "baseline_accuracy": 0.78,
+          "multi_exit_final_accuracy": 0.66,
+          "locked_policy_accuracy": 0.7,
+          "locked_policy_drop_vs_final": -0.039999999999999925,
+          "locked_policy_gain_vs_baseline": -0.08000000000000007
+        },
+        {
+          "class_id": 10,
+          "class_name": "bowl",
+          "support": 100,
+          "baseline_accuracy": 0.4,
+          "multi_exit_final_accuracy": 0.37,
+          "locked_policy_accuracy": 0.36,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.040000000000000036
+        },
+        {
+          "class_id": 11,
+          "class_name": "boy",
+          "support": 100,
+          "baseline_accuracy": 0.37,
+          "multi_exit_final_accuracy": 0.36,
+          "locked_policy_accuracy": 0.37,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 12,
+          "class_name": "bridge",
+          "support": 100,
+          "baseline_accuracy": 0.62,
+          "multi_exit_final_accuracy": 0.65,
+          "locked_policy_accuracy": 0.68,
+          "locked_policy_drop_vs_final": -0.030000000000000027,
+          "locked_policy_gain_vs_baseline": 0.06000000000000005
+        },
+        {
+          "class_id": 13,
+          "class_name": "bus",
+          "support": 100,
+          "baseline_accuracy": 0.5,
+          "multi_exit_final_accuracy": 0.55,
+          "locked_policy_accuracy": 0.53,
+          "locked_policy_drop_vs_final": 0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 14,
+          "class_name": "butterfly",
+          "support": 100,
+          "baseline_accuracy": 0.42,
+          "multi_exit_final_accuracy": 0.49,
+          "locked_policy_accuracy": 0.51,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.09000000000000002
+        },
+        {
+          "class_id": 15,
+          "class_name": "camel",
+          "support": 100,
+          "baseline_accuracy": 0.48,
+          "multi_exit_final_accuracy": 0.58,
+          "locked_policy_accuracy": 0.58,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.09999999999999998
+        },
+        {
+          "class_id": 16,
+          "class_name": "can",
+          "support": 100,
+          "baseline_accuracy": 0.63,
+          "multi_exit_final_accuracy": 0.55,
+          "locked_policy_accuracy": 0.56,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.06999999999999995
+        },
+        {
+          "class_id": 17,
+          "class_name": "castle",
+          "support": 100,
+          "baseline_accuracy": 0.8,
+          "multi_exit_final_accuracy": 0.74,
+          "locked_policy_accuracy": 0.72,
+          "locked_policy_drop_vs_final": 0.020000000000000018,
+          "locked_policy_gain_vs_baseline": -0.08000000000000007
+        },
+        {
+          "class_id": 18,
+          "class_name": "caterpillar",
+          "support": 100,
+          "baseline_accuracy": 0.48,
+          "multi_exit_final_accuracy": 0.57,
+          "locked_policy_accuracy": 0.61,
+          "locked_policy_drop_vs_final": -0.040000000000000036,
+          "locked_policy_gain_vs_baseline": 0.13
+        },
+        {
+          "class_id": 19,
+          "class_name": "cattle",
+          "support": 100,
+          "baseline_accuracy": 0.5,
+          "multi_exit_final_accuracy": 0.46,
+          "locked_policy_accuracy": 0.46,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.03999999999999998
+        },
+        {
+          "class_id": 20,
+          "class_name": "chair",
+          "support": 100,
+          "baseline_accuracy": 0.81,
+          "multi_exit_final_accuracy": 0.84,
+          "locked_policy_accuracy": 0.86,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.04999999999999993
+        },
+        {
+          "class_id": 21,
+          "class_name": "chimpanzee",
+          "support": 100,
+          "baseline_accuracy": 0.78,
+          "multi_exit_final_accuracy": 0.75,
+          "locked_policy_accuracy": 0.76,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.020000000000000018
+        },
+        {
+          "class_id": 22,
+          "class_name": "clock",
+          "support": 100,
+          "baseline_accuracy": 0.51,
+          "multi_exit_final_accuracy": 0.47,
+          "locked_policy_accuracy": 0.48,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.030000000000000027
+        },
+        {
+          "class_id": 23,
+          "class_name": "cloud",
+          "support": 100,
+          "baseline_accuracy": 0.68,
+          "multi_exit_final_accuracy": 0.72,
+          "locked_policy_accuracy": 0.73,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.04999999999999993
+        },
+        {
+          "class_id": 24,
+          "class_name": "cockroach",
+          "support": 100,
+          "baseline_accuracy": 0.72,
+          "multi_exit_final_accuracy": 0.74,
+          "locked_policy_accuracy": 0.75,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 25,
+          "class_name": "couch",
+          "support": 100,
+          "baseline_accuracy": 0.38,
+          "multi_exit_final_accuracy": 0.44,
+          "locked_policy_accuracy": 0.43,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.04999999999999999
+        },
+        {
+          "class_id": 26,
+          "class_name": "crab",
+          "support": 100,
+          "baseline_accuracy": 0.46,
+          "multi_exit_final_accuracy": 0.48,
+          "locked_policy_accuracy": 0.5,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.03999999999999998
+        },
+        {
+          "class_id": 27,
+          "class_name": "crocodile",
+          "support": 100,
+          "baseline_accuracy": 0.43,
+          "multi_exit_final_accuracy": 0.46,
+          "locked_policy_accuracy": 0.46,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 28,
+          "class_name": "cup",
+          "support": 100,
+          "baseline_accuracy": 0.71,
+          "multi_exit_final_accuracy": 0.67,
+          "locked_policy_accuracy": 0.7,
+          "locked_policy_drop_vs_final": -0.029999999999999916,
+          "locked_policy_gain_vs_baseline": -0.010000000000000009
+        },
+        {
+          "class_id": 29,
+          "class_name": "dinosaur",
+          "support": 100,
+          "baseline_accuracy": 0.42,
+          "multi_exit_final_accuracy": 0.53,
+          "locked_policy_accuracy": 0.52,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.10000000000000003
+        },
+        {
+          "class_id": 30,
+          "class_name": "dolphin",
+          "support": 100,
+          "baseline_accuracy": 0.56,
+          "multi_exit_final_accuracy": 0.53,
+          "locked_policy_accuracy": 0.52,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.040000000000000036
+        },
+        {
+          "class_id": 31,
+          "class_name": "elephant",
+          "support": 100,
+          "baseline_accuracy": 0.51,
+          "multi_exit_final_accuracy": 0.63,
+          "locked_policy_accuracy": 0.64,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.13
+        },
+        {
+          "class_id": 32,
+          "class_name": "flatfish",
+          "support": 100,
+          "baseline_accuracy": 0.47,
+          "multi_exit_final_accuracy": 0.52,
+          "locked_policy_accuracy": 0.54,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.07000000000000006
+        },
+        {
+          "class_id": 33,
+          "class_name": "forest",
+          "support": 100,
+          "baseline_accuracy": 0.48,
+          "multi_exit_final_accuracy": 0.51,
+          "locked_policy_accuracy": 0.51,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 34,
+          "class_name": "fox",
+          "support": 100,
+          "baseline_accuracy": 0.51,
+          "multi_exit_final_accuracy": 0.56,
+          "locked_policy_accuracy": 0.56,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.050000000000000044
+        },
+        {
+          "class_id": 35,
+          "class_name": "girl",
+          "support": 100,
+          "baseline_accuracy": 0.28,
+          "multi_exit_final_accuracy": 0.27,
+          "locked_policy_accuracy": 0.27,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.010000000000000009
+        },
+        {
+          "class_id": 36,
+          "class_name": "hamster",
+          "support": 100,
+          "baseline_accuracy": 0.54,
+          "multi_exit_final_accuracy": 0.59,
+          "locked_policy_accuracy": 0.6,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.05999999999999994
+        },
+        {
+          "class_id": 37,
+          "class_name": "house",
+          "support": 100,
+          "baseline_accuracy": 0.52,
+          "multi_exit_final_accuracy": 0.61,
+          "locked_policy_accuracy": 0.61,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.08999999999999997
+        },
+        {
+          "class_id": 38,
+          "class_name": "kangaroo",
+          "support": 100,
+          "baseline_accuracy": 0.37,
+          "multi_exit_final_accuracy": 0.47,
+          "locked_policy_accuracy": 0.5,
+          "locked_policy_drop_vs_final": -0.030000000000000027,
+          "locked_policy_gain_vs_baseline": 0.13
+        },
+        {
+          "class_id": 39,
+          "class_name": "keyboard",
+          "support": 100,
+          "baseline_accuracy": 0.73,
+          "multi_exit_final_accuracy": 0.71,
+          "locked_policy_accuracy": 0.74,
+          "locked_policy_drop_vs_final": -0.030000000000000027,
+          "locked_policy_gain_vs_baseline": 0.010000000000000009
+        },
+        {
+          "class_id": 40,
+          "class_name": "lamp",
+          "support": 100,
+          "baseline_accuracy": 0.54,
+          "multi_exit_final_accuracy": 0.47,
+          "locked_policy_accuracy": 0.47,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.07000000000000006
+        },
+        {
+          "class_id": 41,
+          "class_name": "lawn_mower",
+          "support": 100,
+          "baseline_accuracy": 0.78,
+          "multi_exit_final_accuracy": 0.76,
+          "locked_policy_accuracy": 0.77,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.010000000000000009
+        },
+        {
+          "class_id": 42,
+          "class_name": "leopard",
+          "support": 100,
+          "baseline_accuracy": 0.6,
+          "multi_exit_final_accuracy": 0.52,
+          "locked_policy_accuracy": 0.54,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": -0.05999999999999994
+        },
+        {
+          "class_id": 43,
+          "class_name": "lion",
+          "support": 100,
+          "baseline_accuracy": 0.66,
+          "multi_exit_final_accuracy": 0.59,
+          "locked_policy_accuracy": 0.59,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.07000000000000006
+        },
+        {
+          "class_id": 44,
+          "class_name": "lizard",
+          "support": 100,
+          "baseline_accuracy": 0.26,
+          "multi_exit_final_accuracy": 0.25,
+          "locked_policy_accuracy": 0.24,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.020000000000000018
+        },
+        {
+          "class_id": 45,
+          "class_name": "lobster",
+          "support": 100,
+          "baseline_accuracy": 0.39,
+          "multi_exit_final_accuracy": 0.45,
+          "locked_policy_accuracy": 0.46,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.07
+        },
+        {
+          "class_id": 46,
+          "class_name": "man",
+          "support": 100,
+          "baseline_accuracy": 0.3,
+          "multi_exit_final_accuracy": 0.3,
+          "locked_policy_accuracy": 0.3,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 47,
+          "class_name": "maple_tree",
+          "support": 100,
+          "baseline_accuracy": 0.62,
+          "multi_exit_final_accuracy": 0.52,
+          "locked_policy_accuracy": 0.52,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.09999999999999998
+        },
+        {
+          "class_id": 48,
+          "class_name": "motorcycle",
+          "support": 100,
+          "baseline_accuracy": 0.82,
+          "multi_exit_final_accuracy": 0.78,
+          "locked_policy_accuracy": 0.8,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": -0.019999999999999907
+        },
+        {
+          "class_id": 49,
+          "class_name": "mountain",
+          "support": 100,
+          "baseline_accuracy": 0.76,
+          "multi_exit_final_accuracy": 0.74,
+          "locked_policy_accuracy": 0.76,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 50,
+          "class_name": "mouse",
+          "support": 100,
+          "baseline_accuracy": 0.35,
+          "multi_exit_final_accuracy": 0.32,
+          "locked_policy_accuracy": 0.32,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.02999999999999997
+        },
+        {
+          "class_id": 51,
+          "class_name": "mushroom",
+          "support": 100,
+          "baseline_accuracy": 0.48,
+          "multi_exit_final_accuracy": 0.64,
+          "locked_policy_accuracy": 0.66,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.18000000000000005
+        },
+        {
+          "class_id": 52,
+          "class_name": "oak_tree",
+          "support": 100,
+          "baseline_accuracy": 0.74,
+          "multi_exit_final_accuracy": 0.69,
+          "locked_policy_accuracy": 0.69,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.050000000000000044
+        },
+        {
+          "class_id": 53,
+          "class_name": "orange",
+          "support": 100,
+          "baseline_accuracy": 0.81,
+          "multi_exit_final_accuracy": 0.86,
+          "locked_policy_accuracy": 0.85,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.039999999999999925
+        },
+        {
+          "class_id": 54,
+          "class_name": "orchid",
+          "support": 100,
+          "baseline_accuracy": 0.71,
+          "multi_exit_final_accuracy": 0.72,
+          "locked_policy_accuracy": 0.71,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 55,
+          "class_name": "otter",
+          "support": 100,
+          "baseline_accuracy": 0.19,
+          "multi_exit_final_accuracy": 0.13,
+          "locked_policy_accuracy": 0.13,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.06
+        },
+        {
+          "class_id": 56,
+          "class_name": "palm_tree",
+          "support": 100,
+          "baseline_accuracy": 0.74,
+          "multi_exit_final_accuracy": 0.84,
+          "locked_policy_accuracy": 0.84,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.09999999999999998
+        },
+        {
+          "class_id": 57,
+          "class_name": "pear",
+          "support": 100,
+          "baseline_accuracy": 0.67,
+          "multi_exit_final_accuracy": 0.64,
+          "locked_policy_accuracy": 0.67,
+          "locked_policy_drop_vs_final": -0.030000000000000027,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 58,
+          "class_name": "pickup_truck",
+          "support": 100,
+          "baseline_accuracy": 0.65,
+          "multi_exit_final_accuracy": 0.72,
+          "locked_policy_accuracy": 0.7,
+          "locked_policy_drop_vs_final": 0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.04999999999999993
+        },
+        {
+          "class_id": 59,
+          "class_name": "pine_tree",
+          "support": 100,
+          "baseline_accuracy": 0.55,
+          "multi_exit_final_accuracy": 0.63,
+          "locked_policy_accuracy": 0.63,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.07999999999999996
+        },
+        {
+          "class_id": 60,
+          "class_name": "plain",
+          "support": 100,
+          "baseline_accuracy": 0.78,
+          "multi_exit_final_accuracy": 0.77,
+          "locked_policy_accuracy": 0.8,
+          "locked_policy_drop_vs_final": -0.030000000000000027,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 61,
+          "class_name": "plate",
+          "support": 100,
+          "baseline_accuracy": 0.65,
+          "multi_exit_final_accuracy": 0.54,
+          "locked_policy_accuracy": 0.55,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.09999999999999998
+        },
+        {
+          "class_id": 62,
+          "class_name": "poppy",
+          "support": 100,
+          "baseline_accuracy": 0.63,
+          "multi_exit_final_accuracy": 0.67,
+          "locked_policy_accuracy": 0.69,
+          "locked_policy_drop_vs_final": -0.019999999999999907,
+          "locked_policy_gain_vs_baseline": 0.05999999999999994
+        },
+        {
+          "class_id": 63,
+          "class_name": "porcupine",
+          "support": 100,
+          "baseline_accuracy": 0.49,
+          "multi_exit_final_accuracy": 0.48,
+          "locked_policy_accuracy": 0.49,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 64,
+          "class_name": "possum",
+          "support": 100,
+          "baseline_accuracy": 0.3,
+          "multi_exit_final_accuracy": 0.37,
+          "locked_policy_accuracy": 0.37,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.07
+        },
+        {
+          "class_id": 65,
+          "class_name": "rabbit",
+          "support": 100,
+          "baseline_accuracy": 0.33,
+          "multi_exit_final_accuracy": 0.4,
+          "locked_policy_accuracy": 0.4,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.07
+        },
+        {
+          "class_id": 66,
+          "class_name": "raccoon",
+          "support": 100,
+          "baseline_accuracy": 0.45,
+          "multi_exit_final_accuracy": 0.47,
+          "locked_policy_accuracy": 0.48,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.02999999999999997
+        },
+        {
+          "class_id": 67,
+          "class_name": "ray",
+          "support": 100,
+          "baseline_accuracy": 0.42,
+          "multi_exit_final_accuracy": 0.48,
+          "locked_policy_accuracy": 0.47,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.04999999999999999
+        },
+        {
+          "class_id": 68,
+          "class_name": "road",
+          "support": 100,
+          "baseline_accuracy": 0.86,
+          "multi_exit_final_accuracy": 0.89,
+          "locked_policy_accuracy": 0.92,
+          "locked_policy_drop_vs_final": -0.030000000000000027,
+          "locked_policy_gain_vs_baseline": 0.06000000000000005
+        },
+        {
+          "class_id": 69,
+          "class_name": "rocket",
+          "support": 100,
+          "baseline_accuracy": 0.7,
+          "multi_exit_final_accuracy": 0.74,
+          "locked_policy_accuracy": 0.7,
+          "locked_policy_drop_vs_final": 0.040000000000000036,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 70,
+          "class_name": "rose",
+          "support": 100,
+          "baseline_accuracy": 0.61,
+          "multi_exit_final_accuracy": 0.56,
+          "locked_policy_accuracy": 0.55,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.05999999999999994
+        },
+        {
+          "class_id": 71,
+          "class_name": "sea",
+          "support": 100,
+          "baseline_accuracy": 0.76,
+          "multi_exit_final_accuracy": 0.76,
+          "locked_policy_accuracy": 0.76,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 72,
+          "class_name": "seal",
+          "support": 100,
+          "baseline_accuracy": 0.25,
+          "multi_exit_final_accuracy": 0.31,
+          "locked_policy_accuracy": 0.31,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.06
+        },
+        {
+          "class_id": 73,
+          "class_name": "shark",
+          "support": 100,
+          "baseline_accuracy": 0.43,
+          "multi_exit_final_accuracy": 0.42,
+          "locked_policy_accuracy": 0.42,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.010000000000000009
+        },
+        {
+          "class_id": 74,
+          "class_name": "shrew",
+          "support": 100,
+          "baseline_accuracy": 0.38,
+          "multi_exit_final_accuracy": 0.39,
+          "locked_policy_accuracy": 0.4,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 75,
+          "class_name": "skunk",
+          "support": 100,
+          "baseline_accuracy": 0.74,
+          "multi_exit_final_accuracy": 0.84,
+          "locked_policy_accuracy": 0.85,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.10999999999999999
+        },
+        {
+          "class_id": 76,
+          "class_name": "skyscraper",
+          "support": 100,
+          "baseline_accuracy": 0.84,
+          "multi_exit_final_accuracy": 0.82,
+          "locked_policy_accuracy": 0.83,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.010000000000000009
+        },
+        {
+          "class_id": 77,
+          "class_name": "snail",
+          "support": 100,
+          "baseline_accuracy": 0.44,
+          "multi_exit_final_accuracy": 0.44,
+          "locked_policy_accuracy": 0.44,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 78,
+          "class_name": "snake",
+          "support": 100,
+          "baseline_accuracy": 0.46,
+          "multi_exit_final_accuracy": 0.5,
+          "locked_policy_accuracy": 0.52,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.06
+        },
+        {
+          "class_id": 79,
+          "class_name": "spider",
+          "support": 100,
+          "baseline_accuracy": 0.64,
+          "multi_exit_final_accuracy": 0.57,
+          "locked_policy_accuracy": 0.58,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.06000000000000005
+        },
+        {
+          "class_id": 80,
+          "class_name": "squirrel",
+          "support": 100,
+          "baseline_accuracy": 0.37,
+          "multi_exit_final_accuracy": 0.43,
+          "locked_policy_accuracy": 0.43,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.06
+        },
+        {
+          "class_id": 81,
+          "class_name": "streetcar",
+          "support": 100,
+          "baseline_accuracy": 0.66,
+          "multi_exit_final_accuracy": 0.67,
+          "locked_policy_accuracy": 0.64,
+          "locked_policy_drop_vs_final": 0.030000000000000027,
+          "locked_policy_gain_vs_baseline": -0.020000000000000018
+        },
+        {
+          "class_id": 82,
+          "class_name": "sunflower",
+          "support": 100,
+          "baseline_accuracy": 0.82,
+          "multi_exit_final_accuracy": 0.86,
+          "locked_policy_accuracy": 0.87,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.050000000000000044
+        },
+        {
+          "class_id": 83,
+          "class_name": "sweet_pepper",
+          "support": 100,
+          "baseline_accuracy": 0.54,
+          "multi_exit_final_accuracy": 0.46,
+          "locked_policy_accuracy": 0.49,
+          "locked_policy_drop_vs_final": -0.02999999999999997,
+          "locked_policy_gain_vs_baseline": -0.050000000000000044
+        },
+        {
+          "class_id": 84,
+          "class_name": "table",
+          "support": 100,
+          "baseline_accuracy": 0.51,
+          "multi_exit_final_accuracy": 0.58,
+          "locked_policy_accuracy": 0.59,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.07999999999999996
+        },
+        {
+          "class_id": 85,
+          "class_name": "tank",
+          "support": 100,
+          "baseline_accuracy": 0.7,
+          "multi_exit_final_accuracy": 0.6,
+          "locked_policy_accuracy": 0.58,
+          "locked_policy_drop_vs_final": 0.020000000000000018,
+          "locked_policy_gain_vs_baseline": -0.12
+        },
+        {
+          "class_id": 86,
+          "class_name": "telephone",
+          "support": 100,
+          "baseline_accuracy": 0.56,
+          "multi_exit_final_accuracy": 0.56,
+          "locked_policy_accuracy": 0.57,
+          "locked_policy_drop_vs_final": -0.009999999999999898,
+          "locked_policy_gain_vs_baseline": 0.009999999999999898
+        },
+        {
+          "class_id": 87,
+          "class_name": "television",
+          "support": 100,
+          "baseline_accuracy": 0.68,
+          "multi_exit_final_accuracy": 0.73,
+          "locked_policy_accuracy": 0.74,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.05999999999999994
+        },
+        {
+          "class_id": 88,
+          "class_name": "tiger",
+          "support": 100,
+          "baseline_accuracy": 0.57,
+          "multi_exit_final_accuracy": 0.6,
+          "locked_policy_accuracy": 0.6,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 89,
+          "class_name": "tractor",
+          "support": 100,
+          "baseline_accuracy": 0.69,
+          "multi_exit_final_accuracy": 0.67,
+          "locked_policy_accuracy": 0.69,
+          "locked_policy_drop_vs_final": -0.019999999999999907,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 90,
+          "class_name": "train",
+          "support": 100,
+          "baseline_accuracy": 0.72,
+          "multi_exit_final_accuracy": 0.69,
+          "locked_policy_accuracy": 0.7,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.020000000000000018
+        },
+        {
+          "class_id": 91,
+          "class_name": "trout",
+          "support": 100,
+          "baseline_accuracy": 0.74,
+          "multi_exit_final_accuracy": 0.65,
+          "locked_policy_accuracy": 0.66,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.07999999999999996
+        },
+        {
+          "class_id": 92,
+          "class_name": "tulip",
+          "support": 100,
+          "baseline_accuracy": 0.48,
+          "multi_exit_final_accuracy": 0.5,
+          "locked_policy_accuracy": 0.49,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.010000000000000009
+        },
+        {
+          "class_id": 93,
+          "class_name": "turtle",
+          "support": 100,
+          "baseline_accuracy": 0.33,
+          "multi_exit_final_accuracy": 0.33,
+          "locked_policy_accuracy": 0.31,
+          "locked_policy_drop_vs_final": 0.020000000000000018,
+          "locked_policy_gain_vs_baseline": -0.020000000000000018
+        },
+        {
+          "class_id": 94,
+          "class_name": "wardrobe",
+          "support": 100,
+          "baseline_accuracy": 0.81,
+          "multi_exit_final_accuracy": 0.85,
+          "locked_policy_accuracy": 0.85,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.039999999999999925
+        },
+        {
+          "class_id": 95,
+          "class_name": "whale",
+          "support": 100,
+          "baseline_accuracy": 0.57,
+          "multi_exit_final_accuracy": 0.61,
+          "locked_policy_accuracy": 0.64,
+          "locked_policy_drop_vs_final": -0.030000000000000027,
+          "locked_policy_gain_vs_baseline": 0.07000000000000006
+        },
+        {
+          "class_id": 96,
+          "class_name": "willow_tree",
+          "support": 100,
+          "baseline_accuracy": 0.39,
+          "multi_exit_final_accuracy": 0.52,
+          "locked_policy_accuracy": 0.51,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.12
+        },
+        {
+          "class_id": 97,
+          "class_name": "wolf",
+          "support": 100,
+          "baseline_accuracy": 0.49,
+          "multi_exit_final_accuracy": 0.57,
+          "locked_policy_accuracy": 0.57,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.07999999999999996
+        },
+        {
+          "class_id": 98,
+          "class_name": "woman",
+          "support": 100,
+          "baseline_accuracy": 0.31,
+          "multi_exit_final_accuracy": 0.36,
+          "locked_policy_accuracy": 0.36,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.04999999999999999
+        },
+        {
+          "class_id": 99,
+          "class_name": "worm",
+          "support": 100,
+          "baseline_accuracy": 0.55,
+          "multi_exit_final_accuracy": 0.6,
+          "locked_policy_accuracy": 0.63,
+          "locked_policy_drop_vs_final": -0.030000000000000027,
+          "locked_policy_gain_vs_baseline": 0.07999999999999996
+        }
+      ],
+      "baseline_experiment_id": "early_exit_p4_baseline_p4a_seed67_mobilenetv2_cifar100",
+      "multi_exit_experiment_id": "early_exit_p4_multi_p4a_seed67_multi_exit_pos8-16_cifar100"
+    },
+    {
+      "seed": 68,
+      "samples": 10000,
+      "baseline_test_accuracy": 0.5606,
+      "multi_exit_final_test_accuracy": 0.5732,
+      "exit8_test_accuracy": 0.5837,
+      "exit16_test_accuracy": 0.5803,
+      "paired_final_gain_vs_baseline": 0.012600000000000056,
+      "locked_policy": {
+        "accuracy": 0.5813,
+        "reference_accuracy": 0.5732,
+        "accuracy_drop": -0.008099999999999996,
+        "balanced_accuracy": 0.5813000000000001,
+        "reference_balanced_accuracy": 0.5732,
+        "balanced_accuracy_drop": -0.008100000000000107,
+        "worst_class_accuracy_drop": 0.020000000000000018,
+        "route_fractions": [
+          0.425,
+          0.575
+        ],
+        "expected_cost_fraction": 0.7577070213944329,
+        "cost_saving_fraction": 0.2422929786055671
+      },
+      "locked_policy_gain_vs_baseline": 0.02070000000000005,
+      "locked_policy_gain_vs_final": 0.008099999999999996,
+      "decision_changes_vs_final": {
+        "changed": 269,
+        "harmed": 52,
+        "rescued": 133,
+        "net_correct": 81
+      },
+      "early_route_count": 4250,
+      "final_route_count": 5750,
+      "class_metrics": [
+        {
+          "class_id": 0,
+          "class_name": "apple",
+          "support": 100,
+          "baseline_accuracy": 0.81,
+          "multi_exit_final_accuracy": 0.87,
+          "locked_policy_accuracy": 0.87,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.05999999999999994
+        },
+        {
+          "class_id": 1,
+          "class_name": "aquarium_fish",
+          "support": 100,
+          "baseline_accuracy": 0.63,
+          "multi_exit_final_accuracy": 0.6,
+          "locked_policy_accuracy": 0.62,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": -0.010000000000000009
+        },
+        {
+          "class_id": 2,
+          "class_name": "baby",
+          "support": 100,
+          "baseline_accuracy": 0.45,
+          "multi_exit_final_accuracy": 0.48,
+          "locked_policy_accuracy": 0.48,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.02999999999999997
+        },
+        {
+          "class_id": 3,
+          "class_name": "bear",
+          "support": 100,
+          "baseline_accuracy": 0.38,
+          "multi_exit_final_accuracy": 0.29,
+          "locked_policy_accuracy": 0.28,
+          "locked_policy_drop_vs_final": 0.009999999999999953,
+          "locked_policy_gain_vs_baseline": -0.09999999999999998
+        },
+        {
+          "class_id": 4,
+          "class_name": "beaver",
+          "support": 100,
+          "baseline_accuracy": 0.39,
+          "multi_exit_final_accuracy": 0.37,
+          "locked_policy_accuracy": 0.36,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.030000000000000027
+        },
+        {
+          "class_id": 5,
+          "class_name": "bed",
+          "support": 100,
+          "baseline_accuracy": 0.53,
+          "multi_exit_final_accuracy": 0.63,
+          "locked_policy_accuracy": 0.63,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.09999999999999998
+        },
+        {
+          "class_id": 6,
+          "class_name": "bee",
+          "support": 100,
+          "baseline_accuracy": 0.63,
+          "multi_exit_final_accuracy": 0.63,
+          "locked_policy_accuracy": 0.65,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 7,
+          "class_name": "beetle",
+          "support": 100,
+          "baseline_accuracy": 0.63,
+          "multi_exit_final_accuracy": 0.61,
+          "locked_policy_accuracy": 0.63,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 8,
+          "class_name": "bicycle",
+          "support": 100,
+          "baseline_accuracy": 0.67,
+          "multi_exit_final_accuracy": 0.68,
+          "locked_policy_accuracy": 0.71,
+          "locked_policy_drop_vs_final": -0.029999999999999916,
+          "locked_policy_gain_vs_baseline": 0.039999999999999925
+        },
+        {
+          "class_id": 9,
+          "class_name": "bottle",
+          "support": 100,
+          "baseline_accuracy": 0.67,
+          "multi_exit_final_accuracy": 0.68,
+          "locked_policy_accuracy": 0.69,
+          "locked_policy_drop_vs_final": -0.009999999999999898,
+          "locked_policy_gain_vs_baseline": 0.019999999999999907
+        },
+        {
+          "class_id": 10,
+          "class_name": "bowl",
+          "support": 100,
+          "baseline_accuracy": 0.33,
+          "multi_exit_final_accuracy": 0.42,
+          "locked_policy_accuracy": 0.46,
+          "locked_policy_drop_vs_final": -0.040000000000000036,
+          "locked_policy_gain_vs_baseline": 0.13
+        },
+        {
+          "class_id": 11,
+          "class_name": "boy",
+          "support": 100,
+          "baseline_accuracy": 0.34,
+          "multi_exit_final_accuracy": 0.39,
+          "locked_policy_accuracy": 0.39,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.04999999999999999
+        },
+        {
+          "class_id": 12,
+          "class_name": "bridge",
+          "support": 100,
+          "baseline_accuracy": 0.68,
+          "multi_exit_final_accuracy": 0.7,
+          "locked_policy_accuracy": 0.72,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.039999999999999925
+        },
+        {
+          "class_id": 13,
+          "class_name": "bus",
+          "support": 100,
+          "baseline_accuracy": 0.52,
+          "multi_exit_final_accuracy": 0.45,
+          "locked_policy_accuracy": 0.45,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.07
+        },
+        {
+          "class_id": 14,
+          "class_name": "butterfly",
+          "support": 100,
+          "baseline_accuracy": 0.5,
+          "multi_exit_final_accuracy": 0.43,
+          "locked_policy_accuracy": 0.45,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": -0.04999999999999999
+        },
+        {
+          "class_id": 15,
+          "class_name": "camel",
+          "support": 100,
+          "baseline_accuracy": 0.53,
+          "multi_exit_final_accuracy": 0.55,
+          "locked_policy_accuracy": 0.55,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 16,
+          "class_name": "can",
+          "support": 100,
+          "baseline_accuracy": 0.54,
+          "multi_exit_final_accuracy": 0.62,
+          "locked_policy_accuracy": 0.62,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.07999999999999996
+        },
+        {
+          "class_id": 17,
+          "class_name": "castle",
+          "support": 100,
+          "baseline_accuracy": 0.75,
+          "multi_exit_final_accuracy": 0.72,
+          "locked_policy_accuracy": 0.73,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.020000000000000018
+        },
+        {
+          "class_id": 18,
+          "class_name": "caterpillar",
+          "support": 100,
+          "baseline_accuracy": 0.51,
+          "multi_exit_final_accuracy": 0.53,
+          "locked_policy_accuracy": 0.56,
+          "locked_policy_drop_vs_final": -0.030000000000000027,
+          "locked_policy_gain_vs_baseline": 0.050000000000000044
+        },
+        {
+          "class_id": 19,
+          "class_name": "cattle",
+          "support": 100,
+          "baseline_accuracy": 0.47,
+          "multi_exit_final_accuracy": 0.44,
+          "locked_policy_accuracy": 0.44,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.02999999999999997
+        },
+        {
+          "class_id": 20,
+          "class_name": "chair",
+          "support": 100,
+          "baseline_accuracy": 0.79,
+          "multi_exit_final_accuracy": 0.83,
+          "locked_policy_accuracy": 0.84,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.04999999999999993
+        },
+        {
+          "class_id": 21,
+          "class_name": "chimpanzee",
+          "support": 100,
+          "baseline_accuracy": 0.77,
+          "multi_exit_final_accuracy": 0.81,
+          "locked_policy_accuracy": 0.8,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 22,
+          "class_name": "clock",
+          "support": 100,
+          "baseline_accuracy": 0.47,
+          "multi_exit_final_accuracy": 0.49,
+          "locked_policy_accuracy": 0.51,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.040000000000000036
+        },
+        {
+          "class_id": 23,
+          "class_name": "cloud",
+          "support": 100,
+          "baseline_accuracy": 0.72,
+          "multi_exit_final_accuracy": 0.78,
+          "locked_policy_accuracy": 0.79,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.07000000000000006
+        },
+        {
+          "class_id": 24,
+          "class_name": "cockroach",
+          "support": 100,
+          "baseline_accuracy": 0.76,
+          "multi_exit_final_accuracy": 0.76,
+          "locked_policy_accuracy": 0.78,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 25,
+          "class_name": "couch",
+          "support": 100,
+          "baseline_accuracy": 0.4,
+          "multi_exit_final_accuracy": 0.34,
+          "locked_policy_accuracy": 0.35,
+          "locked_policy_drop_vs_final": -0.009999999999999953,
+          "locked_policy_gain_vs_baseline": -0.050000000000000044
+        },
+        {
+          "class_id": 26,
+          "class_name": "crab",
+          "support": 100,
+          "baseline_accuracy": 0.5,
+          "multi_exit_final_accuracy": 0.53,
+          "locked_policy_accuracy": 0.53,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 27,
+          "class_name": "crocodile",
+          "support": 100,
+          "baseline_accuracy": 0.35,
+          "multi_exit_final_accuracy": 0.48,
+          "locked_policy_accuracy": 0.46,
+          "locked_policy_drop_vs_final": 0.019999999999999962,
+          "locked_policy_gain_vs_baseline": 0.11000000000000004
+        },
+        {
+          "class_id": 28,
+          "class_name": "cup",
+          "support": 100,
+          "baseline_accuracy": 0.72,
+          "multi_exit_final_accuracy": 0.73,
+          "locked_policy_accuracy": 0.77,
+          "locked_policy_drop_vs_final": -0.040000000000000036,
+          "locked_policy_gain_vs_baseline": 0.050000000000000044
+        },
+        {
+          "class_id": 29,
+          "class_name": "dinosaur",
+          "support": 100,
+          "baseline_accuracy": 0.51,
+          "multi_exit_final_accuracy": 0.5,
+          "locked_policy_accuracy": 0.5,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.010000000000000009
+        },
+        {
+          "class_id": 30,
+          "class_name": "dolphin",
+          "support": 100,
+          "baseline_accuracy": 0.48,
+          "multi_exit_final_accuracy": 0.53,
+          "locked_policy_accuracy": 0.54,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.06000000000000005
+        },
+        {
+          "class_id": 31,
+          "class_name": "elephant",
+          "support": 100,
+          "baseline_accuracy": 0.53,
+          "multi_exit_final_accuracy": 0.59,
+          "locked_policy_accuracy": 0.58,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.04999999999999993
+        },
+        {
+          "class_id": 32,
+          "class_name": "flatfish",
+          "support": 100,
+          "baseline_accuracy": 0.47,
+          "multi_exit_final_accuracy": 0.51,
+          "locked_policy_accuracy": 0.55,
+          "locked_policy_drop_vs_final": -0.040000000000000036,
+          "locked_policy_gain_vs_baseline": 0.08000000000000007
+        },
+        {
+          "class_id": 33,
+          "class_name": "forest",
+          "support": 100,
+          "baseline_accuracy": 0.44,
+          "multi_exit_final_accuracy": 0.52,
+          "locked_policy_accuracy": 0.52,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.08000000000000002
+        },
+        {
+          "class_id": 34,
+          "class_name": "fox",
+          "support": 100,
+          "baseline_accuracy": 0.49,
+          "multi_exit_final_accuracy": 0.53,
+          "locked_policy_accuracy": 0.56,
+          "locked_policy_drop_vs_final": -0.030000000000000027,
+          "locked_policy_gain_vs_baseline": 0.07000000000000006
+        },
+        {
+          "class_id": 35,
+          "class_name": "girl",
+          "support": 100,
+          "baseline_accuracy": 0.26,
+          "multi_exit_final_accuracy": 0.23,
+          "locked_policy_accuracy": 0.23,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.03
+        },
+        {
+          "class_id": 36,
+          "class_name": "hamster",
+          "support": 100,
+          "baseline_accuracy": 0.52,
+          "multi_exit_final_accuracy": 0.6,
+          "locked_policy_accuracy": 0.62,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.09999999999999998
+        },
+        {
+          "class_id": 37,
+          "class_name": "house",
+          "support": 100,
+          "baseline_accuracy": 0.54,
+          "multi_exit_final_accuracy": 0.61,
+          "locked_policy_accuracy": 0.62,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.07999999999999996
+        },
+        {
+          "class_id": 38,
+          "class_name": "kangaroo",
+          "support": 100,
+          "baseline_accuracy": 0.43,
+          "multi_exit_final_accuracy": 0.46,
+          "locked_policy_accuracy": 0.46,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 39,
+          "class_name": "keyboard",
+          "support": 100,
+          "baseline_accuracy": 0.72,
+          "multi_exit_final_accuracy": 0.71,
+          "locked_policy_accuracy": 0.75,
+          "locked_policy_drop_vs_final": -0.040000000000000036,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 40,
+          "class_name": "lamp",
+          "support": 100,
+          "baseline_accuracy": 0.56,
+          "multi_exit_final_accuracy": 0.54,
+          "locked_policy_accuracy": 0.55,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.010000000000000009
+        },
+        {
+          "class_id": 41,
+          "class_name": "lawn_mower",
+          "support": 100,
+          "baseline_accuracy": 0.72,
+          "multi_exit_final_accuracy": 0.77,
+          "locked_policy_accuracy": 0.78,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.06000000000000005
+        },
+        {
+          "class_id": 42,
+          "class_name": "leopard",
+          "support": 100,
+          "baseline_accuracy": 0.57,
+          "multi_exit_final_accuracy": 0.48,
+          "locked_policy_accuracy": 0.5,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": -0.06999999999999995
+        },
+        {
+          "class_id": 43,
+          "class_name": "lion",
+          "support": 100,
+          "baseline_accuracy": 0.54,
+          "multi_exit_final_accuracy": 0.65,
+          "locked_policy_accuracy": 0.65,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.10999999999999999
+        },
+        {
+          "class_id": 44,
+          "class_name": "lizard",
+          "support": 100,
+          "baseline_accuracy": 0.3,
+          "multi_exit_final_accuracy": 0.28,
+          "locked_policy_accuracy": 0.28,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.019999999999999962
+        },
+        {
+          "class_id": 45,
+          "class_name": "lobster",
+          "support": 100,
+          "baseline_accuracy": 0.39,
+          "multi_exit_final_accuracy": 0.43,
+          "locked_policy_accuracy": 0.43,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.03999999999999998
+        },
+        {
+          "class_id": 46,
+          "class_name": "man",
+          "support": 100,
+          "baseline_accuracy": 0.32,
+          "multi_exit_final_accuracy": 0.37,
+          "locked_policy_accuracy": 0.37,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.04999999999999999
+        },
+        {
+          "class_id": 47,
+          "class_name": "maple_tree",
+          "support": 100,
+          "baseline_accuracy": 0.63,
+          "multi_exit_final_accuracy": 0.57,
+          "locked_policy_accuracy": 0.56,
+          "locked_policy_drop_vs_final": 0.009999999999999898,
+          "locked_policy_gain_vs_baseline": -0.06999999999999995
+        },
+        {
+          "class_id": 48,
+          "class_name": "motorcycle",
+          "support": 100,
+          "baseline_accuracy": 0.78,
+          "multi_exit_final_accuracy": 0.83,
+          "locked_policy_accuracy": 0.83,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.04999999999999993
+        },
+        {
+          "class_id": 49,
+          "class_name": "mountain",
+          "support": 100,
+          "baseline_accuracy": 0.71,
+          "multi_exit_final_accuracy": 0.72,
+          "locked_policy_accuracy": 0.77,
+          "locked_policy_drop_vs_final": -0.050000000000000044,
+          "locked_policy_gain_vs_baseline": 0.06000000000000005
+        },
+        {
+          "class_id": 50,
+          "class_name": "mouse",
+          "support": 100,
+          "baseline_accuracy": 0.31,
+          "multi_exit_final_accuracy": 0.37,
+          "locked_policy_accuracy": 0.38,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.07
+        },
+        {
+          "class_id": 51,
+          "class_name": "mushroom",
+          "support": 100,
+          "baseline_accuracy": 0.46,
+          "multi_exit_final_accuracy": 0.6,
+          "locked_policy_accuracy": 0.62,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.15999999999999998
+        },
+        {
+          "class_id": 52,
+          "class_name": "oak_tree",
+          "support": 100,
+          "baseline_accuracy": 0.68,
+          "multi_exit_final_accuracy": 0.67,
+          "locked_policy_accuracy": 0.68,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.0
+        },
+        {
+          "class_id": 53,
+          "class_name": "orange",
+          "support": 100,
+          "baseline_accuracy": 0.87,
+          "multi_exit_final_accuracy": 0.81,
+          "locked_policy_accuracy": 0.82,
+          "locked_policy_drop_vs_final": -0.009999999999999898,
+          "locked_policy_gain_vs_baseline": -0.050000000000000044
+        },
+        {
+          "class_id": 54,
+          "class_name": "orchid",
+          "support": 100,
+          "baseline_accuracy": 0.68,
+          "multi_exit_final_accuracy": 0.63,
+          "locked_policy_accuracy": 0.65,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": -0.030000000000000027
+        },
+        {
+          "class_id": 55,
+          "class_name": "otter",
+          "support": 100,
+          "baseline_accuracy": 0.25,
+          "multi_exit_final_accuracy": 0.28,
+          "locked_policy_accuracy": 0.28,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 56,
+          "class_name": "palm_tree",
+          "support": 100,
+          "baseline_accuracy": 0.81,
+          "multi_exit_final_accuracy": 0.82,
+          "locked_policy_accuracy": 0.84,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.029999999999999916
+        },
+        {
+          "class_id": 57,
+          "class_name": "pear",
+          "support": 100,
+          "baseline_accuracy": 0.65,
+          "multi_exit_final_accuracy": 0.72,
+          "locked_policy_accuracy": 0.7,
+          "locked_policy_drop_vs_final": 0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.04999999999999993
+        },
+        {
+          "class_id": 58,
+          "class_name": "pickup_truck",
+          "support": 100,
+          "baseline_accuracy": 0.69,
+          "multi_exit_final_accuracy": 0.64,
+          "locked_policy_accuracy": 0.64,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.04999999999999993
+        },
+        {
+          "class_id": 59,
+          "class_name": "pine_tree",
+          "support": 100,
+          "baseline_accuracy": 0.53,
+          "multi_exit_final_accuracy": 0.5,
+          "locked_policy_accuracy": 0.51,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.020000000000000018
+        },
+        {
+          "class_id": 60,
+          "class_name": "plain",
+          "support": 100,
+          "baseline_accuracy": 0.74,
+          "multi_exit_final_accuracy": 0.79,
+          "locked_policy_accuracy": 0.8,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.06000000000000005
+        },
+        {
+          "class_id": 61,
+          "class_name": "plate",
+          "support": 100,
+          "baseline_accuracy": 0.67,
+          "multi_exit_final_accuracy": 0.61,
+          "locked_policy_accuracy": 0.61,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.06000000000000005
+        },
+        {
+          "class_id": 62,
+          "class_name": "poppy",
+          "support": 100,
+          "baseline_accuracy": 0.59,
+          "multi_exit_final_accuracy": 0.6,
+          "locked_policy_accuracy": 0.61,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 63,
+          "class_name": "porcupine",
+          "support": 100,
+          "baseline_accuracy": 0.5,
+          "multi_exit_final_accuracy": 0.56,
+          "locked_policy_accuracy": 0.57,
+          "locked_policy_drop_vs_final": -0.009999999999999898,
+          "locked_policy_gain_vs_baseline": 0.06999999999999995
+        },
+        {
+          "class_id": 64,
+          "class_name": "possum",
+          "support": 100,
+          "baseline_accuracy": 0.32,
+          "multi_exit_final_accuracy": 0.33,
+          "locked_policy_accuracy": 0.34,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 65,
+          "class_name": "rabbit",
+          "support": 100,
+          "baseline_accuracy": 0.36,
+          "multi_exit_final_accuracy": 0.45,
+          "locked_policy_accuracy": 0.47,
+          "locked_policy_drop_vs_final": -0.019999999999999962,
+          "locked_policy_gain_vs_baseline": 0.10999999999999999
+        },
+        {
+          "class_id": 66,
+          "class_name": "raccoon",
+          "support": 100,
+          "baseline_accuracy": 0.5,
+          "multi_exit_final_accuracy": 0.39,
+          "locked_policy_accuracy": 0.42,
+          "locked_policy_drop_vs_final": -0.02999999999999997,
+          "locked_policy_gain_vs_baseline": -0.08000000000000002
+        },
+        {
+          "class_id": 67,
+          "class_name": "ray",
+          "support": 100,
+          "baseline_accuracy": 0.39,
+          "multi_exit_final_accuracy": 0.41,
+          "locked_policy_accuracy": 0.41,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.019999999999999962
+        },
+        {
+          "class_id": 68,
+          "class_name": "road",
+          "support": 100,
+          "baseline_accuracy": 0.9,
+          "multi_exit_final_accuracy": 0.85,
+          "locked_policy_accuracy": 0.85,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.050000000000000044
+        },
+        {
+          "class_id": 69,
+          "class_name": "rocket",
+          "support": 100,
+          "baseline_accuracy": 0.72,
+          "multi_exit_final_accuracy": 0.7,
+          "locked_policy_accuracy": 0.71,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.010000000000000009
+        },
+        {
+          "class_id": 70,
+          "class_name": "rose",
+          "support": 100,
+          "baseline_accuracy": 0.57,
+          "multi_exit_final_accuracy": 0.6,
+          "locked_policy_accuracy": 0.59,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 71,
+          "class_name": "sea",
+          "support": 100,
+          "baseline_accuracy": 0.74,
+          "multi_exit_final_accuracy": 0.76,
+          "locked_policy_accuracy": 0.77,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 72,
+          "class_name": "seal",
+          "support": 100,
+          "baseline_accuracy": 0.22,
+          "multi_exit_final_accuracy": 0.26,
+          "locked_policy_accuracy": 0.26,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.04000000000000001
+        },
+        {
+          "class_id": 73,
+          "class_name": "shark",
+          "support": 100,
+          "baseline_accuracy": 0.42,
+          "multi_exit_final_accuracy": 0.35,
+          "locked_policy_accuracy": 0.35,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.07
+        },
+        {
+          "class_id": 74,
+          "class_name": "shrew",
+          "support": 100,
+          "baseline_accuracy": 0.42,
+          "multi_exit_final_accuracy": 0.41,
+          "locked_policy_accuracy": 0.41,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.010000000000000009
+        },
+        {
+          "class_id": 75,
+          "class_name": "skunk",
+          "support": 100,
+          "baseline_accuracy": 0.81,
+          "multi_exit_final_accuracy": 0.81,
+          "locked_policy_accuracy": 0.84,
+          "locked_policy_drop_vs_final": -0.029999999999999916,
+          "locked_policy_gain_vs_baseline": 0.029999999999999916
+        },
+        {
+          "class_id": 76,
+          "class_name": "skyscraper",
+          "support": 100,
+          "baseline_accuracy": 0.82,
+          "multi_exit_final_accuracy": 0.83,
+          "locked_policy_accuracy": 0.85,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 77,
+          "class_name": "snail",
+          "support": 100,
+          "baseline_accuracy": 0.52,
+          "multi_exit_final_accuracy": 0.43,
+          "locked_policy_accuracy": 0.46,
+          "locked_policy_drop_vs_final": -0.030000000000000027,
+          "locked_policy_gain_vs_baseline": -0.06
+        },
+        {
+          "class_id": 78,
+          "class_name": "snake",
+          "support": 100,
+          "baseline_accuracy": 0.38,
+          "multi_exit_final_accuracy": 0.42,
+          "locked_policy_accuracy": 0.41,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.02999999999999997
+        },
+        {
+          "class_id": 79,
+          "class_name": "spider",
+          "support": 100,
+          "baseline_accuracy": 0.53,
+          "multi_exit_final_accuracy": 0.52,
+          "locked_policy_accuracy": 0.55,
+          "locked_policy_drop_vs_final": -0.030000000000000027,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 80,
+          "class_name": "squirrel",
+          "support": 100,
+          "baseline_accuracy": 0.39,
+          "multi_exit_final_accuracy": 0.31,
+          "locked_policy_accuracy": 0.3,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.09000000000000002
+        },
+        {
+          "class_id": 81,
+          "class_name": "streetcar",
+          "support": 100,
+          "baseline_accuracy": 0.56,
+          "multi_exit_final_accuracy": 0.62,
+          "locked_policy_accuracy": 0.61,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.04999999999999993
+        },
+        {
+          "class_id": 82,
+          "class_name": "sunflower",
+          "support": 100,
+          "baseline_accuracy": 0.83,
+          "multi_exit_final_accuracy": 0.86,
+          "locked_policy_accuracy": 0.85,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.020000000000000018
+        },
+        {
+          "class_id": 83,
+          "class_name": "sweet_pepper",
+          "support": 100,
+          "baseline_accuracy": 0.48,
+          "multi_exit_final_accuracy": 0.5,
+          "locked_policy_accuracy": 0.51,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 84,
+          "class_name": "table",
+          "support": 100,
+          "baseline_accuracy": 0.54,
+          "multi_exit_final_accuracy": 0.53,
+          "locked_policy_accuracy": 0.51,
+          "locked_policy_drop_vs_final": 0.020000000000000018,
+          "locked_policy_gain_vs_baseline": -0.030000000000000027
+        },
+        {
+          "class_id": 85,
+          "class_name": "tank",
+          "support": 100,
+          "baseline_accuracy": 0.7,
+          "multi_exit_final_accuracy": 0.65,
+          "locked_policy_accuracy": 0.67,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": -0.029999999999999916
+        },
+        {
+          "class_id": 86,
+          "class_name": "telephone",
+          "support": 100,
+          "baseline_accuracy": 0.59,
+          "multi_exit_final_accuracy": 0.59,
+          "locked_policy_accuracy": 0.6,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.010000000000000009
+        },
+        {
+          "class_id": 87,
+          "class_name": "television",
+          "support": 100,
+          "baseline_accuracy": 0.69,
+          "multi_exit_final_accuracy": 0.71,
+          "locked_policy_accuracy": 0.72,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 88,
+          "class_name": "tiger",
+          "support": 100,
+          "baseline_accuracy": 0.64,
+          "multi_exit_final_accuracy": 0.64,
+          "locked_policy_accuracy": 0.63,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.010000000000000009
+        },
+        {
+          "class_id": 89,
+          "class_name": "tractor",
+          "support": 100,
+          "baseline_accuracy": 0.65,
+          "multi_exit_final_accuracy": 0.74,
+          "locked_policy_accuracy": 0.75,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.09999999999999998
+        },
+        {
+          "class_id": 90,
+          "class_name": "train",
+          "support": 100,
+          "baseline_accuracy": 0.64,
+          "multi_exit_final_accuracy": 0.6,
+          "locked_policy_accuracy": 0.61,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.030000000000000027
+        },
+        {
+          "class_id": 91,
+          "class_name": "trout",
+          "support": 100,
+          "baseline_accuracy": 0.7,
+          "multi_exit_final_accuracy": 0.72,
+          "locked_policy_accuracy": 0.73,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 92,
+          "class_name": "tulip",
+          "support": 100,
+          "baseline_accuracy": 0.47,
+          "multi_exit_final_accuracy": 0.55,
+          "locked_policy_accuracy": 0.56,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.09000000000000008
+        },
+        {
+          "class_id": 93,
+          "class_name": "turtle",
+          "support": 100,
+          "baseline_accuracy": 0.34,
+          "multi_exit_final_accuracy": 0.29,
+          "locked_policy_accuracy": 0.27,
+          "locked_policy_drop_vs_final": 0.019999999999999962,
+          "locked_policy_gain_vs_baseline": -0.07
+        },
+        {
+          "class_id": 94,
+          "class_name": "wardrobe",
+          "support": 100,
+          "baseline_accuracy": 0.88,
+          "multi_exit_final_accuracy": 0.87,
+          "locked_policy_accuracy": 0.87,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": -0.010000000000000009
+        },
+        {
+          "class_id": 95,
+          "class_name": "whale",
+          "support": 100,
+          "baseline_accuracy": 0.61,
+          "multi_exit_final_accuracy": 0.64,
+          "locked_policy_accuracy": 0.66,
+          "locked_policy_drop_vs_final": -0.020000000000000018,
+          "locked_policy_gain_vs_baseline": 0.050000000000000044
+        },
+        {
+          "class_id": 96,
+          "class_name": "willow_tree",
+          "support": 100,
+          "baseline_accuracy": 0.48,
+          "multi_exit_final_accuracy": 0.5,
+          "locked_policy_accuracy": 0.51,
+          "locked_policy_drop_vs_final": -0.010000000000000009,
+          "locked_policy_gain_vs_baseline": 0.030000000000000027
+        },
+        {
+          "class_id": 97,
+          "class_name": "wolf",
+          "support": 100,
+          "baseline_accuracy": 0.53,
+          "multi_exit_final_accuracy": 0.63,
+          "locked_policy_accuracy": 0.63,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.09999999999999998
+        },
+        {
+          "class_id": 98,
+          "class_name": "woman",
+          "support": 100,
+          "baseline_accuracy": 0.32,
+          "multi_exit_final_accuracy": 0.38,
+          "locked_policy_accuracy": 0.38,
+          "locked_policy_drop_vs_final": 0.0,
+          "locked_policy_gain_vs_baseline": 0.06
+        },
+        {
+          "class_id": 99,
+          "class_name": "worm",
+          "support": 100,
+          "baseline_accuracy": 0.62,
+          "multi_exit_final_accuracy": 0.6,
+          "locked_policy_accuracy": 0.59,
+          "locked_policy_drop_vs_final": 0.010000000000000009,
+          "locked_policy_gain_vs_baseline": -0.030000000000000027
+        }
+      ],
+      "baseline_experiment_id": "early_exit_p4_baseline_p4a_seed68_mobilenetv2_cifar100",
+      "multi_exit_experiment_id": "early_exit_p4_multi_p4a_seed68_multi_exit_pos8-16_cifar100"
+    }
+  ],
+  "aggregate": {
+    "all_seeds": {
+      "baseline_test_accuracy": {
+        "values": [
+          0.5578,
+          0.5596,
+          0.5606
+        ],
+        "mean": 0.5593333333333333,
+        "sample_std": 0.0014189197769195307
+      },
+      "multi_exit_final_test_accuracy": {
+        "values": [
+          0.5768,
+          0.5754,
+          0.5732
+        ],
+        "mean": 0.5751333333333334,
+        "sample_std": 0.0018147543451754627
+      },
+      "paired_final_gain_vs_baseline": {
+        "values": [
+          0.019000000000000017,
+          0.015800000000000036,
+          0.012600000000000056
+        ],
+        "mean": 0.015800000000000036,
+        "sample_std": 0.0031999999999999806
+      },
+      "locked_policy_accuracy": {
+        "values": [
+          0.5807,
+          0.5809,
+          0.5813
+        ],
+        "mean": 0.5809666666666667,
+        "sample_std": 0.00030550504633041625
+      },
+      "locked_policy_gain_vs_baseline": {
+        "values": [
+          0.02290000000000003,
+          0.021299999999999986,
+          0.02070000000000005
+        ],
+        "mean": 0.021633333333333355,
+        "sample_std": 0.001137248140615464
+      },
+      "locked_policy_gain_vs_final": {
+        "values": [
+          0.0039000000000000146,
+          0.005499999999999949,
+          0.008099999999999996
+        ],
+        "mean": 0.00583333333333332,
+        "sample_std": 0.0021197484127446144
+      },
+      "early_route_fraction": {
+        "values": [
+          0.4205,
+          0.4263,
+          0.425
+        ],
+        "mean": 0.42393333333333333,
+        "sample_std": 0.0030435724623102704
+      },
+      "mac_saving_fraction": {
+        "values": [
+          0.23972752353797877,
+          0.243034110069537,
+          0.2422929786055671
+        ],
+        "mean": 0.2416848707376943,
+        "sample_std": 0.0017351440882235666
+      },
+      "worst_class_accuracy_drop_vs_final": {
+        "values": [
+          0.030000000000000027,
+          0.040000000000000036,
+          0.020000000000000018
+        ],
+        "mean": 0.030000000000000027,
+        "sample_std": 0.010000000000000009
+      }
+    }
+  },
+  "gates": {
+    "each_accuracy_drop_at_most_0_005": true,
+    "each_balanced_accuracy_drop_at_most_0_005": true,
+    "each_worst_class_accuracy_drop_at_most_0_04": true,
+    "mean_accuracy_drop_at_most_0_002": true,
+    "each_route_is_dynamic": true,
+    "each_mac_saving_at_least_0_15": true
+  },
+  "prediction_files": {
+    "66": {
+      "path": "artifacts/official_tests/early_exit_p4_cifar100_20260903/cifar100_test_logits_and_routes_seed66.npz",
+      "size_bytes": 14621255,
+      "sha256": "87afb436995612a9c6c8bdab1463f36e5df95647e3ae16ead0525aeda3b7c1a1"
+    },
+    "67": {
+      "path": "artifacts/official_tests/early_exit_p4_cifar100_20260903/cifar100_test_logits_and_routes_seed67.npz",
+      "size_bytes": 14621589,
+      "sha256": "762c13fdc09cdf2788490ed5784f5dfb42099f44a74981b864bff8001dcc9cb5"
+    },
+    "68": {
+      "path": "artifacts/official_tests/early_exit_p4_cifar100_20260903/cifar100_test_logits_and_routes_seed68.npz",
+      "size_bytes": 14621252,
+      "sha256": "574a2a9d5295ab91f48c99a7b2067c5a390b8ce9577ad56717d7e614f388dc04"
+    }
+  },
+  "historical_test_disclosure": "Legacy baseline-only CIFAR-100 runs exposed test metrics before P4. P3 stopped without test. No P4 checkpoint or policy has seen official test data; describe a later pass as method-locked rather than globally blind.",
+  "limitations": [
+    "CIFAR-100 test was historically exposed by unrelated legacy baseline runs.",
+    "Worst-class evidence has only 100 test examples per class.",
+    "The 4pp class-risk boundary was developed after the frozen P3 failure.",
+    "MAC saving is an operation-count proxy rather than new hardware latency.",
+    "Both training datasets use MobileNetV2."
+  ],
+  "recommended_next_step": "Stop new training and proceed to frozen paper tables, figures and writing."
+}

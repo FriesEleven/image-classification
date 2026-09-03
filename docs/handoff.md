@@ -1125,14 +1125,38 @@ SHA-256为`73f0a7f7645413856bfc9e43b1f7b5108c803773806bb7e59d9d128b1b8833d2`，�
 每seed总体/balanced下降≤0.50pp、最差类别下降≤4pp、早退15%–95%、MAC节省≥15%，且三seed
 平均总体下降≤0.20pp。
 
-必须先提交上述证据并保持服务器工作树干净，再运行一次性评估器。评估器在读取首个test样本前创建
-永久started marker；无论结果、异常或中断都禁止第二次执行，不得据test修改阈值、seed、checkpoint
-或class guard。当前尚未创建P4 official-test输出或access marker。提交和`--verify-only`通过后，唯一
-执行命令为：
+上述证据在提交`e7cc9a48aaac823d427eeaa553a51e4594a8e1f0`上固化；服务器和GitHub对齐、工作树
+干净且无既有P4 test输出/marker后，`--verify-only`再次验证锁、六个checkpoint和评估器哈希，明确
+没有执行推理。随后唯一一次方法锁定评估于17:00:28–17:00:56完成。评估器在读取首个test样本前
+创建永久started marker，completed marker随后落盘；SHA-256分别为
+`90fe74ca1c689bf56ca73757d1a80524cee69a2dc9f5a1c2ad8c7440d43a7a92`和
+`6528e8b091f3cacceb893ace3e24f9bf766cab0c99a378c0f16f957a192fa7be`。禁止再次执行评估器，
+也不得据test修改阈值、seed、checkpoint或class guard。
 
-```bash
-cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/analysis/evaluate_early_exit_p4_locked_test.py
-```
+正式结果位于`reports/experiments/2026-09-03-early-exit-p4-cifar100-test/`；`test_results.json`
+SHA-256为`e17aa638ec24ffe0655c456070ff2620ecaca79c4e805d00bff53a4e0c096d92`，状态为
+`paper_evidence_complete`。baseline test为55.78/55.96/56.06%，multi-exit最终头为
+57.68/57.54/57.32%，锁定策略为58.07/58.09/58.13%。最终头相对baseline平均提升
+`+1.580±0.320 pp`；锁定策略相对baseline平均提升`+2.163±0.114 pp`，相对最终头平均再提升
+`+0.583±0.212 pp`。
 
-这是六对模型的短推理，不是新训练。完成后固化正负结果、清理P4周期checkpoint并停止新增训练，
-进入论文表格、绘图和写作。
+三个seed早退率为42.05/42.63/42.50%，MAC代理节省23.97/24.30/24.23%；策略相对最终头的总体和
+balanced准确率均提高0.39/0.55/0.81pp，最差类别下降为3/4/2pp。所有六个预注册test gate通过，
+没有test-time阈值、类别保护、seed或checkpoint选择。三份原始test logits/routes保存在ignored
+artifacts中并由`source_index.json`固定，禁止重新打开test。历史上无关旧baseline曾暴露CIFAR-100
+test，因此论文必须称此次为P4模型/方法锁定后的首次评估，不能称全项目盲测。
+
+### 28.4 P4清理与实验终止决策
+
+审计、独立确认和official-test证据固化后，只删除六个P4 run的120个`epoch_*.pth`周期优化器快照，
+共3,449,595,324 bytes。18个best/latest/final checkpoint、训练日志、配置、划分、manifest/source
+snapshot、审计、确认、test lock、原始logits/routes和永久access marker全部保留。周期快照剩余0，
+`/root/autodl-tmp`可用约43GB；清理回执为
+`reports/audits/2026-09-03-early-exit-p4a/cleanup_receipt.json`，SHA-256为
+`023c8a30cd1fd131a440faf649410a095a0565920fae70ab72ec83790b7836b7`。删除的周期快照不可恢复，
+但不影响论文复算、绘图、统计或best-checkpoint分析。
+
+P4已补齐第二训练数据集上的独立确认和方法锁定test正证据；结合P1b、P2、CIFAR-10.1、真实分阶段
+续算与RTX4090D延迟剖析，当前已满足CCF-C目标下停止新增训练并进入论文的条件。后续只做冻结数据的
+统计、表格、图、消融归档与写作；除非审稿人明确要求，不再启动P5、替换seed、扫描阈值或重开任何
+官方/外部分布测试集。

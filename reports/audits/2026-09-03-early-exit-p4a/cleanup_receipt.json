@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "performed_on": "2026-09-03",
+  "scope": "Exact six CIFAR-100 P4a run directories from the audited completed manifest.",
+  "manifest_sha256": "f122758c8a62c4bd40ea4451097a138616745f979d595628daa003eaa866d2b7",
+  "audit_results_sha256": "d96cfea5aab71b90700fef3fecda99eff02e7de0570bdcdf55866489d44b1d2c",
+  "confirmation_sha256": "73f0a7f7645413856bfc9e43b1f7b5108c803773806bb7e59d9d128b1b8833d2",
+  "official_test_lock_sha256": "20f885a53f86e1be1e1b4a4136ecc5b48d718596e0b061f90480f6e99547841f",
+  "official_test_results_sha256": "e17aa638ec24ffe0655c456070ff2620ecaca79c4e805d00bff53a4e0c096d92",
+  "preconditions": {
+    "manifest_status": "completed",
+    "audited_runs": 6,
+    "audit_issues": {},
+    "confirmation_status": "ready_for_method_locked_cifar100_test",
+    "official_test_status": "paper_evidence_complete",
+    "training_or_evaluation_processes": 0,
+    "periodic_checkpoint_count": 120,
+    "periodic_checkpoint_bytes": 3449595324,
+    "core_checkpoint_count": 18
+  },
+  "deleted": {
+    "pattern": "checkpoints/epoch_*.pth within the exact six audited P4a run directories",
+    "files": 120,
+    "bytes": 3449595324,
+    "recoverable_on_server": false
+  },
+  "preserved": {
+    "model_best_model_latest_final_checkpoints": 18,
+    "training_csv_and_tensorboard": true,
+    "config_provenance_split_metrics_benchmark_summary": true,
+    "sweep_manifest_launcher_log_and_source_snapshot": true,
+    "immutable_audit_snapshot": true,
+    "versioned_audit_confirmation_lock_and_test_report": true,
+    "official_test_logits_routes_and_access_markers": true
+  },
+  "postconditions": {
+    "periodic_checkpoint_count": 0,
+    "core_checkpoint_count": 18,
+    "filesystem_available_human": "43G",
+    "official_test_result_sha256_unchanged": true,
+    "official_test_access_started_sha256": "90fe74ca1c689bf56ca73757d1a80524cee69a2dc9f5a1c2ad8c7440d43a7a92",
+    "official_test_access_completed_sha256": "6528e8b091f3cacceb893ace3e24f9bf766cab0c99a378c0f16f957a192fa7be"
+  },
+  "reason": "Periodic optimizer snapshots are not required for the frozen P4 audit, independent confirmation, method-locked test evidence, paper tables, figures, or best-checkpoint analysis."
+}

@@ -1,0 +1,51 @@
+{
+  "lock": {
+    "path": "reports/experiments/2026-09-03-early-exit-p4-cifar100/official_test_lock.json",
+    "sha256": "20f885a53f86e1be1e1b4a4136ecc5b48d718596e0b061f90480f6e99547841f"
+  },
+  "manifest": {
+    "path": "artifacts/sweeps/cifar100_early_exit_p4_confirmation_serial_p4a_20260903_150809/manifest.json",
+    "sha256": "f122758c8a62c4bd40ea4451097a138616745f979d595628daa003eaa866d2b7"
+  },
+  "audit": {
+    "path": "reports/audits/2026-09-03-early-exit-p4a/audit_results.json",
+    "sha256": "d96cfea5aab71b90700fef3fecda99eff02e7de0570bdcdf55866489d44b1d2c"
+  },
+  "confirmation": {
+    "path": "reports/experiments/2026-09-03-early-exit-p4-cifar100/confirmation.json",
+    "sha256": "73f0a7f7645413856bfc9e43b1f7b5108c803773806bb7e59d9d128b1b8833d2"
+  },
+  "policy_lock": {
+    "path": "reports/experiments/2026-09-03-early-exit-p4-design/locked_policy.json",
+    "sha256": "69a94227cb2398f75913d09f4315da890e23983ef5a72dd78472ee6bf7060bfe"
+  },
+  "evaluator": {
+    "path": "scripts/analysis/evaluate_early_exit_p4_locked_test.py",
+    "sha256": "ddbdc681c35ff6708d8c09a399d1eb4dd0a8a3e77f623dd5aef249eef434aa9a"
+  },
+  "test_results": {
+    "path": "artifacts/official_tests/early_exit_p4_cifar100_20260903/test_results.json",
+    "sha256": "e17aa638ec24ffe0655c456070ff2620ecaca79c4e805d00bff53a4e0c096d92"
+  },
+  "prediction_files": {
+    "66": {
+      "path": "artifacts/official_tests/early_exit_p4_cifar100_20260903/cifar100_test_logits_and_routes_seed66.npz",
+      "size_bytes": 14621255,
+      "sha256": "87afb436995612a9c6c8bdab1463f36e5df95647e3ae16ead0525aeda3b7c1a1"
+    },
+    "67": {
+      "path": "artifacts/official_tests/early_exit_p4_cifar100_20260903/cifar100_test_logits_and_routes_seed67.npz",
+      "size_bytes": 14621589,
+      "sha256": "762c13fdc09cdf2788490ed5784f5dfb42099f44a74981b864bff8001dcc9cb5"
+    },
+    "68": {
+      "path": "artifacts/official_tests/early_exit_p4_cifar100_20260903/cifar100_test_logits_and_routes_seed68.npz",
+      "size_bytes": 14621252,
+      "sha256": "574a2a9d5295ab91f48c99a7b2067c5a390b8ce9577ad56717d7e614f388dc04"
+    }
+  },
+  "access_started": {
+    "path": "artifacts/official_test_access_registry/early_exit_p4_cifar100_20f885a53f86e1be.started.json",
+    "sha256": "90fe74ca1c689bf56ca73757d1a80524cee69a2dc9f5a1c2ad8c7440d43a7a92"
+  }
+}
