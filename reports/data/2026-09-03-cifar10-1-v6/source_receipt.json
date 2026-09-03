@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "dataset": "cifar10.1_v6",
+  "official_repository": "https://github.com/modestyachts/CIFAR-10.1",
+  "repository_commit": "d9982abb0bfc4846b8d13a11e66b887d946205d0",
+  "files": {
+    "cifar10.1_v6_data.npy": {
+      "source_url": "https://raw.githubusercontent.com/modestyachts/CIFAR-10.1/d9982abb0bfc4846b8d13a11e66b887d946205d0/datasets/cifar10.1_v6_data.npy",
+      "size_bytes": 6144128,
+      "sha256": "2997188e5816f5bd545dc77771b6227828c28146049fcecf3fa10775474cacc6"
+    },
+    "cifar10.1_v6_labels.npy": {
+      "source_url": "https://raw.githubusercontent.com/modestyachts/CIFAR-10.1/d9982abb0bfc4846b8d13a11e66b887d946205d0/datasets/cifar10.1_v6_labels.npy",
+      "size_bytes": 8128,
+      "sha256": "ae40beda001693674edc94d925ee8268cfe68905f8f9aff800c8dcdfcd6c9448"
+    }
+  },
+  "validated_schema": {
+    "images_shape": [2000, 32, 32, 3],
+    "images_dtype": "uint8",
+    "image_value_range": [0, 255],
+    "labels_shape": [2000],
+    "labels_dtype": "int32",
+    "class_counts": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200]
+  },
+  "preflight_scope": "File hashes, array schema and label counts only; no model inference or policy selection was performed.",
+  "server_public_dataset_check": "/root/autodl-pub was empty, so the hash-pinned official files were used."
+}

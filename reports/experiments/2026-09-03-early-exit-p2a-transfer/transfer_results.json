@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "status": "ready_for_external_shift_test",
+  "scope": "P2 cross-model transfer evaluation on unseen training seeds using the P1b-frozen threshold; no threshold selection and no official CIFAR-10 test iteration",
+  "manifest": "/root/autodl-tmp/image-classification/artifacts/sweeps/cifar10_early_exit_p2_transfer_serial_p2a_20260902_182501/manifest.json",
+  "manifest_sha256": "c262be6b7ab6c2d84e0a14247504323833b966a0d314fe8bc0876267dbd50531",
+  "audit": "/root/autodl-tmp/image-classification/reports/audits/2026-09-03-early-exit-p2a/audit_results.json",
+  "audit_sha256": "376d08415ff892bd041efa1c3e12e6e7678ef2208f33045ea2bdf1bcfd7e8bab",
+  "runtime_commit": "4063e9f4f411e1def4b7238ed332dfebeb3af329",
+  "device": "cuda",
+  "source_policy": {
+    "selection": "reports/experiments/2026-09-02-early-exit-p1b/locked_selection.json",
+    "selection_sha256": "8dce5d938e06ae9d7432bd6baafd0c0ed9f978678fb53767ab02eeafecc723ab",
+    "source_training_seeds": [
+      54,
+      55,
+      56
+    ],
+    "target_training_seeds": [
+      57,
+      58,
+      59
+    ],
+    "exit_position": 8,
+    "confidence": "maximum softmax probability",
+    "confidence_threshold": 0.984,
+    "protected_predicted_classes": [],
+    "fallback": "final head",
+    "threshold_candidates_considered_on_p2": 0,
+    "per_target_model_recalibration": false
+  },
+  "data_protocol": {
+    "train_samples": 40000,
+    "model_selection_validation_samples": 5000,
+    "cross_model_transfer_samples": 5000,
+    "split_seed": 20260902,
+    "split_fingerprint": "99d6dcdd68388b2fb3b3bff7ff97065c4931b32756af103234cc833fd9610b80",
+    "caveat": "The transfer images are the same P1b calibration indices. They test unseen model versions, not an independent data distribution; external evidence remains required."
+  },
+  "cost_profile": {
+    "method": "conv_linear_macs_per_sample_v1",
+    "exit_positions": [
+      8,
+      16
+    ],
+    "path_macs": [
+      2676864,
+      5234688,
+      6124928
+    ],
+    "path_cost_fractions": [
+      0.4370441579068358,
+      0.854652985308562,
+      1.0
+    ],
+    "ignored_operations": [
+      "batch_norm",
+      "activations",
+      "pooling",
+      "memory_traffic"
+    ],
+    "paper_evidence": false
+  },
+  "best_checkpoint_sha256": {
+    "early_exit_p2_baseline_p2a_seed57_mobilenetv2_cifar10": "09645dce5b20d1f99317af0d292de62e1813e031947710334d9932bfdfe46a4c",
+    "early_exit_p2_multi_p2a_seed57_multi_exit_pos8-16_cifar10": "fc9b8251196dd2673c8ff1d93601177a119ee3f9c82fcf8c0fb514ed90f97535",
+    "early_exit_p2_baseline_p2a_seed58_mobilenetv2_cifar10": "3ed855020c0c9fbea316da07b0014db6862e78403c65abdf0af1325b9b03699f",
+    "early_exit_p2_multi_p2a_seed58_multi_exit_pos8-16_cifar10": "5efae7f43e7c7404f1a9f8bff502ece6a8b44443878058b9f8f483123c215c4f",
+    "early_exit_p2_baseline_p2a_seed59_mobilenetv2_cifar10": "7e54390346c22140c0af1cff7fd362a5316461a9e1fb9b5e47857cafdfc699c6",
+    "early_exit_p2_multi_p2a_seed59_multi_exit_pos8-16_cifar10": "2f28777373e34c634827934e97b372e76fe742c68d6c7111e460bb7110db9d5f"
+  },
+  "seed_results": [
+    {
+      "seed": 57,
+      "baseline_experiment_id": "early_exit_p2_baseline_p2a_seed57_mobilenetv2_cifar10",
+      "multi_exit_experiment_id": "early_exit_p2_multi_p2a_seed57_multi_exit_pos8-16_cifar10",
+      "baseline_validation_accuracy": 0.8742,
+      "multi_exit_final_validation_accuracy": 0.8782,
+      "paired_final_validation_gain": 0.0040000000000000036,
+      "exit8_validation_accuracy": 0.8764,
+      "exit16_validation_accuracy": 0.8758,
+      "frozen_policy_transfer_metrics": {
+        "accuracy": 0.87,
+        "reference_accuracy": 0.87,
+        "accuracy_drop": 0.0,
+        "balanced_accuracy": 0.8700000000000001,
+        "reference_balanced_accuracy": 0.8700000000000001,
+        "balanced_accuracy_drop": 0.0,
+        "worst_class_accuracy_drop": 0.0,
+        "route_fractions": [
+          0.6622,
+          0.3378
+        ],
+        "expected_cost_fraction": 0.6272106413659068,
+        "cost_saving_fraction": 0.37278935863409324,
+        "decision_changes_vs_final": 0,
+        "harmed_vs_final": 0,
+        "rescued_vs_final": 0
+      }
+    },
+    {
+      "seed": 58,
+      "baseline_experiment_id": "early_exit_p2_baseline_p2a_seed58_mobilenetv2_cifar10",
+      "multi_exit_experiment_id": "early_exit_p2_multi_p2a_seed58_multi_exit_pos8-16_cifar10",
+      "baseline_validation_accuracy": 0.875,
+      "multi_exit_final_validation_accuracy": 0.877,
+      "paired_final_validation_gain": 0.0020000000000000018,
+      "exit8_validation_accuracy": 0.8764,
+      "exit16_validation_accuracy": 0.8726,
+      "frozen_policy_transfer_metrics": {
+        "accuracy": 0.87,
+        "reference_accuracy": 0.87,
+        "accuracy_drop": 0.0,
+        "balanced_accuracy": 0.8700000000000001,
+        "reference_balanced_accuracy": 0.8700000000000001,
+        "balanced_accuracy_drop": 0.0,
+        "worst_class_accuracy_drop": 0.0,
+        "route_fractions": [
+          0.6606,
+          0.3394
+        ],
+        "expected_cost_fraction": 0.6281113707132557,
+        "cost_saving_fraction": 0.37188862928674427,
+        "decision_changes_vs_final": 0,
+        "harmed_vs_final": 0,
+        "rescued_vs_final": 0
+      }
+    },
+    {
+      "seed": 59,
+      "baseline_experiment_id": "early_exit_p2_baseline_p2a_seed59_mobilenetv2_cifar10",
+      "multi_exit_experiment_id": "early_exit_p2_multi_p2a_seed59_multi_exit_pos8-16_cifar10",
+      "baseline_validation_accuracy": 0.8746,
+      "multi_exit_final_validation_accuracy": 0.8752,
+      "paired_final_validation_gain": 0.0005999999999999339,
+      "exit8_validation_accuracy": 0.8784,
+      "exit16_validation_accuracy": 0.8724,
+      "frozen_policy_transfer_metrics": {
+        "accuracy": 0.8706,
+        "reference_accuracy": 0.8706,
+        "accuracy_drop": 0.0,
+        "balanced_accuracy": 0.8705999999999999,
+        "reference_balanced_accuracy": 0.8705999999999999,
+        "balanced_accuracy_drop": 0.0,
+        "worst_class_accuracy_drop": 0.0,
+        "route_fractions": [
+          0.6184,
+          0.3816
+        ],
+        "expected_cost_fraction": 0.6518681072495874,
+        "cost_saving_fraction": 0.34813189275041256,
+        "decision_changes_vs_final": 0,
+        "harmed_vs_final": 0,
+        "rescued_vs_final": 0
+      }
+    }
+  ],
+  "aggregate": {
+    "paired_final_validation_gain_mean": 0.0021999999999999797,
+    "paired_final_validation_gain_sample_std": 0.001708800749063539,
+    "transfer_early_fraction_mean": 0.6470666666666666,
+    "transfer_early_fraction_sample_std": 0.024838947911160297,
+    "transfer_mac_saving_mean": 0.36426996022375,
+    "transfer_mac_saving_sample_std": 0.013983230838035546,
+    "transfer_accuracy_drop_max": 0.0,
+    "transfer_balanced_drop_max": 0.0,
+    "transfer_worst_class_drop_max": 0.0
+  },
+  "gates": {
+    "mean_final_validation_gain_at_least_minus_0_003": true,
+    "each_final_validation_gain_at_least_minus_0_0075": true,
+    "each_transfer_accuracy_drop_at_most_0": true,
+    "each_transfer_balanced_drop_at_most_0": true,
+    "each_transfer_worst_class_drop_at_most_0": true,
+    "each_transfer_route_is_dynamic": true,
+    "each_transfer_mac_saving_at_least_0_15": true
+  },
+  "recommended_next_step": "Freeze and hash this transfer result, then build a one-shot CIFAR-10.1 v6 distribution-shift evaluation. Never reopen the original CIFAR-10 test."
+}

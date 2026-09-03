@@ -2,20 +2,20 @@
 
 本文用于让新的对话接续当前代码、GPU服务器实验和论文计划。**先读本文件，再检查实时状态；不要把历史建议、短测或旧清单的残留字段当成当前正式结果。**
 
-最新状态见第24节；第7、9、15、16、18–23节保留此前阶段的历史计划，若冲突，以第24节为准。当前没有正式训练进程。
+最新状态见第25节；第7、9、15、16、18–24节保留此前阶段的历史计划，若冲突，以第25节为准。当前没有正式训练进程。
 
-> **2026-09-02当前状态：** P1b 六组已完成并通过零问题文件级审计。共享 exit8 阈值 `0.984` 在三个独立 calibration 集均满足总体、balanced、最差类别经验下降≤0，约64.4%–65.3%早退。随后已按一次性锁执行官方 CIFAR-10 test：锁定策略准确率 `87.04±0.18%`，相对各自最终头没有任何类别下降，早退 `64.85±0.30%`，MAC代理节省 `36.51±0.17%`。真实分阶段续算在空闲RTX4090D、batch1的期望时延由4.3545ms降至3.3073ms，节省24.91%、加速1.334×。官方test不得重跑或用于调参。精确查新表明普通风险控制/蒸馏/逐类校准已有更强先例，当前证据尚不足以单独投稿；主张已收窄为“策略跨模型重训版本直接迁移、无需逐版本重校准”。P2最小未见seed确认协议、启动器、审计与冻结分析均已准备，下一步只需用户启动六组串行训练。
+> **2026-09-03当前状态：** P2a 六组已完成并通过零问题文件级审计。P1b 冻结阈值 `0.984` 原样应用到未参与选择的重训 seeds57/58/59，三个模型均没有改变任何 transfer 样本的最终头决策，早退 `64.71±2.48%`、MAC代理节省 `36.43±1.40%`，全部冻结gate通过。外部分布验证已固定为官方 CIFAR-10.1 v6；文件提交、SHA-256、2,000张/每类200张均已核验，仅做过元数据预检、尚未运行模型。一次性评估器和access marker规则已冻结，下一步是在干净提交上执行source/target共六个模型版本的唯一外部推理。原始CIFAR-10 test永久禁止重跑。
 
 ## 1. 一分钟了解当前进度
 
 - CSGHA v3–v6 和预算阶段静态注意力均已作为负结果归档，不再扩展或改名包装。
 - 当前方向：最差类别风险约束、跨模型重训版本可迁移的阶段早退。
 - P0 是探索/失败定位；P1b 是首个严格独立 calibration + 锁定 test 正结果，完整证据见第23节。
-- P1b test 的策略相对最终头平均 `+0.01±0.01 pp`，约65%样本在exit8退出，MAC代理节省约36.5%；但MAC不是延迟。
+- P1b test 的策略相对最终头平均 `+0.01±0.01 pp`，约65%样本在exit8退出，MAC代理节省约36.5%；P2a又在三个未见重训模型上无重校准复现该路由行为。
 - 代码已具有真正的分阶段续算路径：exit8只计算一次，fallback从缓存特征继续，未使用的exit16不执行。
-- 当前无训练进程；不要重跑官方test，不要根据test更改阈值0.984。
+- 当前无训练进程；不要重跑原始CIFAR-10 test，不要根据任何后续结果更改阈值0.984。
 - 精确查新后的候选创新不是“早退+KD+阈值”，而是**冻结策略对未参与校准的新训练seed/模型版本的无重校准迁移**，辅以最差类别风险和真实部署测量。
-- RTX4090D配对时延剖析已完成；P2最小未见seed确认批次已冻结，下一步由用户启动。
+- RTX4090D配对时延剖析与P2a迁移确认均已完成；当前先执行一次性CIFAR-10.1 v6外部验证。
 
 用户此前的固定偏好：需要新实验时，准备可运行的后台Python脚本，给出**一行启动命令**，由用户启动；不要在读完交接后自行启动长训练。用户如果明确授权启动，再执行。
 
@@ -36,7 +36,7 @@
 本机已配置并验证SSH公钥登录。当前实例连接为：
 
 ```bash
-ssh -p 19478 root@connect.westb.seetacloud.com
+ssh -p 52148 root@connect.westb.seetacloud.com
 ```
 
 实例迁移后端口可能再次变化，若连接失败以用户最新提供的端口为准。文档和Git中不要保存密码、私钥内容或令牌。VSCode终端已经位于服务器项目目录时，不需要再SSH一次。
@@ -864,3 +864,57 @@ cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/
 
 启动器自身后台化并返回PID、log和监控命令，不要另加`nohup`，不要并发第二批；运行期间不要修改
 `src/`、`scripts/`或`configs/`。
+
+## 25. 2026-09-03 P2a完成与CIFAR-10.1一次性入口
+
+### 25.1 P2a正式审计
+
+唯一completed manifest为
+`artifacts/sweeps/cifar10_early_exit_p2_transfer_serial_p2a_20260902_182501/manifest.json`，
+SHA-256 `c262be6b7ab6c2d84e0a14247504323833b966a0d314fe8bc0876267dbd50531`；launcher log
+SHA-256为`0bc206bd481011f5f76080466c9eae4b4fa921db22ed66c9852c49eed40b7658`。
+六组均completed/return0、严格串行、连续200 epochs，无termination signal、无test评估或预测文件。
+
+不可变snapshot为`artifacts/audits/2026-09-03-early-exit-p2a/snapshot.json`，SHA-256
+`7c70e66a4aab3a7fe96b3c48d694ec44cbfddd1033c59eab0b24b537857246ac`。版本化审计位于
+`reports/audits/2026-09-03-early-exit-p2a/`；`audit_results.json` SHA-256
+`376d08415ff892bd041efa1c3e12e6e7678ef2208f33045ea2bdf1bcfd7e8bab`，issues为空。审计核对
+manifest/config/summary、200轮有限指标与首次best、best/latest/final、20个周期checkpoint、固定
+40k/5k/5k互斥划分、source snapshot/provenance、串行时间线及test边界。
+
+审计summary中的最终头配对增益为`+0.42/+0.20/+0.02 pp`，平均`+0.213±0.200 pp`，3/3胜出。
+重新加载best checkpoint评估得到`+0.40/+0.20/+0.06 pp`，与训练期summary相差不超过0.04pp且不
+改变任何gate；最终论文表必须选定一套一致口径并披露这一复算差异，不能混写两组数值。
+
+### 25.2 冻结阈值跨重训版本迁移
+
+结果位于`reports/experiments/2026-09-03-early-exit-p2a-transfer/`；`transfer_results.json`
+SHA-256为`ef86f749fba03255b5d31e9ae8ff7d7e4e1b78d3fc12bdf6ea1bec7a5eb79706`，状态
+`ready_for_external_shift_test`。分析器只应用P1b锁定的exit8最大softmax阈值`0.984`，target候选
+阈值数为0、没有逐模型重校准，也没有迭代原始CIFAR-10 test。
+
+seeds57/58/59早退率为66.22%/66.06%/61.84%，MAC代理节省37.28%/37.19%/34.81%；相对各自
+最终头的总体、balanced和worst-class下降均为0。更强的是三个seed上早退预测与最终头预测完全
+一致，decision changed/harmed/rescued均为0。全部七个P2 gate通过。这支持“策略跨未见重训版本
+无需校准迁移”，但5k transfer图像与P1 calibration索引相同，不能充当独立数据分布证据。
+
+### 25.3 外部数据与唯一评估器
+
+公共挂载`/root/autodl-pub`为空，因此使用官方CIFAR-10.1仓库commit
+`d9982abb0bfc4846b8d13a11e66b887d946205d0`的v6文件。data/labels SHA-256分别为
+`2997188e5816f5bd545dc77771b6227828c28146049fcecf3fa10775474cacc6`和
+`ae40beda001693674edc94d925ee8268cfe68905f8f9aff800c8dcdfcd6c9448`；形状为
+`(2000,32,32,3)`/`(2000,)`，10类各200张。元数据预检没有运行模型或选择策略，来源回执见
+`reports/data/2026-09-03-cifar10-1-v6/source_receipt.json`。
+
+完整冻结协议见`docs/early_exit_cifar10_1_v6_plan.md`。评估器
+`scripts/analysis/evaluate_early_exit_cifar10_1_v6.py`先校验selection、P1/P2 manifest、P2 audit、
+transfer result、12个best checkpoint及数据哈希；然后在任何推理前创建永久started marker。它一次
+评估source seeds54/55/56和target seeds57/58/59六对baseline/multi-exit，只应用阈值0.984，保存
+所有logits/routes。六个模型都必须满足总体/balanced/worst-class下降≤0、早退15%–95%、MAC节省
+≥15%；任一失败即归档停止。
+
+新增代码已通过18个定向测试；完整回归188 passed + 3 subtests，只有已知CUDA Graph首次cuBLAS
+context warning；13种模型前向、CIFAR-10/100边界、Ruff、compileall和diff-check均通过。
+`--verify-only`已验证所有输入且明确`model_inference_performed=false`。必须先提交并确保服务器工作区
+干净，才能执行唯一外部评估；该评估是短推理，不需要用户启动长实验。

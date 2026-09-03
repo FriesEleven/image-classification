@@ -1,0 +1,56 @@
+{
+  "snapshot_sha256": "7c70e66a4aab3a7fe96b3c48d694ec44cbfddd1033c59eab0b24b537857246ac",
+  "manifest": {
+    "path": "artifacts/sweeps/cifar10_early_exit_p2_transfer_serial_p2a_20260902_182501/manifest.json",
+    "sha256": "c262be6b7ab6c2d84e0a14247504323833b966a0d314fe8bc0876267dbd50531",
+    "size_bytes": 32111
+  },
+  "launcher_log": {
+    "path": "artifacts/launcher_logs/early_exit_p2_serial_p2a_20260902_182456_716827.log",
+    "size_bytes": 94378,
+    "sha256": "0bc206bd481011f5f76080466c9eae4b4fa921db22ed66c9852c49eed40b7658"
+  },
+  "checkpoint_hashes": {
+    "early_exit_p2_baseline_p2a_seed57_mobilenetv2_cifar10": {
+      "best": "09645dce5b20d1f99317af0d292de62e1813e031947710334d9932bfdfe46a4c",
+      "latest": "1d21460cfcd30016b6855f5bd0d3719bc8f2bbec1d57cccc7fbbb8a60f2b4738",
+      "final": "8c04b2f8c90ae7ea189af0f9c56354e9fd1f8280890603e03183ca11f814afff"
+    },
+    "early_exit_p2_baseline_p2a_seed58_mobilenetv2_cifar10": {
+      "best": "3ed855020c0c9fbea316da07b0014db6862e78403c65abdf0af1325b9b03699f",
+      "latest": "5003f0549dd12128de34d319c634de3c8df4e6caceaf6f219e41b454006fda05",
+      "final": "59860f4d13719c52fc64f2b084c8d7bea27a513d319888c8149f791249db93ee"
+    },
+    "early_exit_p2_baseline_p2a_seed59_mobilenetv2_cifar10": {
+      "best": "7e54390346c22140c0af1cff7fd362a5316461a9e1fb9b5e47857cafdfc699c6",
+      "latest": "1ef760f2be93a01fa1516f0f17e0373132d84fae3d901d6ff48cced19bbd0d1a",
+      "final": "79a33f646938aa754c5a183f821236cb857a9e6c53fbabc699ebf2ad383efbdc"
+    },
+    "early_exit_p2_multi_p2a_seed57_multi_exit_pos8-16_cifar10": {
+      "best": "fc9b8251196dd2673c8ff1d93601177a119ee3f9c82fcf8c0fb514ed90f97535",
+      "latest": "bc39708ae36a19d070e1508e52a1e4ecd4cee0047c3a8d7a7bd4510f2fe7f64a",
+      "final": "a972538d4d67a62bb861f11bc81880e141be3f4cd59c1d5dbb846b3621c0b3df"
+    },
+    "early_exit_p2_multi_p2a_seed58_multi_exit_pos8-16_cifar10": {
+      "best": "5efae7f43e7c7404f1a9f8bff502ece6a8b44443878058b9f8f483123c215c4f",
+      "latest": "53010ac5ebb55a9153b6161e5b6aaf27b5050fef2d8f8b56fc0e5b4b89d11d99",
+      "final": "a30988c3a8d5f77e419f5d7e4281ae610fd8c9f1cc2293e9da3a7cf29b2cd004"
+    },
+    "early_exit_p2_multi_p2a_seed59_multi_exit_pos8-16_cifar10": {
+      "best": "2f28777373e34c634827934e97b372e76fe742c68d6c7111e460bb7110db9d5f",
+      "latest": "053a0f94628267fec42c5a8900e366929819a2286ab921705bc8eb6d59c8cd82",
+      "final": "cfaebbd5d862e01ab79d1f75c5bb3f70b78fa0662f20db373582c997a73c4364"
+    }
+  },
+  "split_hashes": {
+    "early_exit_p2_baseline_p2a_seed57_mobilenetv2_cifar10": "6c52d151bf4a20ac7c416be929f27688d92685e812d704ccc499c8de6c59c757",
+    "early_exit_p2_baseline_p2a_seed58_mobilenetv2_cifar10": "fd4b4b5964543bfad9fc51d27be838331689c3d4c3dcd292b6b64918d771d9d7",
+    "early_exit_p2_baseline_p2a_seed59_mobilenetv2_cifar10": "ac4574bc345af8edc2b9311f042b3bf7218eee424b6e282d8368cee405dce7a0",
+    "early_exit_p2_multi_p2a_seed57_multi_exit_pos8-16_cifar10": "6c52d151bf4a20ac7c416be929f27688d92685e812d704ccc499c8de6c59c757",
+    "early_exit_p2_multi_p2a_seed58_multi_exit_pos8-16_cifar10": "fd4b4b5964543bfad9fc51d27be838331689c3d4c3dcd292b6b64918d771d9d7",
+    "early_exit_p2_multi_p2a_seed59_multi_exit_pos8-16_cifar10": "ac4574bc345af8edc2b9311f042b3bf7218eee424b6e282d8368cee405dce7a0"
+  },
+  "canonical_split_sha256": "99d6dcdd68388b2fb3b3bff7ff97065c4931b32756af103234cc833fd9610b80",
+  "runtime_commit": "4063e9f4f411e1def4b7238ed332dfebeb3af329",
+  "scope": "Exact completed P2a manifest only; unseen training seeds 57/58/59; validation/transfer subsets only; no official-test evaluation."
+}
