@@ -32,3 +32,7 @@ artifacts/
 build/
 dist/
 *.egg-info/
+
+# Local paper evidence bundles
+/image-classification-paper-evidence-*.tar.gz
+/image-classification-paper-evidence-*.tar.gz.sha256
