@@ -1,21 +1,21 @@
-# 实验项目交接：CSGHA负结果归档 / 稳健早退（更新至2026-09-02）
+# 实验项目交接：CSGHA负结果归档 / 稳健早退（更新至2026-09-03）
 
 本文用于让新的对话接续当前代码、GPU服务器实验和论文计划。**先读本文件，再检查实时状态；不要把历史建议、短测或旧清单的残留字段当成当前正式结果。**
 
-最新状态见第25节；第7、9、15、16、18–24节保留此前阶段的历史计划，若冲突，以第25节为准。当前没有正式训练进程。
+最新状态见第26节；第7、9、15、16、18–25节保留此前阶段的历史计划，若冲突，以第26节为准。当前没有正式训练进程。
 
-> **2026-09-03当前状态：** P2a 六组已完成并通过零问题文件级审计。P1b 冻结阈值 `0.984` 原样应用到未参与选择的重训 seeds57/58/59，三个模型均没有改变任何 transfer 样本的最终头决策，早退 `64.71±2.48%`、MAC代理节省 `36.43±1.40%`，全部冻结gate通过。外部分布验证已固定为官方 CIFAR-10.1 v6；文件提交、SHA-256、2,000张/每类200张均已核验，仅做过元数据预检、尚未运行模型。一次性评估器和access marker规则已冻结，下一步是在干净提交上执行source/target共六个模型版本的唯一外部推理。原始CIFAR-10 test永久禁止重跑。
+> **2026-09-03当前状态：** P2a审计和冻结阈值跨重训迁移均已通过。唯一一次CIFAR-10.1 v6外部分布评测也已完成，source/target共六个模型版本全部通过：平均早退`49.01±1.93%`、MAC代理节省`27.59±1.09%`，相对最终头平均`+0.008±0.020 pp`，总体/balanced/worst-class没有任何模型退化。一次性access marker和六份logits/routes均已保留，禁止重跑。当前已准备CIFAR-100 P3最终复现批次：baseline/multi-exit × seeds60–65共12组串行训练，source60–62选择共享阈值，target63–65只做零重校准迁移。下一步只需用户启动P3；原始CIFAR-10 test永久禁止重跑。
 
 ## 1. 一分钟了解当前进度
 
 - CSGHA v3–v6 和预算阶段静态注意力均已作为负结果归档，不再扩展或改名包装。
 - 当前方向：最差类别风险约束、跨模型重训版本可迁移的阶段早退。
 - P0 是探索/失败定位；P1b 是首个严格独立 calibration + 锁定 test 正结果，完整证据见第23节。
-- P1b test 的策略相对最终头平均 `+0.01±0.01 pp`，约65%样本在exit8退出，MAC代理节省约36.5%；P2a又在三个未见重训模型上无重校准复现该路由行为。
+- P1b test 的策略相对最终头平均 `+0.01±0.01 pp`，约65%样本在exit8退出，MAC代理节省约36.5%；P2a在三个未见重训模型上复现，CIFAR-10.1 v6又验证自然分布迁移。
 - 代码已具有真正的分阶段续算路径：exit8只计算一次，fallback从缓存特征继续，未使用的exit16不执行。
-- 当前无训练进程；不要重跑原始CIFAR-10 test，不要根据任何后续结果更改阈值0.984。
+- 当前无训练进程；不要重跑原始CIFAR-10 test或CIFAR-10.1评测，不要根据后续结果更改CIFAR-10阈值0.984。
 - 精确查新后的候选创新不是“早退+KD+阈值”，而是**冻结策略对未参与校准的新训练seed/模型版本的无重校准迁移**，辅以最差类别风险和真实部署测量。
-- RTX4090D配对时延剖析与P2a迁移确认均已完成；当前先执行一次性CIFAR-10.1 v6外部验证。
+- RTX4090D配对时延剖析、P2a迁移和CIFAR-10.1外部验证均已完成；当前只缺P3 CIFAR-100最终复现。
 
 用户此前的固定偏好：需要新实验时，准备可运行的后台Python脚本，给出**一行启动命令**，由用户启动；不要在读完交接后自行启动长训练。用户如果明确授权启动，再执行。
 
@@ -41,7 +41,7 @@ ssh -p 52148 root@connect.westb.seetacloud.com
 
 实例迁移后端口可能再次变化，若连接失败以用户最新提供的端口为准。文档和Git中不要保存密码、私钥内容或令牌。VSCode终端已经位于服务器项目目录时，不需要再SSH一次。
 
-当前已验证环境：Python3.12.3，Torch2.8.0+cu128，RTX4090D 24GB，容器CPU配额16核。实例曾更换，历史章节中的RTX3080Ti/12核只描述当时运行环境。`nvidia-smi`显示的CUDA驱动支持上限可能高于当前PyTorch运行时；`torch.version.cuda`为12.8，不要因为这个显示差异重装环境。
+当前已验证环境：Python3.12.3，Torch2.8.0+cu128，RTX3080 Ti，`nproc=48`、Torch默认24线程。实例曾多次更换，历史章节中的RTX4090D/16核和旧RTX3080Ti档案只描述当时运行环境；论文真实续算延迟仍引用已固化的RTX4090D配对剖析。`nvidia-smi`显示的CUDA驱动支持上限可能高于当前PyTorch运行时；`torch.version.cuda`为12.8，不要因为这个显示差异重装环境。
 
 ```bash
 cd /root/autodl-tmp/image-classification
@@ -918,3 +918,75 @@ transfer result、12个best checkpoint及数据哈希；然后在任何推理前
 context warning；13种模型前向、CIFAR-10/100边界、Ruff、compileall和diff-check均通过。
 `--verify-only`已验证所有输入且明确`model_inference_performed=false`。必须先提交并确保服务器工作区
 干净，才能执行唯一外部评估；该评估是短推理，不需要用户启动长实验。
+
+## 26. 2026-09-03 外部分布确认与CIFAR-100 P3入口
+
+### 26.1 唯一CIFAR-10.1 v6结果
+
+评测在干净提交`e6460b137a0a4ba62dd75db1c87e380ad4a88a80`上执行，started/completed marker分别为
+`artifacts/external_test_access_registry/early_exit_p2_cifar10_1_v6_ef86f749fba03255.{started,completed}.json`，
+SHA-256为`c1c6dd6ea7e82d34282679b0891ca04a2339c8c4c86d2d44eadb97ac4387d983`和
+`66068601c13e30d347a1ac962bad05536f1868c01dbbae1e6a388dee2773612e`。两者及版本化/ignored输出任一
+存在都禁止再次执行。
+
+版本化结果位于`reports/experiments/2026-09-03-early-exit-p2-cifar10-1-v6/`；
+`external_results.json` SHA-256为`2592a5642f85e53a7b7f6aa6ed1cbf3a5dd7e7b893e6027cf7bfd5fd6c49f182`，
+状态`external_shift_confirmed`。source seeds54/55/56的早退率49.30/49.65/49.20%，target
+seeds57/58/59为50.20/50.50/45.20%；六seed平均`49.01±1.93%`。MAC代理节省分别为
+27.75/27.95/27.70/28.26/28.43/25.45%，平均`27.59±1.09%`。六个模型总体、balanced和
+worst-class下降均≤0；五个模型与最终头决策完全相同，seed58改变1个并救回1个错误，故策略相对
+最终头平均`+0.008±0.020 pp`。所有五个外部gate通过。
+
+六份原始NPZ共保存labels、baseline/final/exit8/exit16 logits、冻结预测和route，单文件约297KB，
+其哈希已写入`source_index.json`。CIFAR-10.1每类只有200张，因此零下降是经验事实而非形式保证。
+不得根据这个结果修改阈值0.984，也不得换名或换output目录重跑。
+
+### 26.2 P2安全清理
+
+上述外部证据和P2审计都固化后，只删除六个P2a run的120个`epoch_*.pth`周期优化器快照，共
+3,268,915,068 bytes。18个best/latest/final、训练日志、配置、split、manifest/source snapshot、
+审计、transfer、外部logits/routes与access marker全部保留。清理后六个run共265MB，周期快照为0，
+`/root/autodl-tmp`可用约44GB；回执为
+`reports/audits/2026-09-03-early-exit-p2a/cleanup_receipt.json`，SHA-256为
+`192d7c9c9be42185cff1869e92d3609ac9d132534ffb34ac1c6d17288271cf4c`。删除的周期快照在服务器
+不可恢复，但不影响论文复算、绘图或诊断。
+
+### 26.3 P3为何是最后一批
+
+当前正证据已经覆盖严格独立calibration、官方CIFAR-10锁定test、未见重训版本迁移、CIFAR-10.1
+自然分布转移和真实分阶段续算延迟。对CCF-C目标，继续添加CIFAR-10 seed或扫描阈值收益很低；最小
+缺口是第二训练数据集。第二backbone无法再使用已锁死的CIFAR-10/CIFAR-10.1评测边界，且会引入新
+架构和出口位置混杂，因此选择现有代码完整支持的CIFAR-100机制复现。
+
+完整冻结协议见`docs/early_exit_p3_plan.md`。P3用固定`split_seed=20260903`，source seeds60/61/62和
+target seeds63/64/65，各训练matched baseline与multi-exit，共12组200 epochs、`jobs=1`串行、
+40k/5k/5k、`evaluate_test=false`。模型、出口、蒸馏、优化器、batch、AMP、CUDA Graph、workers和
+prefetch均不变。source只允许在固定0.001网格选一个共享exit8阈值；target候选数为0。全部风险、
+动态路由、≥15% MAC节省及最终头gate通过后，才生成方法锁并执行一次CIFAR-100 test。
+
+旧seeds42/43/44 baseline历史上保存过CIFAR-100 test结果，因此后续只能称“P3模型/策略锁定后的
+首次评估”，不能称全项目盲测。旧运行不进入P3训练、选择或配对统计。test确认边界已预注册为每seed
+总体/balanced下降≤0.50pp、worst-class下降≤2.00pp、早退15%–95%、MAC节省≥15%，六seed平均
+总体下降≤0.20pp；结果无论正负均禁止重调后重跑。
+
+新增两个config、一个12-run sweep、后台启动器、文件级审计器、source→target冻结分析器、test lock
+生成器和永久access marker一次性评测器。最终完整回归为195 passed + 3 subtests，唯一warning仍是
+已知的首次cuBLAS context初始化提示；真实1-epoch CIFAR-100 multi-exit smoke在9.18秒训练完成，
+40k/5k/5k、100类输出、
+CUDA Graph正常，`test_evaluated=false`且无prediction文件；summary SHA-256为
+`cd4d03bb0b053825b5048eecb3deb96462c31a0c6bd7385f0cfd97a0a6be7e6a`，临时目录核验后已删除。
+正式dry-run精确打印12个全新`_p3a_seed{60..65}` ID且未启动训练。预计串行约4.5小时。
+
+### 26.4 用户下一步只需启动
+
+启动前服务器仓库、GitHub和本地必须对齐且工作区干净；12个目标目录不得存在。launcher自身后台化
+并返回PID、日志和监控命令，不要另加`nohup`，不要并发第二批；运行期间不要修改`src/`、`scripts/`
+或`configs/`。唯一一行命令：
+
+```bash
+cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/launch_early_exit_p3.py
+```
+
+完成后先审计唯一`cifar100_early_exit_p3_serial_p3a_<timestamp>/manifest.json`及对应launcher log，再
+运行预注册分析器。若`stop_without_test`，不打开P3 test；若通过，固化哈希后执行一次短test推理，
+随后停止新增训练并进入论文表格、图和写作。

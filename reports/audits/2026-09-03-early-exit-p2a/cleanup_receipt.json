@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-03T10:10:29+08:00",
+  "scope": "Post-audit and post-external-evaluation cleanup of the six completed early-exit P2a runs only.",
+  "deleted": {
+    "pattern": "artifacts/runs/early_exit_p2_*_p2a_*/checkpoints/epoch_*.pth",
+    "file_count": 120,
+    "size_bytes": 3268915068,
+    "recoverable_on_server": false,
+    "reason": "Periodic optimizer snapshots are not needed for paper analysis, plotting, frozen-policy evaluation or best-checkpoint diagnostics."
+  },
+  "preserved": {
+    "core_checkpoint_count": 18,
+    "core_checkpoint_names_per_run": [
+      "model_best.pth",
+      "model_latest.pth",
+      "final.pth"
+    ],
+    "evidence": [
+      "training CSV and TensorBoard logs",
+      "config, summary, metrics, benchmark and provenance",
+      "40k/5k/5k split indices",
+      "completed manifest, launcher log and source snapshot",
+      "immutable P2 audit snapshot and versioned audit reports",
+      "frozen P2 transfer analysis",
+      "CIFAR-10.1 v6 logits, routes, reports and one-shot access records"
+    ]
+  },
+  "verification": {
+    "periodic_checkpoints_remaining": 0,
+    "core_checkpoints_remaining": 18,
+    "six_p2a_run_directories_total_after_cleanup": "265M",
+    "filesystem_free_after_cleanup": "44G"
+  }
+}

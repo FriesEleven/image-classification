@@ -1,0 +1,102 @@
+{
+  "dataset": {
+    "dataset": "cifar10.1_v6",
+    "official_repository": "https://github.com/modestyachts/CIFAR-10.1",
+    "repository_commit": "d9982abb0bfc4846b8d13a11e66b887d946205d0",
+    "data_file": "cifar10.1_v6_data.npy",
+    "data_sha256": "2997188e5816f5bd545dc77771b6227828c28146049fcecf3fa10775474cacc6",
+    "labels_file": "cifar10.1_v6_labels.npy",
+    "labels_sha256": "ae40beda001693674edc94d925ee8268cfe68905f8f9aff800c8dcdfcd6c9448",
+    "samples": 2000,
+    "image_shape": [
+      2000,
+      32,
+      32,
+      3
+    ],
+    "image_dtype": "uint8",
+    "label_shape": [
+      2000
+    ],
+    "label_dtype": "int32",
+    "class_counts": [
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200
+    ],
+    "labels_array_sha256": "14a91bcfec2a9cea56cb8019075f67c37341bf58a76cd7f1efa0c3fee931ebc0",
+    "labels_evaluation_order_sha256": "2ab51f431026a920b85a83eb1ebb0b44b16a4a0f7af0da78fe7754115ac514f3",
+    "metadata_integrity_checked_before_model_evaluation": true
+  },
+  "source_selection": {
+    "path": "reports/experiments/2026-09-02-early-exit-p1b/locked_selection.json",
+    "sha256": "8dce5d938e06ae9d7432bd6baafd0c0ed9f978678fb53767ab02eeafecc723ab"
+  },
+  "p1_manifest": {
+    "path": "artifacts/sweeps/cifar10_early_exit_p1_serial_p1b_20260902_144353/manifest.json",
+    "sha256": "1545e85651103400c425bf3eaae0e70e4d1a4d0e413203158d2f6b6ff16c8c88"
+  },
+  "p2_manifest": {
+    "path": "artifacts/sweeps/cifar10_early_exit_p2_transfer_serial_p2a_20260902_182501/manifest.json",
+    "sha256": "c262be6b7ab6c2d84e0a14247504323833b966a0d314fe8bc0876267dbd50531"
+  },
+  "p2_audit": {
+    "path": "reports/audits/2026-09-03-early-exit-p2a/audit_results.json",
+    "sha256": "376d08415ff892bd041efa1c3e12e6e7678ef2208f33045ea2bdf1bcfd7e8bab"
+  },
+  "p2_transfer": {
+    "path": "reports/experiments/2026-09-03-early-exit-p2a-transfer/transfer_results.json",
+    "sha256": "ef86f749fba03255b5d31e9ae8ff7d7e4e1b78d3fc12bdf6ea1bec7a5eb79706"
+  },
+  "evaluator": {
+    "path": "scripts/analysis/evaluate_early_exit_cifar10_1_v6.py",
+    "sha256": "cd3c053077b805c39e8ccd89b8eb8dc4ebd35aee3ab02b1d4dd5930bc52e9a9f"
+  },
+  "external_results": {
+    "path": "artifacts/external_tests/early_exit_p2_cifar10_1_v6_20260903/external_results.json",
+    "sha256": "2592a5642f85e53a7b7f6aa6ed1cbf3a5dd7e7b893e6027cf7bfd5fd6c49f182"
+  },
+  "prediction_files": {
+    "54": {
+      "path": "artifacts/external_tests/early_exit_p2_cifar10_1_v6_20260903/cifar10_1_v6_logits_and_routes_seed54.npz",
+      "size_bytes": 297314,
+      "sha256": "f95cb71f65bb36e1d4c2b62da8e4473a2e796dd21c266dfbec07e42389662e3c"
+    },
+    "55": {
+      "path": "artifacts/external_tests/early_exit_p2_cifar10_1_v6_20260903/cifar10_1_v6_logits_and_routes_seed55.npz",
+      "size_bytes": 297077,
+      "sha256": "f8e086252046de9dfb8b35fb763299d66f30b6549af2ac644081a774fa75a173"
+    },
+    "56": {
+      "path": "artifacts/external_tests/early_exit_p2_cifar10_1_v6_20260903/cifar10_1_v6_logits_and_routes_seed56.npz",
+      "size_bytes": 297289,
+      "sha256": "a72d90cdf2278e76256420363cbe1c9f5e52c00dfdf4fdba39d0e46bb7b269eb"
+    },
+    "57": {
+      "path": "artifacts/external_tests/early_exit_p2_cifar10_1_v6_20260903/cifar10_1_v6_logits_and_routes_seed57.npz",
+      "size_bytes": 297033,
+      "sha256": "a1d206d9579c4f94caa6a236f334862aba15259e939eb5229e2b331482cef74e"
+    },
+    "58": {
+      "path": "artifacts/external_tests/early_exit_p2_cifar10_1_v6_20260903/cifar10_1_v6_logits_and_routes_seed58.npz",
+      "size_bytes": 297240,
+      "sha256": "681a2e33fe2221bb3e84ed88be3272c0cf535b1dab0966aa6342dbcb2ef19900"
+    },
+    "59": {
+      "path": "artifacts/external_tests/early_exit_p2_cifar10_1_v6_20260903/cifar10_1_v6_logits_and_routes_seed59.npz",
+      "size_bytes": 297594,
+      "sha256": "10fcd305063e2bfae835c479088cd18b5326e911ca4fb97fbb8da0bd04781d63"
+    }
+  },
+  "access_started": {
+    "path": "artifacts/external_test_access_registry/early_exit_p2_cifar10_1_v6_ef86f749fba03255.started.json",
+    "sha256": "c1c6dd6ea7e82d34282679b0891ca04a2339c8c4c86d2d44eadb97ac4387d983"
+  }
+}

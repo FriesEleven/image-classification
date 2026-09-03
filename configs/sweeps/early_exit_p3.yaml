@@ -1,0 +1,13 @@
+name: cifar100_early_exit_p3_serial
+description: >-
+  Final second-dataset replication of the frozen early-exit mechanism. Train
+  matched MobileNetV2 and detached-final KD multi-exit models on source seeds
+  60/61/62 and target seeds 63/64/65. Every run shares split seed 20260903 and
+  disjoint 40k train, 5k checkpoint-selection validation and 5k policy
+  calibration subsets. Only source models may select one shared exit8
+  threshold; target models are a no-recalibration transfer cohort. Execute
+  serially and do not evaluate the official CIFAR-100 test during training.
+seeds: [60, 61, 62, 63, 64, 65]
+experiments:
+  - configs/experiments/early_exit_p3_baseline.yaml
+  - configs/experiments/early_exit_p3_multi.yaml

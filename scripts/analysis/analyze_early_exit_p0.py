@@ -146,9 +146,10 @@ def _path_macs(model, exit_position: int | None) -> int:
     return total
 
 
-def _cost_profile() -> dict:
+def _cost_profile(dataset: str = "cifar10") -> dict:
     config = ExperimentConfig(
         model_type="multi_exit",
+        dataset=dataset,
         exit_positions=(8, 16),
         exit_loss_weights=(0.2, 0.3),
     )
@@ -157,6 +158,8 @@ def _cost_profile() -> dict:
     final = macs[-1]
     return {
         "method": "conv_linear_macs_per_sample_v1",
+        "dataset": dataset,
+        "num_classes": config.num_classes,
         "exit_positions": list(config.exit_positions),
         "path_macs": macs,
         "path_cost_fractions": [value / final for value in macs],
