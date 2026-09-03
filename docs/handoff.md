@@ -1082,3 +1082,57 @@ cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/
 
 完成后先审计唯一`cifar100_early_exit_p4_confirmation_serial_p4a_<timestamp>/manifest.json`，再执行
 冻结确认分析。只有`ready_for_method_locked_cifar100_test`才准备并提交一次性test lock；否则停止。
+
+## 28. 2026-09-03 P4完成、独立确认通过与一次性test锁
+
+### 28.1 P4正式审计
+
+唯一completed manifest为
+`artifacts/sweeps/cifar100_early_exit_p4_confirmation_serial_p4a_20260903_150809/manifest.json`，
+SHA-256为`f122758c8a62c4bd40ea4451097a138616745f979d595628daa003eaa866d2b7`；launcher log
+SHA-256为`897e14d65c4eeb372b61176cce991b56d171abd469fb4811664edb709ae023d8`。六组均
+completed/return0、`concurrent_jobs=1`、连续200 epochs，无termination signal、无test评估或预测文件；
+总时长约1.57小时。
+
+初次审计把相邻进程间`15:55:24→15:55:25`的一秒正常创建间隙误判为时间线异常；manifest中没有
+运行重叠。审计器已改为只拒绝后一个run在前一个run结束前启动，并增加同秒衔接、正间隙和真实重叠
+三种回归断言。修正后正式审计issues为空。不可变snapshot位于
+`artifacts/audits/2026-09-03-early-exit-p4a/snapshot.json`，SHA-256为
+`30aefb45ee0451f9a0aa9356041638d8771e293ac4e77894a2026f65ce2ae1d8`；版本化审计位于
+`reports/audits/2026-09-03-early-exit-p4a/`，`audit_results.json` SHA-256为
+`d96cfea5aab71b90700fef3fecda99eff02e7de0570bdcdf55866489d44b1d2c`。
+
+checkpoint-selection validation上，baseline seeds66/67/68为56.16/55.54/55.48%，multi-exit最终头为
+56.24/57.34/57.26%；配对差值`+0.08/+1.80/+1.78 pp`，平均`+1.220±0.987 pp`，胜出3/3。
+
+### 28.2 冻结策略的独立确认
+
+确认结果位于`reports/experiments/2026-09-03-early-exit-p4-cifar100/`；`confirmation.json`
+SHA-256为`73f0a7f7645413856bfc9e43b1f7b5108c803773806bb7e59d9d128b1b8833d2`，状态为
+`ready_for_method_locked_cifar100_test`。分析只把训练前冻结的exit8最大softmax阈值`0.903`应用到
+全新split和seeds66/67/68，候选阈值数为0、无逐模型重校准、无类别保护，也没有迭代official test。
+
+三个seed早退率为41.94/41.54/42.40%，MAC代理节省23.91/23.68/24.17%；策略相对各自最终头的
+总体与balanced准确率分别提高1.10/0.90/0.82pp，最差类别经验下降均为4pp。最终头两个gate以及
+每seed总体、balanced、最差类别、动态路由和预算gate全部通过。这是P3后验边界在新模型版本和新
+数据划分上的独立复现，不改写P3的`stop_without_test`结论。
+
+### 28.3 唯一一次方法锁定official test入口
+
+精确manifest、audit、confirmation、原始policy、六个best checkpoint和评估器哈希已冻结在
+`reports/experiments/2026-09-03-early-exit-p4-cifar100/official_test_lock.json`，SHA-256为
+`20f885a53f86e1be1e1b4a4136ecc5b48d718596e0b061f90480f6e99547841f`。测试门槛保持预注册值：
+每seed总体/balanced下降≤0.50pp、最差类别下降≤4pp、早退15%–95%、MAC节省≥15%，且三seed
+平均总体下降≤0.20pp。
+
+必须先提交上述证据并保持服务器工作树干净，再运行一次性评估器。评估器在读取首个test样本前创建
+永久started marker；无论结果、异常或中断都禁止第二次执行，不得据test修改阈值、seed、checkpoint
+或class guard。当前尚未创建P4 official-test输出或access marker。提交和`--verify-only`通过后，唯一
+执行命令为：
+
+```bash
+cd /root/autodl-tmp/image-classification && /root/miniconda3/bin/python scripts/analysis/evaluate_early_exit_p4_locked_test.py
+```
+
+这是六对模型的短推理，不是新训练。完成后固化正负结果、清理P4周期checkpoint并停止新增训练，
+进入论文表格、绘图和写作。

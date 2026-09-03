@@ -64,6 +64,12 @@ EXPECTED_ARCHITECTURES = {
 }
 
 
+def _serial_timeline_overlaps(previous_finish: str, start: str) -> bool:
+    """Return whether the next run starts before the preceding run finishes."""
+
+    return _elapsed_seconds(previous_finish, start) < 0
+
+
 def collect(manifest_path: Path, launcher_log_path: Path) -> dict:
     manifest_record = file_record(manifest_path)
     manifest = json.loads(manifest_record["text"])
@@ -190,8 +196,8 @@ def analyze(snapshot: dict) -> dict:
         finish = manifest_run.get("finished_at")
         if not start or not finish or _elapsed_seconds(start, finish) <= 0:
             issues.append("invalid_run_timestamps")
-        if previous_finish is not None and start != previous_finish:
-            issues.append("serial_timeline_gap_or_overlap")
+        if previous_finish is not None and start and _serial_timeline_overlaps(previous_finish, start):
+            issues.append("serial_timeline_overlap")
         previous_finish = finish
         for name, record in entry["files"].items():
             if not record["exists"]:

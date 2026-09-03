@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "status": "ready_for_one_shot_method_locked_cifar100_test",
+  "created_at_utc": "2026-09-03T08:53:09.692190+00:00",
+  "scope": "Exact completed P4a manifest, accepted audit, independently confirmed frozen policy and six best checkpoints; lock creation does not iterate a test loader.",
+  "manifest": "artifacts/sweeps/cifar100_early_exit_p4_confirmation_serial_p4a_20260903_150809/manifest.json",
+  "manifest_sha256": "f122758c8a62c4bd40ea4451097a138616745f979d595628daa003eaa866d2b7",
+  "audit": "reports/audits/2026-09-03-early-exit-p4a/audit_results.json",
+  "audit_sha256": "d96cfea5aab71b90700fef3fecda99eff02e7de0570bdcdf55866489d44b1d2c",
+  "confirmation": "reports/experiments/2026-09-03-early-exit-p4-cifar100/confirmation.json",
+  "confirmation_sha256": "73f0a7f7645413856bfc9e43b1f7b5108c803773806bb7e59d9d128b1b8833d2",
+  "policy_lock": "reports/experiments/2026-09-03-early-exit-p4-design/locked_policy.json",
+  "policy_lock_sha256": "69a94227cb2398f75913d09f4315da890e23983ef5a72dd78472ee6bf7060bfe",
+  "evaluator": "scripts/analysis/evaluate_early_exit_p4_locked_test.py",
+  "evaluator_sha256": "ddbdc681c35ff6708d8c09a399d1eb4dd0a8a3e77f623dd5aef249eef434aa9a",
+  "runtime_training_commit": "92664bab601850302188c95a09bbedb6b7692333",
+  "dataset": "cifar100",
+  "training_seeds": [
+    66,
+    67,
+    68
+  ],
+  "split_seed": 20260904,
+  "locked_policy": {
+    "policy_version": "shared_exit8_softmax_threshold_p4_v1",
+    "exit_position": 8,
+    "confidence": "maximum softmax probability",
+    "confidence_threshold": 0.903,
+    "protected_predicted_classes": [],
+    "fallback": "final head",
+    "path_cost_fractions": [
+      0.42989887386925396,
+      1.0
+    ],
+    "selection_performed_on_test": false,
+    "test_threshold_candidates": 0
+  },
+  "best_checkpoint_sha256": {
+    "early_exit_p4_baseline_p4a_seed66_mobilenetv2_cifar100": "d8201b57bce0451ef8070d807a1b234d6cf0f9c490ea99cc56b5295e03607625",
+    "early_exit_p4_multi_p4a_seed66_multi_exit_pos8-16_cifar100": "ad592d893b782c57400d49e6de432e913c2679f7a82e2964b883a2636ebebf16",
+    "early_exit_p4_baseline_p4a_seed67_mobilenetv2_cifar100": "fcab5fefc36f778c6136e5c7831ff1dc7f70855c0b3dc532ca0a074b0b2f3bd5",
+    "early_exit_p4_multi_p4a_seed67_multi_exit_pos8-16_cifar100": "1b96cdff95f8b6cb7a6750743591e3b31c82b036481e7297db36bf75a4c9bf5f",
+    "early_exit_p4_baseline_p4a_seed68_mobilenetv2_cifar100": "94c84cffd3c8eabc39cd646a1e0f99cb39a295b3147a1555a9d8ec316eaa3136",
+    "early_exit_p4_multi_p4a_seed68_multi_exit_pos8-16_cifar100": "08a1b416ec71eb0cced0c24de7d5fa5fd93052fb3591cd22c184ad61dc34e94b"
+  },
+  "test_confirmation_gates": {
+    "each_accuracy_drop_at_most": 0.005,
+    "each_balanced_accuracy_drop_at_most": 0.005,
+    "each_worst_class_accuracy_drop_at_most": 0.04,
+    "mean_accuracy_drop_at_most": 0.002,
+    "minimum_early_fraction": 0.15,
+    "maximum_early_fraction": 0.95,
+    "minimum_mac_saving_fraction": 0.15
+  },
+  "historical_test_disclosure": "Legacy baseline-only CIFAR-100 runs exposed test metrics before P4. P3 stopped without test. No P4 checkpoint or policy has seen official test data; describe a later pass as method-locked rather than globally blind.",
+  "one_shot_rule": "Create a permanent started marker before loading test samples; preserve any result or failure and never rerun with changed thresholds, seeds or class guards.",
+  "p3_boundary_preserved": {
+    "p3_status": "stop_without_test",
+    "p3_official_test_accessed": false
+  }
+}

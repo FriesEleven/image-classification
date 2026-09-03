@@ -1,4 +1,5 @@
 from scripts.analysis.analyze_early_exit_p4_confirmation import frozen_gates
+from scripts.analysis.audit_early_exit_p4 import _serial_timeline_overlaps
 from scripts.analysis.evaluate_early_exit_p4_locked_test import locked_test_gates
 from scripts.launch_early_exit_p4 import (
     LOCKED_THRESHOLD,
@@ -32,6 +33,14 @@ def test_p4_policy_lock_and_plan_are_frozen():
     }
     assert all("_p4a_seed" in run["experiment_id"] for run in plan)
     assert all(run["resolved_config"]["evaluate_test"] is False for run in plan)
+
+
+def test_p4_audit_timeline_allows_launch_gap_and_rejects_overlap():
+    previous_finish = "2026-09-03T15:55:24+08:00"
+
+    assert not _serial_timeline_overlaps(previous_finish, "2026-09-03T15:55:24+08:00")
+    assert not _serial_timeline_overlaps(previous_finish, "2026-09-03T15:55:25+08:00")
+    assert _serial_timeline_overlaps(previous_finish, "2026-09-03T15:55:23+08:00")
 
 
 def test_p4_confirmation_gates_accept_frozen_boundary():
