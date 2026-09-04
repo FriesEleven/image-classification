@@ -1,0 +1,18 @@
+\begin{table*}[t]
+\centering
+\small
+\caption{Complexity proxy and paired batch-1 server-GPU latency. Training-only exit16 is included in parameter counts.}
+\label{tab:complexity-latency}
+\begin{tabular}{lrrrrrrr}
+\toprule
+Model/path & Params & Conv/Linear MACs & Early (\%) & Latency (ms) & Saving (\%) & Speedup & Basis \\
+\midrule
+CIFAR-10 baseline/final & 2236682 & 6124928 & -- & 4.35 & -- & -- & RTX 4090 D, batch 1 \\
+CIFAR-10 multi-exit (full) & 2238942 & 6124928 & 64.85 & 3.31 & 24.91 & 1.33 & RTX 4090 D, batch 1 \\
+CIFAR-10 exit8 path & 2238942 & 2676864 & -- & -- & 56.30 & -- & MAC proxy \\
+CIFAR-100 baseline/final & 2351972 & 6240128 & -- & -- & -- & -- & MAC proxy \\
+CIFAR-100 multi-exit policy & 2374572 & 6240128 & 42.39 & -- & 24.17 & -- & MAC proxy \\
+CIFAR-100 exit8 path & 2374572 & 2682624 & -- & -- & 57.01 & -- & MAC proxy \\
+\bottomrule
+\end{tabular}
+\end{table*}

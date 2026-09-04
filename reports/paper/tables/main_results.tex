@@ -1,0 +1,18 @@
+\begin{table*}[t]
+\centering
+\small
+\caption{Method-locked official-test results. Standard deviations are across three training seeds.}
+\label{tab:main-results}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Dataset & Method & Acc. (\%) & SD & $\Delta$ base (pp) & $\Delta$ final (pp) & Early (\%) & MAC save (\%) & Worst drop (pp) & Params (M) \\
+\midrule
+CIFAR-10 & Matched MobileNetV2 & 86.83 & 0.27 & -- & -- & -- & -- & -- & 2.24 \\
+CIFAR-10 & Multi-exit final head & 87.03 & 0.18 & 0.19 & -- & -- & -- & -- & 2.24 \\
+CIFAR-10 & Locked shared policy & 87.04 & 0.18 & 0.20 & 0.01 & 64.85 & 36.51 & 0.00 & 2.24 \\
+CIFAR-100 & Matched MobileNetV2 & 55.93 & 0.14 & -- & -- & -- & -- & -- & 2.35 \\
+CIFAR-100 & Multi-exit final head & 57.51 & 0.18 & 1.58 & -- & -- & -- & -- & 2.37 \\
+CIFAR-100 & Locked shared policy & 58.10 & 0.03 & 2.16 & 0.58 & 42.39 & 24.17 & 3.00 & 2.37 \\
+\bottomrule
+\end{tabular}
+\end{table*}

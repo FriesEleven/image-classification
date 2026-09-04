@@ -1,0 +1,16 @@
+\begin{table*}[t]
+\centering
+\small
+\caption{Transfer of the CIFAR-10 threshold $0.984$ without recalibration.}
+\label{tab:transfer}
+\begin{tabular}{lrrrrrr}
+\toprule
+Evaluation & Seeds & Policy acc. (\%) & SD & Early (\%) & MAC save (\%) & Max worst drop (pp) \\
+\midrule
+Unseen retraining (CIFAR-10) & 57--59 & 87.02 & 0.03 & 64.71 & 36.43 & 0.00 \\
+CIFAR-10.1 source models & 54--56 & 76.92 & 0.45 & 49.38 & 27.80 & 0.00 \\
+CIFAR-10.1 unseen models & 57--59 & 76.47 & 0.88 & 48.63 & 27.38 & 0.00 \\
+CIFAR-10.1 all models & 54--59 & 76.69 & 0.67 & 49.01 & 27.59 & 0.00 \\
+\bottomrule
+\end{tabular}
+\end{table*}

@@ -1,0 +1,6 @@
+phase,dataset,split_seed,training_seeds,samples,policy_role,gpu
+P1,CIFAR-10,20260902,54--56,40k/5k/5k,Shared-threshold selection; locked test,RTX 3080 Ti
+P2,CIFAR-10,20260902,57--59,40k/5k/5k,Zero-recalibration model transfer,RTX 3080 Ti
+P2-ext,CIFAR-10.1 v6,--,54--59,2k external,Natural-shift evaluation,Evaluation only
+P3,CIFAR-100,20260903,60--65,40k/5k/5k,Strict-gate failure; post-hoc boundary,RTX 3080 Ti
+P4,CIFAR-100,20260904,66--68,40k/5k/5k,Frozen-policy confirmation; locked test,RTX 3080 Ti

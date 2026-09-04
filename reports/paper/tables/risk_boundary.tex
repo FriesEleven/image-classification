@@ -1,0 +1,16 @@
+\begin{table*}[t]
+\centering
+\small
+\caption{CIFAR-100 empirical risk boundary. P3 rows are post-hoc diagnostics; P4 is an independent confirmation.}
+\label{tab:risk-boundary}
+\begin{tabular}{lrrrrrr}
+\toprule
+Dataset/split & Budget (pp) & $\theta$ & Min save (\%) & Observed worst drop (pp) & Evidence & Outcome \\
+\midrule
+CIFAR-100 P3 source/target & 0.00 & 1.00 & 6.36 & 0.00 & Post-hoc diagnostic & Below 15\% saving \\
+CIFAR-100 P3 source/target & 2.00 & 0.99 & 12.83 & 2.00 & Post-hoc diagnostic & Below 15\% saving \\
+CIFAR-100 P3 source/target & 4.00 & 0.89 & 23.44 & 4.00 & Post-hoc diagnostic & Pass \\
+CIFAR-100 P4 confirmation & 4.00 & 0.90 & 23.68 & 4.00 & Independent confirmation & Pass \\
+\bottomrule
+\end{tabular}
+\end{table*}

@@ -1,0 +1,7 @@
+model_path,params,conv_linear_macs,early_route_mean_pct,expected_latency_ms,saving_pct,speedup_x,hardware
+CIFAR-10 baseline/final,2236682,6124928,,4.354462880286,,,"RTX 4090 D, batch 1"
+CIFAR-10 multi-exit (full),2238942,6124928,64.85333333333332,3.3072959845333334,24.91399188209343,1.3336628365991698,"RTX 4090 D, batch 1"
+CIFAR-10 exit8 path,2238942,2676864,,,56.29558420931642,,MAC proxy
+CIFAR-100 baseline/final,2351972,6240128,,,,,MAC proxy
+CIFAR-100 multi-exit policy,2374572,6240128,42.39333333333333,,24.16848707376943,,MAC proxy
+CIFAR-100 exit8 path,2374572,2682624,,,57.010112613074604,,MAC proxy

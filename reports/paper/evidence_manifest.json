@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "generator": "scripts/analysis/build_early_exit_paper_tables.py",
+  "policy": "Read-only aggregation of frozen JSON; no evaluator or data loader is invoked.",
+  "inputs": [
+    {
+      "name": "p1_selection",
+      "path": "reports/experiments/2026-09-02-early-exit-p1b/locked_selection.json",
+      "sha256": "8dce5d938e06ae9d7432bd6baafd0c0ed9f978678fb53767ab02eeafecc723ab",
+      "used_fields": [
+        "locked_policy",
+        "selection_protocol",
+        "source_seeds"
+      ]
+    },
+    {
+      "name": "p1_test",
+      "path": "reports/experiments/2026-09-02-early-exit-p1b/test_results.json",
+      "sha256": "239ef583cfd4352eb64b398ce1390706f0fa187aa3c6b6c96c2f90675c45d8f5",
+      "used_fields": [
+        "aggregate",
+        "locked_policy",
+        "seed_results"
+      ]
+    },
+    {
+      "name": "p2_transfer",
+      "path": "reports/experiments/2026-09-03-early-exit-p2a-transfer/transfer_results.json",
+      "sha256": "ef86f749fba03255b5d31e9ae8ff7d7e4e1b78d3fc12bdf6ea1bec7a5eb79706",
+      "used_fields": [
+        "aggregate",
+        "data_protocol",
+        "seed_results",
+        "source_policy"
+      ]
+    },
+    {
+      "name": "cifar10_1",
+      "path": "reports/experiments/2026-09-03-early-exit-p2-cifar10-1-v6/external_results.json",
+      "sha256": "2592a5642f85e53a7b7f6aa6ed1cbf3a5dd7e7b893e6027cf7bfd5fd6c49f182",
+      "used_fields": [
+        "aggregate",
+        "external_test_set",
+        "locked_policy",
+        "seed_results"
+      ]
+    },
+    {
+      "name": "p3_selection",
+      "path": "reports/experiments/2026-09-03-early-exit-p3-cifar100/selection.json",
+      "sha256": "c71ad43122d5fec4a08679f80a616b7e3015ef730d4c0465829a51329edb6bfe",
+      "used_fields": [
+        "aggregate",
+        "data_protocol",
+        "status"
+      ]
+    },
+    {
+      "name": "p3_boundary",
+      "path": "reports/diagnostics/2026-09-03-early-exit-p3-boundary-v2/diagnostic.json",
+      "sha256": "25bbcf5365be9b860b0919b3b1160cfefe5b1adfd609e54f158bf4803fb73910",
+      "used_fields": [
+        "strict_zero_risk_without_15_percent_floor",
+        "exploratory_relaxations"
+      ]
+    },
+    {
+      "name": "p3_class_guard",
+      "path": "reports/diagnostics/2026-09-03-early-exit-p3-class-guard-v2/diagnostic.json",
+      "sha256": "ece0c80b6790245715440991a57e109b62ee61f1fc66b208546397f7fbd603dc",
+      "used_fields": [
+        "searches",
+        "status"
+      ]
+    },
+    {
+      "name": "p4_confirmation",
+      "path": "reports/experiments/2026-09-03-early-exit-p4-cifar100/confirmation.json",
+      "sha256": "73f0a7f7645413856bfc9e43b1f7b5108c803773806bb7e59d9d128b1b8833d2",
+      "used_fields": [
+        "aggregate",
+        "data_protocol",
+        "locked_policy",
+        "seed_results"
+      ]
+    },
+    {
+      "name": "p4_test",
+      "path": "reports/experiments/2026-09-03-early-exit-p4-cifar100-test/test_results.json",
+      "sha256": "e17aa638ec24ffe0655c456070ff2620ecaca79c4e805d00bff53a4e0c096d92",
+      "used_fields": [
+        "aggregate",
+        "locked_policy",
+        "seed_results"
+      ]
+    },
+    {
+      "name": "latency",
+      "path": "reports/profiles/2026-09-02-early-exit-p1b-rtx4090d/profile.json",
+      "sha256": "07e5efe1733b4f0e82ac80cfe849c9625f5b3bb2acc7e6b47a6c5ca460c18687",
+      "used_fields": [
+        "aggregate",
+        "device",
+        "measurement_protocol",
+        "seed_profiles"
+      ]
+    }
+  ],
+  "outputs": [
+    "reports/paper/claim_to_evidence.md",
+    "reports/paper/figures/accuracy_compute_tradeoff.pdf",
+    "reports/paper/figures/cross_seed_transfer.pdf",
+    "reports/paper/figures/latency_profile_rtx4090d.pdf",
+    "reports/paper/figures/method_overview.pdf",
+    "reports/paper/figures/risk_budget_boundary.pdf",
+    "reports/paper/tables/complexity_latency.csv",
+    "reports/paper/tables/complexity_latency.tex",
+    "reports/paper/tables/main_results.csv",
+    "reports/paper/tables/main_results.tex",
+    "reports/paper/tables/protocol_hardware.csv",
+    "reports/paper/tables/protocol_hardware.tex",
+    "reports/paper/tables/risk_boundary.csv",
+    "reports/paper/tables/risk_boundary.tex",
+    "reports/paper/tables/transfer_results.csv",
+    "reports/paper/tables/transfer_results.tex"
+  ],
+  "figure_generator": "scripts/visualization/plot_early_exit_paper.py",
+  "output_sha256": {
+    "reports/paper/claim_to_evidence.md": "5e567390ca5ac9ee90d278293d48202cbfa23957bebc90a02495522e6bff441a",
+    "reports/paper/figures/accuracy_compute_tradeoff.pdf": "866e2a2d7a4536004f7a9e42772eb8fe315025bf44e7479dc380a8ae70e4d3d2",
+    "reports/paper/figures/cross_seed_transfer.pdf": "3ce5b7109527b5d57636ebad6f6497db2990330d1aaab09104b2eca615b2a2dd",
+    "reports/paper/figures/latency_profile_rtx4090d.pdf": "869fe7705e917c5e8abf4b5a03a6d8d91daaac5e37920c392d800ed7eb604cf0",
+    "reports/paper/figures/method_overview.pdf": "843313b5d5214106d7e6653bf00e925be2ff0d8fd64ad29b0b08aeb5bfed4cef",
+    "reports/paper/figures/risk_budget_boundary.pdf": "0802c9ec9a74f3ce9ce764bca0104f4d8e3b8097a3342786158a5c292d45d115",
+    "reports/paper/tables/complexity_latency.csv": "84d513f2485c024da0e23e24ca82467c6ab2e21ac5ffe9f7a85d941570d882d5",
+    "reports/paper/tables/complexity_latency.tex": "a72f9c112f2bc5805b847712be2b632db3a840682e364df04cc577d096685bec",
+    "reports/paper/tables/main_results.csv": "a2e0e617e18f63f811af821a7de878ae15e4459c5f4f0ca4cd15233929a44a6f",
+    "reports/paper/tables/main_results.tex": "b0c25a3489e7d96336b81c66ca675fb92ecf8ea9a0cd278f077bdaa757ccd456",
+    "reports/paper/tables/protocol_hardware.csv": "772295d77110498aa2f23a30bdcc1791a331375a9468f79dde5bfe056242c624",
+    "reports/paper/tables/protocol_hardware.tex": "bcc90682af12bfb3ca47621b939e801efdb082577881180b44508d64e0e62608",
+    "reports/paper/tables/risk_boundary.csv": "4280cb4fa15d2ab4f7fa91747f116b9e212fb793f1e57841826a5ff095cb6e3b",
+    "reports/paper/tables/risk_boundary.tex": "f1b477d8d566142494519f2812e6ef70136c0c10bf3600a7539bc99e774d1dc8",
+    "reports/paper/tables/transfer_results.csv": "57e130764775745f0cc5127d3eb492cc6be592d02765c20082d94afa77b08343",
+    "reports/paper/tables/transfer_results.tex": "f745e0db8018f9a73ff6a9a09dafb96cb61bc2d863dcc653c26f10ac70c9a721"
+  }
+}

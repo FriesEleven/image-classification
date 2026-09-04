@@ -1,0 +1,5 @@
+dataset_split,policy_variant,risk_budget_pp,threshold,min_mac_saving_pct,mean_mac_saving_pct,max_worst_class_drop_pp,evidence_type,outcome
+CIFAR-100 P3 source/target,Global shared threshold,0.0,0.999,6.362328567619113,,0.0,Post-hoc diagnostic,Below 15% saving
+CIFAR-100 P3 source/target,Global shared threshold,2.0,0.987,12.82727533794179,,2.0000000000000018,Post-hoc diagnostic,Below 15% saving
+CIFAR-100 P3 source/target,Global shared threshold,4.0,0.893,23.442558306496288,,4.0000000000000036,Post-hoc diagnostic,Pass
+CIFAR-100 P4 confirmation,Frozen global threshold,4.0,0.903,23.682000779471192,23.921443252446103,3.9999999999999982,Independent confirmation,Pass
