@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "status": "simplify_to_a3_no_kd",
+  "scope": "P5-C development-only component ablation; all preregistered seeds retained; no official or external evaluator executed.",
+  "artifact_directory": "artifacts/analyses/early_exit_p5c_20260905_143000",
+  "artifact_hashes": {
+    "p5c_results.json": "056cc363c07c0f33b60a14a376e52e2b7f03d8e52849fe4d5715bb31b1124deb",
+    "development_logits_manifest.json": "8d3e1e3fcb49be512ce343fb9577edb61a8da9eb07a38a8300da7da22303b430",
+    "tables/variant_seed_metrics.csv": "9e6e93a96d1bfe2952bafc0a826099cc0146e6105fac57c5cc074bfc47409bdb",
+    "tables/aggregate_metrics.csv": "fb5f3ed76360eb74c8c0a104266e8d6f824aefc54576834124fbf8a8989fe920",
+    "tables/factorial_effects.csv": "6a59bf88481e62aa5846e0a6ed7cb9fa9cc7f97729c6cf8efeba2c5ce261b0e6",
+    "tables/failure_gates.csv": "d2b7cb0a53f6b2d129613b9e047c19dcc6f194a386dcc72d5816223346f28b00"
+  },
+  "run_accounting": {
+    "new_runs_complete": 18,
+    "historical_runs_reused": 12,
+    "new_seed_failures": 0,
+    "deleted_or_replaced_seeds": 0,
+    "development_logit_files": 24
+  },
+  "factorial_final_validation_effects_pp": {
+    "cifar10": {
+      "kd_main_mean": -0.06333333333333191,
+      "exit16_main_mean": -0.15666666666666607
+    },
+    "cifar100": {
+      "kd_main_mean": -0.16333333333333383,
+      "exit16_main_mean": 0.6500000000000024
+    }
+  },
+  "selected_simplification": {
+    "cell": "A3",
+    "deployable_exit8": true,
+    "training_only_exit16": true,
+    "detached_final_kd": false,
+    "reason": "KD had no stable same-direction final effect; A3 passed every final failure rule, exceeded A4 mean final validation accuracy on both datasets, and its unchanged frozen selector passed all six seeds."
+  },
+  "a3_development_summary": {
+    "cifar10": {
+      "mean_final_validation_accuracy_percent": 88.04,
+      "mean_final_gain_vs_a0_pp": 0.7666666666666637,
+      "mac_saving_percent_range": [32.5951432571942, 33.146839982445506],
+      "accuracy_drop_pp_range": [0.0, 0.0],
+      "worst_class_drop_pp_range": [0.0, 0.0]
+    },
+    "cifar100": {
+      "mean_final_validation_accuracy_percent": 57.53333333333334,
+      "mean_final_gain_vs_a0_pp": 1.8066666666666713,
+      "mac_saving_percent_range": [15.09627781994215, 15.278710180304],
+      "accuracy_drop_pp_range": [-0.31999999999999806, -0.17999999999999128],
+      "worst_class_drop_pp_range": [2.0000000000000018, 2.0000000000000018]
+    }
+  },
+  "claim_boundary": "Exit16 is dataset-dependent, not universally beneficial. KD is not necessary and is removed from the selected recipe. All conclusions are development-only until a separately authorized method-locked evaluation."
+}
