@@ -8,6 +8,7 @@ import hashlib
 import itertools
 import json
 import math
+import multiprocessing as mp
 import sys
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -42,6 +43,13 @@ REPORTS = {
     "p3": ROOT / "reports/experiments/2026-09-03-early-exit-p3-cifar100/selection.json",
     "p4": ROOT / "reports/experiments/2026-09-03-early-exit-p4-cifar100/confirmation.json",
 }
+_WORKER_COHORTS: dict[str, list[dict]] = {}
+
+
+def _initialize_worker(cohorts: dict[str, list[dict]]) -> None:
+    global _WORKER_COHORTS
+    _WORKER_COHORTS = cohorts
+    torch.set_num_threads(1)
 
 
 def sha256(path: Path) -> str:
@@ -556,15 +564,31 @@ def diagnostics(cohorts: dict[str, list[dict]], tables: Path) -> dict:
     return {"per_class_rows": len(per_class), "decision_rows": len(complementarity), "calibration_rows": len(calibration)}
 
 
-def strategy_comparison(cohorts: dict[str, list[dict]], protocol: dict, tables: Path) -> tuple[dict, list[dict]]:
+def _shared_strategy_task(payload: tuple) -> tuple[str, dict]:
+    source_key, target_key, method, score_name, budgets, scale = payload
+    source = _WORKER_COHORTS[source_key]
+    target = _WORKER_COHORTS[target_key]
+    selected = select_shared(source, score_name, budgets, temperature=scale)
+    target_metrics = evaluate_selected(selected, target, score_name, temperature=scale)
+    return method, {
+        "selection": selected,
+        "source": summarize_metrics([] if selected is None else selected["source_metrics"]),
+        "target": summarize_metrics(target_metrics),
+        "temperature": scale if score_name == "temperature_msp" else None,
+    }
+
+
+def strategy_comparison(cohorts: dict[str, list[dict]], protocol: dict, tables: Path, pool) -> tuple[dict, list[dict]]:
     comparisons = {}
     flat_rows = []
     designs = (
-        ("cifar10", cohorts["cifar10_source"], cohorts["cifar10_target"], protocol["risk_budgets"]["cifar10"]),
-        ("cifar100_strict", cohorts["cifar100_source"], cohorts["cifar100_target"], protocol["risk_budgets"]["cifar100_strict"]),
-        ("cifar100_relaxed", cohorts["cifar100_source"], cohorts["cifar100_confirmation"], protocol["risk_budgets"]["cifar100_relaxed_boundary"]),
+        ("cifar10", "cifar10_source", "cifar10_target", protocol["risk_budgets"]["cifar10"]),
+        ("cifar100_strict", "cifar100_source", "cifar100_target", protocol["risk_budgets"]["cifar100_strict"]),
+        ("cifar100_relaxed", "cifar100_source", "cifar100_confirmation", protocol["risk_budgets"]["cifar100_relaxed_boundary"]),
     )
-    for design, source, target, full_budget in designs:
+    for design, source_key, target_key, full_budget in designs:
+        source = cohorts[source_key]
+        target = cohorts[target_key]
         variants = {
             "shared_msp_overall": ("msp", {**full_budget, "balanced_drop": 1.0, "worst_class_drop": 1.0}, 1.0),
             "shared_msp_overall_balanced": ("msp", {**full_budget, "worst_class_drop": 1.0}, 1.0),
@@ -574,11 +598,8 @@ def strategy_comparison(cohorts: dict[str, list[dict]], protocol: dict, tables: 
         }
         temperature = fit_temperature(source)
         variants["temperature_scaled_msp_full"] = ("temperature_msp", full_budget, temperature)
-        result = {}
-        for method, (score_name, budgets, scale) in variants.items():
-            selected = select_shared(source, score_name, budgets, temperature=scale)
-            target_metrics = evaluate_selected(selected, target, score_name, temperature=scale)
-            result[method] = {"selection": selected, "source": summarize_metrics([] if selected is None else selected["source_metrics"]), "target": summarize_metrics(target_metrics), "temperature": scale if score_name == "temperature_msp" else None}
+        tasks = [(source_key, target_key, method, score_name, budgets, scale) for method, (score_name, budgets, scale) in variants.items()]
+        result = dict(pool.map(_shared_strategy_task, tasks))
         mapping = fit_pcee(source)
         source_scores = [pcee_score(row["exit8_logits"], mapping) for row in source]
         selected = select_from_precomputed(source, source_scores, full_budget)
@@ -632,80 +653,98 @@ def strategy_comparison(cohorts: dict[str, list[dict]], protocol: dict, tables: 
     return comparisons, flat_rows
 
 
-def frontier_and_matched_compute(cohorts: dict[str, list[dict]], protocol: dict, tables: Path) -> tuple[list[dict], list[dict]]:
-    frontier_rows = []
+def _frontier_task(payload: tuple) -> tuple[list[dict], list[dict]]:
+    design, source_key, target_key, budget, method, score_name = payload
+    source = _WORKER_COHORTS[source_key]
+    target = _WORKER_COHORTS[target_key]
+    candidates = thresholds_for(source, score_name)
+    method_frontier = []
     matched_rows = []
+    for threshold in candidates:
+        source_metrics = [route_metrics(row, score_values(score_name, row["exit8_logits"]) >= threshold) for row in source]
+        source_summary = summarize_metrics(source_metrics)
+        method_frontier.append({
+            "design": design,
+            "method": method,
+            "threshold": float(threshold),
+            "source_accuracy_drop_mean": source_summary["accuracy_drop_mean"],
+            "source_balanced_drop_max": source_summary["balanced_accuracy_drop_max"],
+            "source_worst_class_drop_max": source_summary["worst_class_accuracy_drop_max"],
+            "source_min_saving": source_summary["cost_saving_fraction_min"],
+            "source_mean_saving": source_summary["cost_saving_fraction_mean"],
+        })
+    for target_saving in (0.10, 0.20, 0.30):
+        eligible = [row for row in method_frontier if row["source_min_saving"] >= target_saving - 1e-12]
+        if not eligible:
+            matched_rows.append({"design": design, "method": method, "target_saving": target_saving, "status": "infeasible"})
+            continue
+        chosen = min(eligible, key=lambda row: (row["source_min_saving"] - target_saving, abs(row["source_accuracy_drop_mean"])))
+        target_metrics = [route_metrics(record, score_values(score_name, record["exit8_logits"]) >= chosen["threshold"]) for record in target]
+        summary = summarize_metrics(target_metrics)
+        risk_feasible = (
+            chosen["source_accuracy_drop_mean"] <= budget["overall_drop"] + 1e-12
+            and chosen["source_balanced_drop_max"] <= budget["balanced_drop"] + 1e-12
+            and chosen["source_worst_class_drop_max"] <= budget["worst_class_drop"] + 1e-12
+        )
+        matched_rows.append({"design": design, "method": method, "target_saving": target_saving, "status": "feasible" if risk_feasible else "risk_violation", "threshold": chosen["threshold"], **{f"target_{key}": value for key, value in summary.items()}})
+    return method_frontier, matched_rows
+
+
+def frontier_and_matched_compute(cohorts: dict[str, list[dict]], protocol: dict, tables: Path, pool) -> tuple[list[dict], list[dict]]:
     designs = (
-        ("cifar10", cohorts["cifar10_source"], cohorts["cifar10_target"], protocol["risk_budgets"]["cifar10"]),
-        ("cifar100_strict", cohorts["cifar100_source"], cohorts["cifar100_target"], protocol["risk_budgets"]["cifar100_strict"]),
-        ("cifar100_relaxed", cohorts["cifar100_source"], cohorts["cifar100_confirmation"], protocol["risk_budgets"]["cifar100_relaxed_boundary"]),
+        ("cifar10", "cifar10_source", "cifar10_target", protocol["risk_budgets"]["cifar10"]),
+        ("cifar100_strict", "cifar100_source", "cifar100_target", protocol["risk_budgets"]["cifar100_strict"]),
+        ("cifar100_relaxed", "cifar100_source", "cifar100_confirmation", protocol["risk_budgets"]["cifar100_relaxed_boundary"]),
     )
-    for design, source, target, budget in designs:
-        for method, score_name in (("shared_msp", "msp"), ("shared_entropy", "entropy"), ("shared_logit_margin", "margin")):
-            candidates = thresholds_for(source, score_name)
-            method_frontier = []
-            for threshold in candidates:
-                source_metrics = [route_metrics(row, score_values(score_name, row["exit8_logits"]) >= threshold) for row in source]
-                source_summary = summarize_metrics(source_metrics)
-                row = {
-                    "design": design,
-                    "method": method,
-                    "threshold": float(threshold),
-                    "source_accuracy_drop_mean": source_summary["accuracy_drop_mean"],
-                    "source_balanced_drop_max": source_summary["balanced_accuracy_drop_max"],
-                    "source_worst_class_drop_max": source_summary["worst_class_accuracy_drop_max"],
-                    "source_min_saving": source_summary["cost_saving_fraction_min"],
-                    "source_mean_saving": source_summary["cost_saving_fraction_mean"],
-                }
-                method_frontier.append(row)
-                frontier_rows.append(row)
-            for target_saving in (0.10, 0.20, 0.30):
-                eligible = [row for row in method_frontier if row["source_min_saving"] >= target_saving - 1e-12]
-                if not eligible:
-                    matched_rows.append({"design": design, "method": method, "target_saving": target_saving, "status": "infeasible"})
-                    continue
-                chosen = min(eligible, key=lambda row: (row["source_min_saving"] - target_saving, abs(row["source_accuracy_drop_mean"])))
-                target_metrics = [route_metrics(record, score_values(score_name, record["exit8_logits"]) >= chosen["threshold"]) for record in target]
-                summary = summarize_metrics(target_metrics)
-                risk_feasible = (
-                    chosen["source_accuracy_drop_mean"] <= budget["overall_drop"] + 1e-12
-                    and chosen["source_balanced_drop_max"] <= budget["balanced_drop"] + 1e-12
-                    and chosen["source_worst_class_drop_max"] <= budget["worst_class_drop"] + 1e-12
-                )
-                matched_rows.append({"design": design, "method": method, "target_saving": target_saving, "status": "feasible" if risk_feasible else "risk_violation", "threshold": chosen["threshold"], **{f"target_{key}": value for key, value in summary.items()}})
+    methods = (("shared_msp", "msp"), ("shared_entropy", "entropy"), ("shared_logit_margin", "margin"))
+    tasks = [(*design, method, score_name) for design in designs for method, score_name in methods]
+    results = pool.map(_frontier_task, tasks)
+    frontier_rows = list(itertools.chain.from_iterable(result[0] for result in results))
+    matched_rows = list(itertools.chain.from_iterable(result[1] for result in results))
     write_csv(tables / "development_frontier.csv", frontier_rows)
     write_csv(tables / "matched_compute.csv", matched_rows)
     latex_from_csv(tables / "matched_compute.csv", tables / "matched_compute.tex")
     return frontier_rows, matched_rows
 
 
-def sensitivity(cohorts: dict[str, list[dict]], protocol: dict, tables: Path) -> list[dict]:
+def _sensitivity_task(payload: tuple[str, str, dict, int, int]) -> dict:
+    design, cohort, budget, size, repeat = payload
+    records = _WORKER_COHORTS[cohort]
+    classes = np.unique(records[0]["labels"])
+    sampled = []
+    for record in records:
+        generator = np.random.default_rng(20_260_905 + repeat * 100 + record["seed"])
+        indices = []
+        quotient, remainder = divmod(size, len(classes))
+        for offset, class_id in enumerate(classes):
+            choices = np.flatnonzero(record["labels"] == class_id)
+            take = quotient + int(offset < remainder)
+            indices.extend(generator.choice(choices, size=take, replace=take > len(choices)).tolist())
+        indices = np.asarray(indices)
+        sampled.append({key: value[indices] if isinstance(value, np.ndarray) and len(value) == len(record["labels"]) else value for key, value in record.items()})
+    selected = select_shared(sampled, "msp", budget, thresholds=np.linspace(0, 1, 101))
+    return {"analysis": "calibration_size", "design": design, "size": size, "replicate": repeat, "threshold": None if selected is None else selected["threshold"], "minimum_saving": None if selected is None else selected["min_saving"], "feasible": selected is not None}
+
+
+def sensitivity(cohorts: dict[str, list[dict]], protocol: dict, tables: Path, pool) -> list[dict]:
     rows = []
-    for design, records, budget in (
-        ("cifar10", cohorts["cifar10_source"], protocol["risk_budgets"]["cifar10"]),
-        ("cifar100_relaxed", cohorts["cifar100_source"], protocol["risk_budgets"]["cifar100_relaxed_boundary"]),
-    ):
+    designs = (
+        ("cifar10", "cifar10_source", protocol["risk_budgets"]["cifar10"]),
+        ("cifar100_relaxed", "cifar100_source", protocol["risk_budgets"]["cifar100_relaxed_boundary"]),
+    )
+    for design, cohort, budget in designs:
+        records = cohorts[cohort]
         for count in (1, 2, 3):
             for subset in itertools.combinations(records, count):
                 selected = select_shared(list(subset), "msp", budget)
                 rows.append({"analysis": "source_seed_subset", "design": design, "size": count, "replicate": "-".join(str(row["seed"]) for row in subset), "threshold": None if selected is None else selected["threshold"], "minimum_saving": None if selected is None else selected["min_saving"], "feasible": selected is not None})
-        labels = records[0]["labels"]
-        classes = np.unique(labels)
-        for size in protocol["calibration_resampling"]["sizes_per_seed"]:
-            for repeat in range(protocol["calibration_resampling"]["replicates"]):
-                sampled = []
-                for record in records:
-                    generator = np.random.default_rng(20_260_905 + repeat * 100 + record["seed"])
-                    indices = []
-                    quotient, remainder = divmod(size, len(classes))
-                    for offset, class_id in enumerate(classes):
-                        choices = np.flatnonzero(record["labels"] == class_id)
-                        take = quotient + int(offset < remainder)
-                        indices.extend(generator.choice(choices, size=take, replace=take > len(choices)).tolist())
-                    indices = np.asarray(indices)
-                    sampled.append({key: value[indices] if isinstance(value, np.ndarray) and len(value) == len(record["labels"]) else value for key, value in record.items()})
-                selected = select_shared(sampled, "msp", budget, thresholds=np.linspace(0, 1, 101))
-                rows.append({"analysis": "calibration_size", "design": design, "size": size, "replicate": repeat, "threshold": None if selected is None else selected["threshold"], "minimum_saving": None if selected is None else selected["min_saving"], "feasible": selected is not None})
+    tasks = [
+        (design, cohort, budget, size, repeat)
+        for design, cohort, budget in designs
+        for size in protocol["calibration_resampling"]["sizes_per_seed"]
+        for repeat in range(protocol["calibration_resampling"]["replicates"])
+    ]
+    rows.extend(pool.map(_sensitivity_task, tasks, chunksize=2))
     write_csv(tables / "threshold_sensitivity.csv", rows)
     latex_from_csv(tables / "threshold_sensitivity.csv", tables / "threshold_sensitivity.tex")
     return rows
@@ -818,8 +857,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--reuse-logits", type=Path)
+    parser.add_argument("--workers", type=int, default=12)
     parser.add_argument("--verify-only", action="store_true")
     args = parser.parse_args()
+    if args.workers < 1:
+        raise ValueError("--workers must be at least 1")
+    torch.set_num_threads(1)
     protocol = validate_protocol()
     if args.verify_only:
         print(json.dumps({"status": "ready", "protocol_sha256": sha256(PROTOCOL), "model_inference_performed": False}, indent=2))
@@ -830,18 +873,31 @@ def main() -> int:
     output.mkdir(parents=True)
     tables = output / "tables"; figures_dir = output / "figures"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"[P5 1/7] Loading development logits; workers={args.workers}", flush=True)
     if args.reuse_logits is None:
         cohorts, logits_manifest = collect_all(protocol, output, device)
     else:
         cohorts, logits_manifest = reuse_logits(protocol, (ROOT / args.reuse_logits).resolve(), output, device)
+    print("[P5 2/7] Checking frozen-point reproduction", flush=True)
     checks = frozen_point_checks(cohorts, protocol["replay_amendment"])
     if not checks["all_passed"]:
         (output / "reproduction_checks.json").write_text(json.dumps(checks, indent=2) + "\n")
         raise RuntimeError("Frozen point reproduction failed; P5 stopped before policy comparison")
+    print("[P5 3/7] Building diagnostic tables", flush=True)
     diagnostic_counts = diagnostics(cohorts, tables)
-    comparisons, strategy_rows = strategy_comparison(cohorts, protocol, tables)
-    frontier_rows, matched_compute_rows = frontier_and_matched_compute(cohorts, protocol, tables)
-    sensitivity_rows = sensitivity(cohorts, protocol, tables)
+    context = mp.get_context("fork")
+    with context.Pool(
+        processes=args.workers,
+        initializer=_initialize_worker,
+        initargs=(cohorts,),
+    ) as pool:
+        print("[P5 4/7] Comparing policy strategies in parallel", flush=True)
+        comparisons, strategy_rows = strategy_comparison(cohorts, protocol, tables, pool)
+        print("[P5 5/7] Computing development frontiers in parallel", flush=True)
+        frontier_rows, matched_compute_rows = frontier_and_matched_compute(cohorts, protocol, tables, pool)
+        print("[P5 6/7] Running calibration-size sensitivity in parallel", flush=True)
+        sensitivity_rows = sensitivity(cohorts, protocol, tables, pool)
+    print("[P5 7/7] Bootstrap, figures, and Gate A", flush=True)
     bootstrap_rows = bootstrap_locked_points(cohorts, protocol, tables)
     figure_files = figures(cohorts, strategy_rows, sensitivity_rows, figures_dir)
     decision = gate_a(checks, comparisons)
@@ -851,6 +907,7 @@ def main() -> int:
         "finished_at_utc": datetime.now(timezone.utc).isoformat(),
         "protocol_sha256": sha256(PROTOCOL),
         "device": str(device),
+        "cpu_workers": args.workers,
         "reproduction_checks": checks,
         "diagnostics": diagnostic_counts,
         "strategy_comparison": comparisons,

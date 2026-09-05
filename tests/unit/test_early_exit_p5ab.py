@@ -1,6 +1,10 @@
+import multiprocessing as mp
+
 import numpy as np
 
 from scripts.analysis.run_early_exit_p5ab import (
+    _initialize_worker,
+    _shared_strategy_task,
     binary_auc,
     calibration_metrics,
     macro_f1,
@@ -55,3 +59,12 @@ def test_p1_replay_tolerance_never_relaxes_risk_metrics():
     assert reproduction_row_passes("cifar10_source", acceptable, amendment)
     unacceptable = {**acceptable, "worst_class_accuracy_drop": 0.02}
     assert not reproduction_row_passes("cifar10_source", unacceptable, amendment)
+
+
+def test_shared_strategy_runs_in_forked_worker_pool():
+    cohorts = {"source": [_record(1)], "target": [_record(2)]}
+    payload = ("source", "target", "shared_msp_full", "msp", {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.0}, 1.0)
+    with mp.get_context("fork").Pool(2, initializer=_initialize_worker, initargs=(cohorts,)) as pool:
+        method, result = pool.map(_shared_strategy_task, [payload])[0]
+    assert method == "shared_msp_full"
+    assert result["source"]["feasible"]

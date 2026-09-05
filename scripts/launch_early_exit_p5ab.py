@@ -20,10 +20,13 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--foreground", action="store_true")
     parser.add_argument("--reuse-logits", type=Path)
+    parser.add_argument("--workers", type=int, default=12)
     args = parser.parse_args()
+    if args.workers < 1:
+        raise ValueError("--workers must be at least 1")
     subprocess.run([sys.executable, str(ANALYZER), "--output", "/tmp/p5-unused", "--verify-only"], cwd=ROOT, check=True)
     if args.dry_run:
-        print(json.dumps({"status": "ready", "batch": "P5-A/P5-B", "training_runs": 0, "serial_development_inference_runs": 18, "official_or_external_evaluator_runs": 0}, indent=2))
+        print(json.dumps({"status": "ready", "batch": "P5-A/P5-B", "training_runs": 0, "serial_development_inference_runs": 18, "cpu_workers": args.workers, "official_or_external_evaluator_runs": 0}, indent=2))
         return 0
     changes = subprocess.check_output(["git", "status", "--short"], cwd=ROOT, text=True).strip()
     if changes:
@@ -43,7 +46,7 @@ def main() -> int:
         output = ARTIFACTS / "analyses" / f"early_exit_p5ab_{timestamp}"
         log_dir = ARTIFACTS / "launcher_logs"; log_dir.mkdir(parents=True, exist_ok=True)
         log_path = log_dir / f"early_exit_p5ab_{timestamp}.log"
-        command = [sys.executable, str(ANALYZER), "--output", str(output)]
+        command = [sys.executable, str(ANALYZER), "--output", str(output), "--workers", str(args.workers)]
         if args.reuse_logits is not None:
             command.extend(["--reuse-logits", str(args.reuse_logits)])
         if args.foreground:
@@ -51,6 +54,7 @@ def main() -> int:
         with log_path.open("x", encoding="utf-8") as log:
             log.write(f"Command: {shlex.join(command)}\n")
             log.write("Development-only P5-A/B; no training and no official/external evaluator.\n")
+            log.write(f"CPU workers: {args.workers}; child-process Torch threads: 1.\n")
             log.flush()
             process = subprocess.Popen(command, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT, start_new_session=True, pass_fds=(lock_handle.fileno(),))
         print(f"P5-A/B started with PID {process.pid}")
