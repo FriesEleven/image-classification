@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_p8_execution",
+  "stage": "P8",
+  "research_question": "RQ5",
+  "method": "A3: deployable exit8 plus training-only exit16, no KD",
+  "method_decision_receipt": {
+    "path": "reports/experiments/2026-09-05-early-exit-p5c-analysis/analysis_receipt.json",
+    "sha256": "e36049ef0d0a556b3b9763f5f5ed4a1b1ab279e1600802e2e0bd826cd22d8f2e"
+  },
+  "matrix": {
+    "cifar10": {"seeds": [54, 55, 56], "threshold": 0.984, "split_seed": 20260902},
+    "cifar100": {"seeds": [66, 67, 68], "threshold": 0.903, "split_seed": 20260904},
+    "devices": ["cuda:0 RTX 3080 Ti", "same-server CPU with 12 intra-op threads"],
+    "batch_sizes": [1, 4, 8, 16, 32],
+    "modes": ["final_only", "actual_dynamic", "exit8_only"]
+  },
+  "timing": {
+    "input_residency": "device-resident main result",
+    "warmup_batches_per_mode_round": 100,
+    "timed_batches_per_mode_round": 1000,
+    "paired_rounds": 5,
+    "mode_order": "deterministically randomized within every paired round",
+    "cuda_synchronize_each_batch": true,
+    "precision": "FP32",
+    "incomplete_last_batch": "excluded from timing"
+  },
+  "reported_metrics": [
+    "mean_median_p95_latency_ms",
+    "throughput_samples_per_second",
+    "peak_memory",
+    "route_fraction",
+    "mac_saving_fraction",
+    "isolated_path_expected_latency_saving",
+    "actual_dynamic_latency_saving",
+    "temperature_frequency_power_telemetry_when_available"
+  ],
+  "test_boundary": "Only CIFAR train-split calibration indices are loaded. Official CIFAR test and external evaluators are forbidden.",
+  "hardware_boundary": "RTX 4090D is historical evidence only and is not used or required.",
+  "expected_model_checkpoints": 6
+}
