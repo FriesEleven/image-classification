@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "status": "completed",
+  "scope": "Remove rebuildable resources unrelated to paper writing while preserving all paper evidence and the active P8 benchmark.",
+  "removed": {
+    "intermediate_epoch_checkpoints": {
+      "match": "artifacts/runs/*/checkpoints/epoch_[0-9]*.pth",
+      "files": 416,
+      "logical_bytes": 11605661902,
+      "reason": "Not referenced by paper analysis; project handoff states these snapshots do not provide verified lossless resume."
+    },
+    "rebuildable_caches": {
+      "kinds": ["__pycache__", ".pytest_cache", ".ruff_cache"],
+      "approximate_bytes": 2831155
+    }
+  },
+  "preserved_checkpoint_inventory_after_cleanup": {
+    "model_best.pth": {"files": 149, "logical_bytes": 1386995971},
+    "model_latest.pth": {"files": 149, "logical_bytes": 1387093947},
+    "final.pth": {"files": 139, "logical_bytes": 3829002609}
+  },
+  "preserved_evidence": [
+    "all training CSV and per-head logs",
+    "all TensorBoard events",
+    "all resolved configs, provenance, summaries, split indices and manifests",
+    "all best/latest/final checkpoints",
+    "all official/external access records and negative/failed/interrupted evidence",
+    "all P5-A/B and P5-C logits, tables and figures",
+    "active artifacts/analyses/early_exit_p8_20260905_153545 output"
+  ],
+  "post_cleanup": {
+    "intermediate_epoch_checkpoints_remaining": 0,
+    "cache_directories_remaining": 0,
+    "artifacts_apparent_size": "6.7G",
+    "filesystem_free_space": "42G",
+    "git_worktree_was_clean_before_receipt": true,
+    "active_p8_pid": 39704,
+    "active_p8_unaffected": true
+  },
+  "recovery": "Removed files were deleted directly and are not recoverable from this server. They can be regenerated only by rerunning training; retained best/latest/final checkpoints and logs remain sufficient for the registered paper analyses."
+}
