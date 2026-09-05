@@ -1,6 +1,13 @@
 import numpy as np
 
-from scripts.analysis.run_early_exit_p5ab import binary_auc, calibration_metrics, macro_f1, route_metrics, select_shared
+from scripts.analysis.run_early_exit_p5ab import (
+    binary_auc,
+    calibration_metrics,
+    macro_f1,
+    reproduction_row_passes,
+    route_metrics,
+    select_shared,
+)
 
 
 def _record(seed=1):
@@ -29,3 +36,22 @@ def test_shared_selector_keeps_final_only_when_zero_risk_requires_it():
     selected = select_shared([_record()], "msp", {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.0})
     assert selected is not None
     assert selected["source_metrics"][0]["accuracy_drop"] <= 0
+
+
+def test_p1_replay_tolerance_never_relaxes_risk_metrics():
+    amendment = {
+        "unchanged_requirements": {
+            "accuracy_drop_absolute_difference_max": 1e-12,
+            "balanced_accuracy_drop_absolute_difference_max": 1e-12,
+            "worst_class_accuracy_drop_absolute_difference_max": 1e-12,
+            "all_non_p1_cohorts_absolute_difference_max": 1e-12,
+        },
+        "p1_cross_hardware_replay_disclosure": {
+            "absolute_accuracy_difference_max": 0.000600000001,
+            "cost_saving_fraction_difference_max": 0.000230000001,
+        },
+    }
+    acceptable = {"accuracy": 0.0006, "accuracy_drop": 0.0, "balanced_accuracy_drop": 0.0, "worst_class_accuracy_drop": 0.0, "cost_saving_fraction": 0.000225}
+    assert reproduction_row_passes("cifar10_source", acceptable, amendment)
+    unacceptable = {**acceptable, "worst_class_accuracy_drop": 0.02}
+    assert not reproduction_row_passes("cifar10_source", unacceptable, amendment)

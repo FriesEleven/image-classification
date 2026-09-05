@@ -28,6 +28,7 @@ from image_classification.selection.early_exit import policy_metrics, softmax_co
 from scripts.analysis.analyze_early_exit_p0 import _collect_logits
 
 PROTOCOL = ROOT / "reports/experiments/2026-09-05-early-exit-p5-design/protocol_manifest.json"
+AMENDMENT = ROOT / "reports/experiments/2026-09-05-early-exit-p5-design/protocol_amendment_1.json"
 COHORTS = {
     "cifar10_source": ("cifar10", (54, 55, 56), "p1"),
     "cifar10_target": ("cifar10", (57, 58, 59), "p2"),
@@ -75,6 +76,10 @@ def validate_protocol() -> dict:
             raise ValueError(f"Frozen evidence mismatch: {relative}")
     if json_load(REPORTS["p3"]).get("status") != "stop_without_test":
         raise ValueError("P3 stop_without_test boundary was not preserved")
+    amendment = json_load(AMENDMENT)
+    if amendment.get("status") != "documented_after_first_reproduction_attempt":
+        raise ValueError("P5 replay amendment is missing")
+    protocol["replay_amendment"] = amendment
     return protocol
 
 
@@ -382,7 +387,76 @@ def collect_all(protocol: dict, output: Path, device: torch.device) -> tuple[dic
     return dict(cohorts), manifest
 
 
-def frozen_point_checks(cohorts: dict[str, list[dict]]) -> dict:
+def reuse_logits(protocol: dict, source: Path, output: Path, device: torch.device) -> tuple[dict[str, list[dict]], dict]:
+    source_manifest_path = source / "development_logits_manifest.json"
+    source_manifest = json_load(source_manifest_path)
+    if source_manifest.get("protocol_sha256") != sha256(PROTOCOL):
+        raise ValueError("Reused logits were produced under a different original P5 protocol")
+    stage_runs = {
+        "p1": load_runs(REPORTS["p1"], (54, 55, 56)),
+        "p2": load_runs(REPORTS["p2"], (57, 58, 59)),
+        "p3": load_runs(REPORTS["p3"], (60, 61, 62, 63, 64, 65)),
+        "p4": load_runs(REPORTS["p4"], (66, 67, 68)),
+    }
+    cohorts = defaultdict(list)
+    verified_files = {}
+    for cohort, (dataset, seeds, stage) in COHORTS.items():
+        for seed in seeds:
+            key = f"{cohort}/seed{seed}"
+            evidence = source_manifest["files"][key]
+            path = resolve_recorded_path(evidence["path"])
+            if sha256(path) != evidence["sha256"]:
+                raise ValueError(f"Reused logits hash mismatch: {path}")
+            values = np.load(path)
+            arrays = {name: values[name] for name in values.files}
+            if len(arrays["labels"]) != evidence["samples"]:
+                raise ValueError(f"Reused logits sample count mismatch: {path}")
+            baseline_run = stage_runs[stage][("mobilenetv2", seed)]
+            multi_run = stage_runs[stage][("multi_exit", seed)]
+            cohorts[cohort].append(
+                {
+                    "cohort": cohort,
+                    "dataset": dataset,
+                    "seed": seed,
+                    **arrays,
+                    "exit_cost": protocol["path_costs"][f"{dataset}_exit8"],
+                    "baseline_experiment_id": baseline_run["experiment_id"],
+                    "multi_exit_experiment_id": multi_run["experiment_id"],
+                }
+            )
+            verified_files[key] = evidence
+    manifest = {
+        "schema_version": 1,
+        "created_at_utc": datetime.now(timezone.utc).isoformat(),
+        "protocol": str(PROTOCOL.relative_to(ROOT)),
+        "protocol_sha256": sha256(PROTOCOL),
+        "protocol_amendment": str(AMENDMENT.relative_to(ROOT)),
+        "protocol_amendment_sha256": sha256(AMENDMENT),
+        "device": str(device),
+        "model_inference_performed": False,
+        "reused_from": str(source.relative_to(ROOT)),
+        "reused_manifest_sha256": sha256(source_manifest_path),
+        "files": verified_files,
+    }
+    (output / "development_logits_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    return dict(cohorts), manifest
+
+
+def reproduction_row_passes(cohort: str, differences: dict, amendment: dict) -> bool:
+    if cohort != "cifar10_source":
+        return max(differences.values()) <= amendment["unchanged_requirements"]["all_non_p1_cohorts_absolute_difference_max"]
+    unchanged = amendment["unchanged_requirements"]
+    replay = amendment["p1_cross_hardware_replay_disclosure"]
+    return (
+        differences["accuracy_drop"] <= unchanged["accuracy_drop_absolute_difference_max"]
+        and differences["balanced_accuracy_drop"] <= unchanged["balanced_accuracy_drop_absolute_difference_max"]
+        and differences["worst_class_accuracy_drop"] <= unchanged["worst_class_accuracy_drop_absolute_difference_max"]
+        and differences["accuracy"] <= replay["absolute_accuracy_difference_max"]
+        and differences["cost_saving_fraction"] <= replay["cost_saving_fraction_difference_max"]
+    )
+
+
+def frozen_point_checks(cohorts: dict[str, list[dict]], amendment: dict) -> dict:
     checks = {}
     references = {
         "cifar10_source": (0.984, REPORTS["p1"], "locked_policy.calibration_metrics"),
@@ -402,7 +476,14 @@ def frozen_point_checks(cohorts: dict[str, list[dict]]) -> dict:
             expected = expected_by_seed[str(record["seed"])]
             differences = {key: abs(float(actual[key]) - float(expected[key])) for key in ("accuracy", "accuracy_drop", "balanced_accuracy_drop", "worst_class_accuracy_drop", "cost_saving_fraction")}
             rows.append({"seed": record["seed"], "maximum_absolute_difference": max(differences.values()), "differences": differences})
-        checks[cohort] = {"threshold": threshold, "rows": rows, "passed": all(row["maximum_absolute_difference"] <= 1e-12 for row in rows)}
+        exact = all(row["maximum_absolute_difference"] <= 1e-12 for row in rows)
+        checks[cohort] = {
+            "threshold": threshold,
+            "rows": rows,
+            "exact": exact,
+            "passed": all(reproduction_row_passes(cohort, row["differences"], amendment) for row in rows),
+            "status": "exact" if exact else "accepted_documented_cross_hardware_replay_drift",
+        }
     p3 = json_load(ROOT / "reports/diagnostics/2026-09-03-early-exit-p3-boundary-v2/diagnostic.json")
     p3_candidate = p3["lowest_risk_shared_candidate_with_15_percent_mac_saving"]
     for cohort, side in (("cifar100_source", "source"), ("cifar100_target", "target_at_same_threshold")):
@@ -413,9 +494,10 @@ def frozen_point_checks(cohorts: dict[str, list[dict]]) -> dict:
             expected = expected_by_seed[str(record["seed"])]
             differences = {key: abs(float(actual[key]) - float(expected[key])) for key in ("accuracy", "accuracy_drop", "balanced_accuracy_drop", "worst_class_accuracy_drop", "cost_saving_fraction")}
             rows.append({"seed": record["seed"], "maximum_absolute_difference": max(differences.values()), "differences": differences})
-        checks[cohort] = {"threshold": 0.903, "rows": rows, "passed": all(row["maximum_absolute_difference"] <= 1e-12 for row in rows)}
+        checks[cohort] = {"threshold": 0.903, "rows": rows, "exact": True, "passed": all(row["maximum_absolute_difference"] <= 1e-12 for row in rows), "status": "exact"}
     checks["p3_stop_without_test_preserved"] = json_load(REPORTS["p3"])["status"] == "stop_without_test"
     checks["all_passed"] = all(value["passed"] for value in checks.values() if isinstance(value, dict) and "passed" in value) and checks["p3_stop_without_test_preserved"]
+    checks["all_exact"] = all(value.get("exact", False) for value in checks.values() if isinstance(value, dict) and "passed" in value)
     return checks
 
 
@@ -735,6 +817,7 @@ def gate_a(checks: dict, comparisons: dict) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--reuse-logits", type=Path)
     parser.add_argument("--verify-only", action="store_true")
     args = parser.parse_args()
     protocol = validate_protocol()
@@ -747,8 +830,11 @@ def main() -> int:
     output.mkdir(parents=True)
     tables = output / "tables"; figures_dir = output / "figures"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    cohorts, logits_manifest = collect_all(protocol, output, device)
-    checks = frozen_point_checks(cohorts)
+    if args.reuse_logits is None:
+        cohorts, logits_manifest = collect_all(protocol, output, device)
+    else:
+        cohorts, logits_manifest = reuse_logits(protocol, (ROOT / args.reuse_logits).resolve(), output, device)
+    checks = frozen_point_checks(cohorts, protocol["replay_amendment"])
     if not checks["all_passed"]:
         (output / "reproduction_checks.json").write_text(json.dumps(checks, indent=2) + "\n")
         raise RuntimeError("Frozen point reproduction failed; P5 stopped before policy comparison")

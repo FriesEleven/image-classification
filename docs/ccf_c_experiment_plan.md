@@ -289,12 +289,13 @@ Tiny ImageNet-200 的建议协议：
 ### 4.6 P8：真实动态数据流硬件评测（0 次训练，需设备）
 
 现有 RTX 4090D 结果是在 synthetic input 上分别测 early/fallback 路径，再按路由率加权。它是有价值的
-机制证据，但不能替代实际 `forward_with_policy` 数据流。
+历史机制证据，但该设备后续已不可用，也不能替代实际 `forward_with_policy` 数据流。未来实验不得依赖
+RTX 4090D 复测；新测量统一以当前 RTX 3080 Ti 为主设备，并把同机 CPU 作为可获得的第二平台。
 
 #### 最低矩阵
 
-- 设备 1：现有 RTX 4090D；
-- 设备 2（强烈建议）：Jetson Orin Nano/NX，或同一机器 CPU；
+- 设备 1：当前 NVIDIA GeForce RTX 3080 Ti；
+- 设备 2：同一服务器 CPU；若以后可获得 Jetson Orin Nano/NX，再作为追加平台而非当前依赖；
 - 数据：CIFAR-10 `theta=0.984`、CIFAR-100 `theta=0.903` 的 calibration/confirmation 样本；
 - batch size：1/4/8/16/32；新增 ResNet-18 后至少测 batch 1/8；
 - 对比：final-only、实际 dynamic forward、隔离路径加权 expected latency；
@@ -473,7 +474,7 @@ test 表现选择方法。预留约 20% 失败/调度缓冲，但失败 run 不�
 1. **目标期刊与期望投稿时间**：不同 CCF-C 期刊对应用场景、理论性、篇幅和实验规模侧重不同；
 2. **算力预算**：可用 GPU 型号/数量、单卡连续可用时长、可接受的总 GPU-hours 和磁盘余量；
 3. **数据权限**：是否允许下载 Tiny ImageNet-200、CIFAR-10-C/100-C；是否已有合法 ImageNet-1K 访问；
-4. **硬件条件**：是否能提供 Jetson Orin、桌面 CPU、Android/树莓派等第二平台；
+4. **硬件条件**：已确认后续只能使用 RTX 3080 Ti；P8 默认使用当前 GPU + 同机 CPU，不依赖 RTX 4090D；
 5. **第二 backbone 选择**：默认 ResNet-18；若投稿更偏端侧系统，可改为 MobileNetV3-Small；
 6. **新 benchmark-evaluation bundle 授权**：新消融/新 backbone 是否允许在全部预注册和冻结后统一评估一次；
    CIFAR-10/100 结果会明确标成“历史已暴露 benchmark 上的方法锁定评估”，而非独立盲测；

@@ -19,6 +19,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--foreground", action="store_true")
+    parser.add_argument("--reuse-logits", type=Path)
     args = parser.parse_args()
     subprocess.run([sys.executable, str(ANALYZER), "--output", "/tmp/p5-unused", "--verify-only"], cwd=ROOT, check=True)
     if args.dry_run:
@@ -43,6 +44,8 @@ def main() -> int:
         log_dir = ARTIFACTS / "launcher_logs"; log_dir.mkdir(parents=True, exist_ok=True)
         log_path = log_dir / f"early_exit_p5ab_{timestamp}.log"
         command = [sys.executable, str(ANALYZER), "--output", str(output)]
+        if args.reuse_logits is not None:
+            command.extend(["--reuse-logits", str(args.reuse_logits)])
         if args.foreground:
             return subprocess.run(command, cwd=ROOT, check=False).returncode
         with log_path.open("x", encoding="utf-8") as log:
