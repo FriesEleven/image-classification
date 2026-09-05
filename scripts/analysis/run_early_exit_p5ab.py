@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT))
 
-from image_classification.selection.early_exit import policy_metrics, softmax_confidence
+from image_classification.selection.early_exit import softmax_confidence
 from scripts.analysis.analyze_early_exit_p0 import _collect_logits
 
 PROTOCOL = ROOT / "reports/experiments/2026-09-05-early-exit-p5-design/protocol_manifest.json"
@@ -119,14 +119,21 @@ def softmax(logits: np.ndarray, temperature: float = 1.0) -> np.ndarray:
 
 
 def macro_f1(labels: np.ndarray, predictions: np.ndarray) -> float:
-    values = []
-    for class_id in np.unique(labels):
-        true_positive = np.sum((labels == class_id) & (predictions == class_id))
-        false_positive = np.sum((labels != class_id) & (predictions == class_id))
-        false_negative = np.sum((labels == class_id) & (predictions != class_id))
-        denominator = 2 * true_positive + false_positive + false_negative
-        values.append(0.0 if denominator == 0 else 2 * true_positive / denominator)
-    return float(np.mean(values))
+    labels = np.asarray(labels, dtype=np.int64)
+    predictions = np.asarray(predictions, dtype=np.int64)
+    classes = int(max(labels.max(), predictions.max())) + 1
+    support = np.bincount(labels, minlength=classes)
+    predicted = np.bincount(predictions, minlength=classes)
+    true_positive = np.bincount(labels[labels == predictions], minlength=classes)
+    denominator = support + predicted
+    populated = support > 0
+    values = np.divide(
+        2 * true_positive,
+        denominator,
+        out=np.zeros(classes, dtype=float),
+        where=denominator > 0,
+    )
+    return float(values[populated].mean())
 
 
 def binary_auc(labels: np.ndarray, scores: np.ndarray) -> float:
@@ -194,12 +201,37 @@ def score_values(name: str, logits: np.ndarray, *, temperature: float = 1.0) -> 
 
 
 def route_metrics(record: dict, early: np.ndarray) -> dict:
-    labels = record["labels"]
-    exit_predictions = record["exit8_logits"].argmax(axis=1)
-    final_predictions = record["final_logits"].argmax(axis=1)
+    labels = np.asarray(record["labels"], dtype=np.int64)
+    exit_predictions = record.get("exit8_predictions")
+    if exit_predictions is None:
+        exit_predictions = record["exit8_logits"].argmax(axis=1)
+    final_predictions = record.get("final_predictions")
+    if final_predictions is None:
+        final_predictions = record["final_logits"].argmax(axis=1)
     predictions = np.where(early, exit_predictions, final_predictions)
-    paths = np.where(early, 0, 1)
-    values = policy_metrics(labels, predictions, final_predictions, paths, [record["exit_cost"], 1.0])
+    classes = int(labels.max()) + 1
+    support = np.bincount(labels, minlength=classes)
+    policy_correct = predictions == labels
+    final_correct = final_predictions == labels
+    policy_class_correct = np.bincount(labels, weights=policy_correct, minlength=classes)
+    final_class_correct = np.bincount(labels, weights=final_correct, minlength=classes)
+    populated = support > 0
+    policy_class_accuracy = np.divide(policy_class_correct, support, out=np.zeros(classes), where=populated)
+    final_class_accuracy = np.divide(final_class_correct, support, out=np.zeros(classes), where=populated)
+    early_fraction = float(np.mean(early))
+    expected_cost = early_fraction * record["exit_cost"] + (1.0 - early_fraction)
+    values = {
+        "accuracy": float(policy_correct.mean()),
+        "reference_accuracy": float(final_correct.mean()),
+        "accuracy_drop": float(final_correct.mean() - policy_correct.mean()),
+        "balanced_accuracy": float(policy_class_accuracy[populated].mean()),
+        "reference_balanced_accuracy": float(final_class_accuracy[populated].mean()),
+        "balanced_accuracy_drop": float((final_class_accuracy[populated] - policy_class_accuracy[populated]).mean()),
+        "worst_class_accuracy_drop": float((final_class_accuracy[populated] - policy_class_accuracy[populated]).max()),
+        "route_fractions": [early_fraction, 1.0 - early_fraction],
+        "expected_cost_fraction": expected_cost,
+        "cost_saving_fraction": 1.0 - expected_cost,
+    }
     values.update(
         {
             "macro_f1": macro_f1(labels, predictions),
@@ -229,12 +261,12 @@ def select_shared(
     thresholds: np.ndarray | None = None,
 ) -> dict | None:
     candidates = thresholds_for(records, score_name, temperature) if thresholds is None else thresholds
+    base_name = "msp" if score_name == "temperature_msp" else score_name
+    scores = [score_values(base_name, record["exit8_logits"], temperature=temperature) for record in records]
     best = None
     for threshold in candidates:
         per_seed = []
-        for record in records:
-            base_name = "msp" if score_name == "temperature_msp" else score_name
-            score = score_values(base_name, record["exit8_logits"], temperature=temperature)
+        for record, score in zip(records, scores):
             metrics = route_metrics(record, score >= threshold)
             if (
                 metrics["accuracy_drop"] > budgets["overall_drop"] + 1e-12
@@ -258,7 +290,8 @@ def evaluate_selected(selected: dict | None, records: list[dict], score_name: st
     if selected is None:
         return []
     base_name = "msp" if score_name == "temperature_msp" else score_name
-    return [route_metrics(row, score_values(base_name, row["exit8_logits"], temperature=temperature) >= selected["threshold"]) for row in records]
+    scores = [score_values(base_name, row["exit8_logits"], temperature=temperature) for row in records]
+    return [route_metrics(row, score >= selected["threshold"]) for row, score in zip(records, scores)]
 
 
 def fit_temperature(records: list[dict]) -> float:
@@ -367,6 +400,8 @@ def collect_all(protocol: dict, output: Path, device: torch.device) -> tuple[dic
                 "final_logits": final_logits,
                 "exit8_logits": exit8_logits,
                 "exit16_logits": exit16_logits,
+                "final_predictions": final_logits.argmax(axis=1),
+                "exit8_predictions": exit8_logits.argmax(axis=1),
                 "sample_ids": sample_ids,
                 "exit_cost": exit_cost,
                 "baseline_experiment_id": baseline_run["experiment_id"],
@@ -427,6 +462,8 @@ def reuse_logits(protocol: dict, source: Path, output: Path, device: torch.devic
                     "dataset": dataset,
                     "seed": seed,
                     **arrays,
+                    "final_predictions": arrays["final_logits"].argmax(axis=1),
+                    "exit8_predictions": arrays["exit8_logits"].argmax(axis=1),
                     "exit_cost": protocol["path_costs"][f"{dataset}_exit8"],
                     "baseline_experiment_id": baseline_run["experiment_id"],
                     "multi_exit_experiment_id": multi_run["experiment_id"],
@@ -564,13 +601,13 @@ def diagnostics(cohorts: dict[str, list[dict]], tables: Path) -> dict:
     return {"per_class_rows": len(per_class), "decision_rows": len(complementarity), "calibration_rows": len(calibration)}
 
 
-def _shared_strategy_task(payload: tuple) -> tuple[str, dict]:
-    source_key, target_key, method, score_name, budgets, scale = payload
+def _shared_strategy_task(payload: tuple) -> tuple[str, str, dict]:
+    design, source_key, target_key, method, score_name, budgets, scale = payload
     source = _WORKER_COHORTS[source_key]
     target = _WORKER_COHORTS[target_key]
     selected = select_shared(source, score_name, budgets, temperature=scale)
     target_metrics = evaluate_selected(selected, target, score_name, temperature=scale)
-    return method, {
+    return design, method, {
         "selection": selected,
         "source": summarize_metrics([] if selected is None else selected["source_metrics"]),
         "target": summarize_metrics(target_metrics),
@@ -579,16 +616,17 @@ def _shared_strategy_task(payload: tuple) -> tuple[str, dict]:
 
 
 def strategy_comparison(cohorts: dict[str, list[dict]], protocol: dict, tables: Path, pool) -> tuple[dict, list[dict]]:
-    comparisons = {}
+    comparisons = {design: {} for design in ("cifar10", "cifar100_strict", "cifar100_relaxed")}
     flat_rows = []
     designs = (
         ("cifar10", "cifar10_source", "cifar10_target", protocol["risk_budgets"]["cifar10"]),
         ("cifar100_strict", "cifar100_source", "cifar100_target", protocol["risk_budgets"]["cifar100_strict"]),
         ("cifar100_relaxed", "cifar100_source", "cifar100_confirmation", protocol["risk_budgets"]["cifar100_relaxed_boundary"]),
     )
+    contexts = {}
+    shared_tasks = []
     for design, source_key, target_key, full_budget in designs:
         source = cohorts[source_key]
-        target = cohorts[target_key]
         variants = {
             "shared_msp_overall": ("msp", {**full_budget, "balanced_drop": 1.0, "worst_class_drop": 1.0}, 1.0),
             "shared_msp_overall_balanced": ("msp", {**full_budget, "worst_class_drop": 1.0}, 1.0),
@@ -598,8 +636,15 @@ def strategy_comparison(cohorts: dict[str, list[dict]], protocol: dict, tables: 
         }
         temperature = fit_temperature(source)
         variants["temperature_scaled_msp_full"] = ("temperature_msp", full_budget, temperature)
-        tasks = [(source_key, target_key, method, score_name, budgets, scale) for method, (score_name, budgets, scale) in variants.items()]
-        result = dict(pool.map(_shared_strategy_task, tasks))
+        contexts[design] = (source_key, target_key, full_budget)
+        shared_tasks.extend((design, source_key, target_key, method, score_name, budgets, scale) for method, (score_name, budgets, scale) in variants.items())
+    for design, method, values in pool.map(_shared_strategy_task, shared_tasks):
+        comparisons[design][method] = values
+
+    for design, (source_key, target_key, full_budget) in contexts.items():
+        source = cohorts[source_key]
+        target = cohorts[target_key]
+        result = comparisons[design]
         mapping = fit_pcee(source)
         source_scores = [pcee_score(row["exit8_logits"], mapping) for row in source]
         selected = select_from_precomputed(source, source_scores, full_budget)
@@ -647,7 +692,6 @@ def strategy_comparison(cohorts: dict[str, list[dict]], protocol: dict, tables: 
 
         for method, values in result.items():
             flat_rows.append({"design": design, "method": method, "threshold": None if values.get("selection") is None else values["selection"].get("threshold"), **{f"source_{key}": value for key, value in values["source"].items()}, **{f"target_{key}": value for key, value in values["target"].items()}})
-        comparisons[design] = result
     write_csv(tables / "strategy_comparison.csv", flat_rows)
     latex_from_csv(tables / "strategy_comparison.csv", tables / "strategy_comparison.tex")
     return comparisons, flat_rows
@@ -658,10 +702,12 @@ def _frontier_task(payload: tuple) -> tuple[list[dict], list[dict]]:
     source = _WORKER_COHORTS[source_key]
     target = _WORKER_COHORTS[target_key]
     candidates = thresholds_for(source, score_name)
+    source_scores = [score_values(score_name, row["exit8_logits"]) for row in source]
+    target_scores = [score_values(score_name, row["exit8_logits"]) for row in target]
     method_frontier = []
     matched_rows = []
     for threshold in candidates:
-        source_metrics = [route_metrics(row, score_values(score_name, row["exit8_logits"]) >= threshold) for row in source]
+        source_metrics = [route_metrics(row, score >= threshold) for row, score in zip(source, source_scores)]
         source_summary = summarize_metrics(source_metrics)
         method_frontier.append({
             "design": design,
@@ -679,7 +725,7 @@ def _frontier_task(payload: tuple) -> tuple[list[dict], list[dict]]:
             matched_rows.append({"design": design, "method": method, "target_saving": target_saving, "status": "infeasible"})
             continue
         chosen = min(eligible, key=lambda row: (row["source_min_saving"] - target_saving, abs(row["source_accuracy_drop_mean"])))
-        target_metrics = [route_metrics(record, score_values(score_name, record["exit8_logits"]) >= chosen["threshold"]) for record in target]
+        target_metrics = [route_metrics(record, score >= chosen["threshold"]) for record, score in zip(target, target_scores)]
         summary = summarize_metrics(target_metrics)
         risk_feasible = (
             chosen["source_accuracy_drop_mean"] <= budget["overall_drop"] + 1e-12

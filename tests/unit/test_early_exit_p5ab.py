@@ -2,6 +2,7 @@ import multiprocessing as mp
 
 import numpy as np
 
+from image_classification.selection.early_exit import policy_metrics
 from scripts.analysis.run_early_exit_p5ab import (
     _initialize_worker,
     _shared_strategy_task,
@@ -36,6 +37,26 @@ def test_route_metrics_counts_harm_and_rescue():
     assert values["cost_saving_fraction"] == 0.6
 
 
+def test_vectorized_route_metrics_match_reference_metrics():
+    record = _record()
+    early = np.array([True, False, True, False])
+    predictions = np.where(
+        early,
+        record["exit8_logits"].argmax(axis=1),
+        record["final_logits"].argmax(axis=1),
+    )
+    reference = policy_metrics(
+        record["labels"],
+        predictions,
+        record["final_logits"].argmax(axis=1),
+        np.where(early, 0, 1),
+        [record["exit_cost"], 1.0],
+    )
+    actual = route_metrics(record, early)
+    for key in reference:
+        np.testing.assert_allclose(actual[key], reference[key], atol=1e-12)
+
+
 def test_shared_selector_keeps_final_only_when_zero_risk_requires_it():
     selected = select_shared([_record()], "msp", {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.0})
     assert selected is not None
@@ -63,8 +84,9 @@ def test_p1_replay_tolerance_never_relaxes_risk_metrics():
 
 def test_shared_strategy_runs_in_forked_worker_pool():
     cohorts = {"source": [_record(1)], "target": [_record(2)]}
-    payload = ("source", "target", "shared_msp_full", "msp", {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.0}, 1.0)
+    payload = ("design", "source", "target", "shared_msp_full", "msp", {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.0}, 1.0)
     with mp.get_context("fork").Pool(2, initializer=_initialize_worker, initargs=(cohorts,)) as pool:
-        method, result = pool.map(_shared_strategy_task, [payload])[0]
+        design, method, result = pool.map(_shared_strategy_task, [payload])[0]
+    assert design == "design"
     assert method == "shared_msp_full"
     assert result["source"]["feasible"]
