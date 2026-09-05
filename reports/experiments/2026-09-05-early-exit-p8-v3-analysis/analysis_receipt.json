@@ -1,0 +1,31 @@
+{
+  "status": "passed",
+  "errors": [],
+  "round_rows": 1200,
+  "cells": 300,
+  "raw_files": 1200,
+  "workloads": 300,
+  "check_files": 300,
+  "latency_observations": 1200000,
+  "route_count_observations": 600000,
+  "check_totals": {
+    "samples_checked": 117120,
+    "route_errors": 0,
+    "prediction_errors": 0,
+    "logit_tolerance_errors": 0
+  },
+  "check_maxima": {
+    "max_abs_logit_difference": 3.0517578125e-05,
+    "max_tolerance_ratio": 0.12403760105371475
+  },
+  "input_hashes": {
+    "protocol_manifest.json": "58569287e0844e3f1abdbfe46a1e60cdf33438126a3a35ff7de704fdfbc96c5f",
+    "p8_v3_results.json": "28b7e89556d974baf5b098060638e491160aeb8fd4287ff4fc3cfe54ad88199c",
+    "round_metrics.csv": "4623dcfc725ea976c89f456470a8830acc1ad951fc451dfaa801c17785f8ca72",
+    "seed_metrics.csv": "5b7ae2e5cd20b173da16c7edb8c056b86ec6e41c648715509b5bcafa795e7ae4"
+  },
+  "schema_version": 1,
+  "statistical_unit": "training seed after averaging five paired rounds",
+  "seed_rows": 60,
+  "aggregate_rows": 20
+}

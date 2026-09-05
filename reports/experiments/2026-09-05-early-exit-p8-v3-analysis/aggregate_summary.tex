@@ -1,0 +1,26 @@
+\begin{tabular}{llrrrr}
+\toprule
+Device & Dataset & Batch & Early (\%) & MAC saving (\%) & Actual saving (\%) \\
+\midrule
+12-thread CPU & CIFAR-10 & 1 & 57.95 & 32.62 & 26.56 $\pm$ 1.95 \\
+12-thread CPU & CIFAR-10 & 4 & 58.42 & 32.89 & 7.58 $\pm$ 0.39 \\
+12-thread CPU & CIFAR-10 & 8 & 58.50 & 32.93 & 1.64 $\pm$ 0.82 \\
+12-thread CPU & CIFAR-10 & 16 & 58.45 & 32.90 & 7.78 $\pm$ 1.30 \\
+12-thread CPU & CIFAR-10 & 32 & 58.48 & 32.92 & 4.56 $\pm$ 0.56 \\
+12-thread CPU & CIFAR-100 & 1 & 26.20 & 14.86 & 10.14 $\pm$ 0.42 \\
+12-thread CPU & CIFAR-100 & 4 & 26.64 & 15.11 & -5.77 $\pm$ 2.14 \\
+12-thread CPU & CIFAR-100 & 8 & 26.67 & 15.13 & -3.30 $\pm$ 0.82 \\
+12-thread CPU & CIFAR-100 & 16 & 26.60 & 15.09 & 1.19 $\pm$ 1.18 \\
+12-thread CPU & CIFAR-100 & 32 & 26.64 & 15.11 & -1.51 $\pm$ 0.96 \\
+RTX 3080 Ti & CIFAR-10 & 1 & 57.95 & 32.62 & 17.14 $\pm$ 1.45 \\
+RTX 3080 Ti & CIFAR-10 & 4 & 58.42 & 32.89 & -14.73 $\pm$ 3.70 \\
+RTX 3080 Ti & CIFAR-10 & 8 & 58.50 & 32.93 & -19.24 $\pm$ 0.32 \\
+RTX 3080 Ti & CIFAR-10 & 16 & 58.45 & 32.90 & -20.36 $\pm$ 0.51 \\
+RTX 3080 Ti & CIFAR-10 & 32 & 58.48 & 32.92 & -20.39 $\pm$ 0.72 \\
+RTX 3080 Ti & CIFAR-100 & 1 & 26.20 & 14.86 & -0.04 $\pm$ 2.74 \\
+RTX 3080 Ti & CIFAR-100 & 4 & 26.64 & 15.11 & -18.45 $\pm$ 0.90 \\
+RTX 3080 Ti & CIFAR-100 & 8 & 26.67 & 15.13 & -19.51 $\pm$ 1.89 \\
+RTX 3080 Ti & CIFAR-100 & 16 & 26.60 & 15.09 & -21.79 $\pm$ 0.58 \\
+RTX 3080 Ti & CIFAR-100 & 32 & 26.64 & 15.11 & -22.44 $\pm$ 4.30 \\
+\bottomrule
+\end{tabular}

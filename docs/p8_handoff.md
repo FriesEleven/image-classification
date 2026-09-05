@@ -28,25 +28,24 @@ disabling TF32 reduced the maximum checked logit difference from 0.0069122 to
 2.861e-6 and restored zero prediction differences. The partial timings remain
 failed-run evidence and are not reused.
 
-P8 v3 is the clean repair. It retains the same six A3 checkpoints, thresholds,
-devices, batch sizes, rounds and timing counts; disables cuDNN/matmul TF32;
-enables deterministic algorithms; and freezes logit-level correctness at
-rtol=1e-4, atol=1e-5. Exact route mismatches or logits outside tolerance remain
-fatal. Near-tie argmax changes are counted and disclosed separately. P8 v3
-remeasures all 1,200 arrays in a new output directory. Expected runtime remains
-about 3–4 hours, subject to server contention.
+P8 v3 completed all 1,200 timing arrays in
+`artifacts/analyses/early_exit_p8_v3_20260905_192249_293181`. The full audit
+verified 1,200,000 positive finite latency observations, 300 exact workload
+receipts, 600,000 timed route-count observations, and 300 correctness receipts.
+Across 117,120 checked sample executions, route, prediction, and logit-tolerance
+errors were all zero. Source stayed unchanged and no official test was accessed.
 
-User launch from the server project directory:
+The report is
+`reports/experiments/2026-09-05-early-exit-p8-v3-analysis/README.md`. Mean actual
+GPU savings at batch 1 were 17.14% (sample SD 1.45 pp) for CIFAR-10 and -0.04%
+(2.74 pp) for CIFAR-100. Every GPU batch size from 4 to 32 slowed down despite
+positive MAC savings. CPU CIFAR-10 accelerated at all tested batch sizes; CPU
+CIFAR-100 showed a clear gain at batch 1 and mixed/negative larger-batch results.
+These are conditional hardware findings, not a universal acceleration claim.
 
-```bash
-/root/miniconda3/bin/python scripts/launch_early_exit_p8_v3.py
-```
-
-After completion, validate 1,200 raw timing arrays, 300 exact workload receipts,
-per-batch early counts and prediction checks; aggregate rounds within seed before
-between-seed statistics. Keep CPU lifetime RSS distinct from mode peak memory.
-Use paired singleton isolated-path estimates only at batch=1; larger-batch
-latency is measured directly. No training, official test access, threshold tuning,
-or replacement seeds are included in this batch. Avoid source edits, cleanup,
-or concurrent experiments while it runs. Then continue P6/P7 planning using A3
-and retain the documented hardware limitations in the manuscript.
+Keep CPU lifetime RSS distinct from mode peak memory, and use the isolated-path
+estimate only as a singleton mechanism diagnostic. Telemetry snapshots are not
+energy measurements. The next core work package is P6, a preregistered CIFAR-stem
+ResNet-18 source-to-target transfer using the simplified A3 recipe. Do not launch
+P6 until its architecture mapping, MAC fractions, configs, tests, and immutable
+manifest have all been reviewed and committed.
