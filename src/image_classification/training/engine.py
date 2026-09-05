@@ -18,7 +18,11 @@ from image_classification.data import build_dataloaders
 from image_classification.models import build_model
 from image_classification.paths import RunPaths
 from image_classification.training.benchmark import benchmark_inference, model_metrics
-from image_classification.training.checkpoint import append_training_log, save_checkpoint
+from image_classification.training.checkpoint import (
+    append_per_head_training_log,
+    append_training_log,
+    save_checkpoint,
+)
 from image_classification.training.cuda_graph import prepare_training_graph
 from image_classification.training.evaluate import EpochAccumulator, save_evaluation_data, validate
 from image_classification.training.objectives import primary_logits, training_objective
@@ -69,6 +73,7 @@ def _train_epoch(model, loader, criterion, optimizer, scheduler, scaler, config,
     model.train()
     optimizer.zero_grad()
     accumulator = EpochAccumulator()
+    output_accumulators = None
     amp_enabled = config.amp and device.type == "cuda"
     interactive = sys.stderr.isatty()
     with OptimizerStepTracker(optimizer) as tracker, tqdm(
@@ -86,11 +91,20 @@ def _train_epoch(model, loader, criterion, optimizer, scheduler, scaler, config,
                 loss = batch_loss / group_size
             scaler.scale(loss).backward()
             accumulator.update(primary_logits(outputs), host_targets, batch_loss)
+            if isinstance(outputs, tuple):
+                if output_accumulators is None:
+                    output_accumulators = [EpochAccumulator() for _ in outputs]
+                if len(outputs) != len(output_accumulators):
+                    raise ValueError("Model output count changed during training")
+                for output_accumulator, logits in zip(output_accumulators, outputs):
+                    output_accumulator.update(logits, host_targets, criterion(logits, targets))
             if interactive and step % 50 == 0:
                 progress.set_postfix(loss=f"{batch_loss.item():.4f}")
             if step % config.accumulation_steps == 0 or step == len(loader):
                 _step_optimizer_and_scheduler(optimizer, scheduler, scaler, tracker)
     metrics, _labels, _predictions, _probabilities = accumulator.finish()
+    if output_accumulators is not None:
+        metrics["per_output"] = [item.finish()[0] for item in output_accumulators]
     metrics["learning_rate"] = optimizer.param_groups[0]["lr"]
     return metrics
 
@@ -105,6 +119,7 @@ def train(config: ExperimentConfig) -> dict:
     _save_resolved_config(paths.root / "config.yaml", config, device)
     provenance = {
         **runtime_provenance(), "architecture_version": config.architecture_version,
+        "training_recipe_version": config.training_recipe_version,
         "command": sys.argv,
         "split_seed": config.seed if config.split_seed is None else config.split_seed,
         "training_seed": config.seed,
@@ -114,6 +129,7 @@ def train(config: ExperimentConfig) -> dict:
             else "fixed data split seed is independent of model/training seed"
         ),
         "training_implementation": "deferred_metrics_post_step_hook_v1",
+        "per_head_epoch_metrics": "long_form_ce_loss_accuracy_v1",
         "execution_backend": "cuda_graph_training_v1" if config.cuda_graph else "eager",
         "amp_cache_enabled": not config.cuda_graph,
         "inference_benchmark_enabled": config.measure_inference,
@@ -191,6 +207,14 @@ def train(config: ExperimentConfig) -> dict:
             train_losses.append(train_metrics["loss"])
             val_accuracies.append(val_metrics["accuracy"])
             append_training_log(paths.training_log, epoch, train_metrics, val_metrics)
+            if config.model_type == "multi_exit":
+                append_per_head_training_log(
+                    paths.root / "logs/per_head_training.csv",
+                    epoch,
+                    train_metrics,
+                    val_metrics,
+                    config.exit_positions,
+                )
             for name, value in (("Loss/train", train_metrics["loss"]), ("Loss/val", val_metrics["loss"]),
                                 ("Accuracy/train", train_metrics["accuracy"]), ("Accuracy/val", val_metrics["accuracy"]),
                                 ("Learning_rate", train_metrics["learning_rate"])):

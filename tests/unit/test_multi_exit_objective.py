@@ -1,7 +1,9 @@
 import torch
 from torch import nn
+from torch.utils.data import DataLoader, TensorDataset
 
 from image_classification.config import ExperimentConfig
+from image_classification.training.evaluate import validate
 from image_classification.training.objectives import primary_logits, training_objective
 
 
@@ -48,3 +50,18 @@ def test_multi_exit_objective_trains_all_heads_without_teacher_kd_gradient():
     # The detached final teacher means its gradient is exactly final-head CE.
     torch.testing.assert_close(final.grad, reference_gradient)
     assert loss.item() > criterion(final.detach(), targets).item()
+
+
+def test_validation_reports_each_multi_exit_head():
+    class TupleModel(nn.Module):
+        def forward(self, inputs):
+            values = inputs.flatten(1)
+            return values, values.flip(1), values.roll(1, 1)
+
+    inputs = torch.tensor([[4.0, 0.0], [0.0, 4.0]])[:, :, None, None]
+    targets = torch.tensor([0, 1])
+    loader = DataLoader(TensorDataset(inputs, targets), batch_size=2)
+    metrics, *_ = validate(TupleModel(), loader, nn.CrossEntropyLoss(), torch.device("cpu"))
+    assert len(metrics["per_output"]) == 3
+    assert metrics["per_output"][0]["accuracy"] == 1.0
+    assert metrics["per_output"][1]["accuracy"] == 0.0

@@ -59,6 +59,7 @@ def validate(
 ) -> tuple[dict, np.ndarray, np.ndarray, np.ndarray]:
     model.eval()
     accumulator = EpochAccumulator(probabilities=True)
+    output_accumulators = None
     with torch.no_grad(), tqdm(
         loader, desc=description, unit="batch", disable=not sys.stderr.isatty(),
     ) as progress:
@@ -69,7 +70,17 @@ def validate(
             outputs = model(inputs)
             final_logits = primary_logits(outputs)
             accumulator.update(final_logits, host_targets, criterion(final_logits, targets))
-    return accumulator.finish()
+            if isinstance(outputs, tuple):
+                if output_accumulators is None:
+                    output_accumulators = [EpochAccumulator() for _ in outputs]
+                if len(outputs) != len(output_accumulators):
+                    raise ValueError("Model output count changed during validation")
+                for output_accumulator, logits in zip(output_accumulators, outputs):
+                    output_accumulator.update(logits, host_targets, criterion(logits, targets))
+    result = accumulator.finish()
+    if output_accumulators is not None:
+        result[0]["per_output"] = [item.finish()[0] for item in output_accumulators]
+    return result
 
 
 def save_evaluation_data(

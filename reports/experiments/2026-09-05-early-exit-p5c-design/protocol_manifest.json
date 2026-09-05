@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_p5c_training",
+  "stage": "P5-C",
+  "research_question": "RQ2",
+  "scope": "Training-component 2x2 ablation using existing A0/A4 runs and 18 new A1/A2/A3 development-only runs.",
+  "gate_a_evidence": {
+    "path": "artifacts/analyses/early_exit_p5ab_20260905_092909/p5ab_results.json",
+    "sha256": "e1270fde3d200004ecc5e4bc976898b9fb882be6fa4224c2743c77ec47bee8cd",
+    "status": "go_p5c",
+    "required_gates": {
+      "frozen_points_reproduced": true,
+      "proposed_not_pareto_dominated_on_primary_designs": true,
+      "nonempty_risk_compute_tradeoff": true,
+      "p3_stop_without_test_preserved": true
+    }
+  },
+  "matrix": {
+    "cifar10": {"training_seeds": [54, 55, 56], "split_seed": 20260902},
+    "cifar100": {"training_seeds": [66, 67, 68], "split_seed": 20260904}
+  },
+  "variants": {
+    "A0": {"exit8": false, "exit16": false, "distillation": false, "status": "existing_final_only"},
+    "A1": {"exit8": true, "exit16": false, "distillation": false, "positions": [8], "nominal_weights": [0.1], "alpha": 0.0},
+    "A2": {"exit8": true, "exit16": false, "distillation": true, "positions": [8], "nominal_weights": [0.2], "alpha": 0.5, "temperature": 3.0},
+    "A3": {"exit8": true, "exit16": true, "distillation": false, "positions": [8, 16], "nominal_weights": [0.1, 0.15], "alpha": 0.0},
+    "A4": {"exit8": true, "exit16": true, "distillation": true, "positions": [8, 16], "nominal_weights": [0.2, 0.3], "alpha": 0.5, "temperature": 3.0, "status": "existing_full"}
+  },
+  "controls": {
+    "epochs": 200,
+    "batch_size": 128,
+    "optimizer": "AdamW(lr=0.01, weight_decay=1e-4, betas=(0.9,0.999))",
+    "scheduler": "OneCycleLR(pct_start=0.3, cosine, div_factor=25, final_div_factor=100)",
+    "amp": true,
+    "cuda_graph": true,
+    "checkpoint_selection": "final-head model-selection validation accuracy only",
+    "execution": "one serial GPU job; datasets and variants execute in manifest order",
+    "hardware": "NVIDIA GeForce RTX 3080 Ti only; no RTX 4090D dependency",
+    "per_head_epoch_log": "logs/per_head_training.csv for every new run"
+  },
+  "risk_budgets": {
+    "cifar10": {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.0, "minimum_mac_saving": 0.15},
+    "cifar100": {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.04, "minimum_mac_saving": 0.15}
+  },
+  "failure_rules": {
+    "delete_or_replace_seed": false,
+    "variant_mean_final_gain_minimum": -0.003,
+    "each_seed_final_gain_minimum": -0.0075,
+    "failed_variant_follow_up_benchmark": "stop",
+    "infeasible_policy": "report_infeasible"
+  },
+  "test_boundary": {
+    "evaluate_test_during_training": false,
+    "official_or_external_evaluator": "forbidden in this batch",
+    "future_bundled_method_locked_evaluator": "requires a separate user-authorized freeze after every variant is complete"
+  },
+  "existing_evidence": {
+    "reports/experiments/2026-09-02-early-exit-p1b/locked_selection.json": "8dce5d938e06ae9d7432bd6baafd0c0ed9f978678fb53767ab02eeafecc723ab",
+    "reports/experiments/2026-09-03-early-exit-p4-cifar100/confirmation.json": "73f0a7f7645413856bfc9e43b1f7b5108c803773806bb7e59d9d128b1b8833d2"
+  },
+  "expected_new_runs": 18
+}

@@ -165,6 +165,14 @@ class ExperimentConfig:
         }.get(self.model_type, f"{self.model_type}_v1")
 
     @property
+    def training_recipe_version(self) -> str:
+        if self.model_type != "multi_exit":
+            return "single_head_cross_entropy_v1"
+        positions = "_".join(str(position) for position in self.exit_positions)
+        objective = "ce_only" if self.exit_distillation_alpha == 0 else "detached_final_kd"
+        return f"multi_exit_{objective}_positions_{positions}_v1"
+
+    @property
     def experiment_id(self) -> str:
         if self.model_type in {"csgha", "csgha_v4", "csgha_v5", "csgha_v6"}:
             se = "-".join(map(str, self.se_positions))

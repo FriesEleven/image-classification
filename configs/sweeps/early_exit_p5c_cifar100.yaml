@@ -1,0 +1,9 @@
+name: early_exit_p5c_cifar100_serial
+description: >-
+  P5-C training-component ablation on the frozen CIFAR-100 development split.
+  Runs A1, A2, and A3 serially for seeds 66/67/68 without test evaluation.
+seeds: [66, 67, 68]
+experiments:
+  - configs/experiments/early_exit_p5c_cifar100_a1.yaml
+  - configs/experiments/early_exit_p5c_cifar100_a2.yaml
+  - configs/experiments/early_exit_p5c_cifar100_a3.yaml

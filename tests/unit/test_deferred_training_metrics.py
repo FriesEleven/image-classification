@@ -4,6 +4,7 @@ import torch
 from torch import nn
 from torch.amp import GradScaler
 
+from image_classification.training.checkpoint import append_per_head_training_log
 from image_classification.training.engine import _step_optimizer_and_scheduler
 from image_classification.training.evaluate import EpochAccumulator, classification_metrics
 from image_classification.training.optimizer_step import OptimizerStepTracker
@@ -40,6 +41,23 @@ def test_deferred_metrics_match_old_batch_mean_and_probability_semantics():
 def test_empty_accumulator_is_rejected():
     with pytest.raises(ValueError, match="empty"):
         EpochAccumulator().finish()
+
+
+def test_per_head_log_records_each_split_and_output(tmp_path):
+    values = {
+        "per_output": [
+            {"loss": 1.0, "accuracy": 0.5, "precision": 0.4, "recall": 0.5, "f1": 0.45},
+            {"loss": 1.2, "accuracy": 0.4, "precision": 0.3, "recall": 0.4, "f1": 0.35},
+        ]
+    }
+    path = tmp_path / "per_head_training.csv"
+    append_per_head_training_log(path, 0, values, values, (8,))
+    rows = path.read_text().splitlines()
+    assert len(rows) == 5
+    assert ",train,final,final," in rows[1]
+    assert ",train,exit8,8," in rows[2]
+    assert ",validation,final,final," in rows[3]
+    assert ",validation,exit8,8," in rows[4]
 
 
 def test_hook_path_does_not_read_amp_scale_and_cleans_up():

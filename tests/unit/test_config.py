@@ -80,6 +80,7 @@ def test_multi_exit_config_records_training_contract():
     assert config.exit_positions == (8, 16)
     assert config.exit_loss_weights == (0.2, 0.3)
     assert config.experiment_id == "exit_p0_multi_exit_pos8-16_cifar10"
+    assert config.training_recipe_version == "multi_exit_detached_final_kd_positions_8_16_v1"
     assert config.to_dict()["exit_positions"] == [8, 16]
     assert "exit_positions" not in ExperimentConfig().to_dict()
 
