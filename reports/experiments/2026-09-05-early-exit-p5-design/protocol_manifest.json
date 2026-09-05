@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_p5ab_execution",
+  "stage": "P5-A/P5-B",
+  "research_questions": ["RQ1", "RQ4", "RQ6"],
+  "scope": "Development-only reconstruction and policy comparison using frozen P1-P4 checkpoints; no training and no official/external evaluator execution.",
+  "cohorts": {
+    "cifar10_source": [54, 55, 56],
+    "cifar10_target": [57, 58, 59],
+    "cifar100_source": [60, 61, 62],
+    "cifar100_target": [63, 64, 65],
+    "cifar100_confirmation": [66, 67, 68]
+  },
+  "frozen_thresholds": {"cifar10": 0.984, "cifar100": 0.903},
+  "path_costs": {
+    "cifar10_exit8": 0.4370441579068358,
+    "cifar100_exit8": 0.42989887386925396,
+    "final": 1.0
+  },
+  "risk_budgets": {
+    "cifar10": {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.0},
+    "cifar100_strict": {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.0},
+    "cifar100_relaxed_boundary": {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.04}
+  },
+  "minimum_mac_saving": 0.15,
+  "threshold_grid": {"minimum": 0.0, "maximum": 1.0, "step": 0.001},
+  "calibration_resampling": {"sizes_per_seed": [500, 1000, 2500, 5000], "replicates": 50, "stratified": true},
+  "paired_bootstrap_replicates": 1000,
+  "policy_methods": [
+    "final_only",
+    "always_exit8",
+    "random_routing_matched_coverage",
+    "per_model_msp",
+    "shared_msp_overall",
+    "shared_msp_overall_balanced",
+    "shared_msp_full",
+    "shared_entropy_full",
+    "shared_logit_margin_full",
+    "temperature_scaled_msp_full",
+    "pcee_binned_accuracy_adapter",
+    "ucb_hoeffding_empirical_risk_adapter"
+  ],
+  "recent_method_disclosure": {
+    "pcee_binned_accuracy_adapter": "Descriptive adapter of PCEE's held-out confidence-to-accuracy mapping; not claimed as an official-code reproduction.",
+    "ucb_hoeffding_empirical_risk_adapter": "Descriptive bounded-risk UCB adapter; not claimed as the WSR implementation from RC-EENN.",
+    "rc_eenn_official": "The official method controls a scalar bounded risk; joint overall/balanced/worst-class control is not directly interchangeable with this protocol."
+  },
+  "forbidden_actions": [
+    "No iteration of CIFAR-10 or CIFAR-100 official test loaders.",
+    "No execution of P1/P3/P4 locked-test evaluators.",
+    "No execution of the CIFAR-10.1 evaluator.",
+    "No threshold fitting on target, confirmation, official-test, or external-shift samples.",
+    "No seed deletion or replacement in machine-readable outputs."
+  ],
+  "frozen_evidence": {
+    "reports/experiments/2026-09-02-early-exit-p1b/locked_selection.json": "8dce5d938e06ae9d7432bd6baafd0c0ed9f978678fb53767ab02eeafecc723ab",
+    "reports/experiments/2026-09-03-early-exit-p2a-transfer/transfer_results.json": "ef86f749fba03255b5d31e9ae8ff7d7e4e1b78d3fc12bdf6ea1bec7a5eb79706",
+    "reports/experiments/2026-09-03-early-exit-p3-cifar100/selection.json": "c71ad43122d5fec4a08679f80a616b7e3015ef730d4c0465829a51329edb6bfe",
+    "reports/diagnostics/2026-09-03-early-exit-p3-boundary-v2/diagnostic.json": "25bbcf5365be9b860b0919b3b1160cfefe5b1adfd609e54f158bf4803fb73910",
+    "reports/experiments/2026-09-03-early-exit-p4-cifar100/confirmation.json": "73f0a7f7645413856bfc9e43b1f7b5108c803773806bb7e59d9d128b1b8833d2",
+    "reports/experiments/2026-09-03-early-exit-p2-cifar10-1-v6/external_results.json": "2592a5642f85e53a7b7f6aa6ed1cbf3a5dd7e7b893e6027cf7bfd5fd6c49f182",
+    "reports/experiments/2026-09-03-early-exit-p4-cifar100-test/test_results.json": "e17aa638ec24ffe0655c456070ff2620ecaca79c4e805d00bff53a4e0c096d92"
+  },
+  "go_no_go": {
+    "reproduce_frozen_points": true,
+    "proposed_not_pareto_dominated_by_simple_shared_confidence_or_entropy": true,
+    "nonempty_risk_compute_tradeoff": true,
+    "preserve_p3_stop_without_test": true
+  }
+}

@@ -1,0 +1,31 @@
+import numpy as np
+
+from scripts.analysis.run_early_exit_p5ab import binary_auc, calibration_metrics, macro_f1, route_metrics, select_shared
+
+
+def _record(seed=1):
+    labels = np.array([0, 0, 1, 1])
+    final = np.array([[4, 0], [4, 0], [0, 4], [0, 4]], dtype=float)
+    exit8 = np.array([[5, 0], [0, 1], [0, 5], [1, 0]], dtype=float)
+    return {"seed": seed, "labels": labels, "final_logits": final, "exit8_logits": exit8, "exit_cost": 0.4}
+
+
+def test_metrics_helpers_are_finite():
+    record = _record()
+    metrics = calibration_metrics(record["exit8_logits"], record["labels"])
+    assert 0 <= metrics["ece_15"] <= 1
+    assert macro_f1(record["labels"], record["final_logits"].argmax(1)) == 1
+    assert binary_auc(np.array([0, 1, 0, 1]), np.array([0.1, 0.9, 0.2, 0.8])) == 1
+
+
+def test_route_metrics_counts_harm_and_rescue():
+    values = route_metrics(_record(), np.array([True, True, True, True]))
+    assert values["premature_count"] == 2
+    assert values["rescue_count"] == 0
+    assert values["cost_saving_fraction"] == 0.6
+
+
+def test_shared_selector_keeps_final_only_when_zero_risk_requires_it():
+    selected = select_shared([_record()], "msp", {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.0})
+    assert selected is not None
+    assert selected["source_metrics"][0]["accuracy_drop"] <= 0
