@@ -355,6 +355,15 @@ def summarize_metrics(rows: list[dict]) -> dict:
     return result
 
 
+def risk_feasible(summary: dict, budget: dict) -> bool:
+    """Return whether every summarized seed satisfies the preregistered risk budget."""
+    return bool(summary.get("feasible")) and (
+        summary["accuracy_drop_max"] <= budget["overall_drop"] + 1e-12
+        and summary["balanced_accuracy_drop_max"] <= budget["balanced_drop"] + 1e-12
+        and summary["worst_class_accuracy_drop_max"] <= budget["worst_class_drop"] + 1e-12
+    )
+
+
 def collect_all(protocol: dict, output: Path, device: torch.device) -> tuple[dict[str, list[dict]], dict]:
     logits_dir = output / "development_logits"
     logits_dir.mkdir(parents=True)
@@ -691,7 +700,9 @@ def strategy_comparison(cohorts: dict[str, list[dict]], protocol: dict, tables: 
         result["ucb_hoeffding_empirical_risk_adapter"] = {"selection": ucb_choice, "source": summarize_metrics([] if ucb_choice is None else ucb_choice["source_metrics"]), "target": summarize_metrics(ucb_target), "delta": 0.05}
 
         for method, values in result.items():
-            flat_rows.append({"design": design, "method": method, "threshold": None if values.get("selection") is None else values["selection"].get("threshold"), **{f"source_{key}": value for key, value in values["source"].items()}, **{f"target_{key}": value for key, value in values["target"].items()}})
+            values["source_risk_feasible"] = risk_feasible(values["source"], full_budget)
+            values["target_risk_feasible"] = risk_feasible(values["target"], full_budget)
+            flat_rows.append({"design": design, "method": method, "threshold": None if values.get("selection") is None else values["selection"].get("threshold"), "source_risk_feasible": values["source_risk_feasible"], "target_risk_feasible": values["target_risk_feasible"], **{f"source_{key}": value for key, value in values["source"].items()}, **{f"target_{key}": value for key, value in values["target"].items()}})
     write_csv(tables / "strategy_comparison.csv", flat_rows)
     latex_from_csv(tables / "strategy_comparison.csv", tables / "strategy_comparison.tex")
     return comparisons, flat_rows
@@ -714,6 +725,7 @@ def _frontier_task(payload: tuple) -> tuple[list[dict], list[dict]]:
             "method": method,
             "threshold": float(threshold),
             "source_accuracy_drop_mean": source_summary["accuracy_drop_mean"],
+            "source_accuracy_drop_max": source_summary["accuracy_drop_max"],
             "source_balanced_drop_max": source_summary["balanced_accuracy_drop_max"],
             "source_worst_class_drop_max": source_summary["worst_class_accuracy_drop_max"],
             "source_min_saving": source_summary["cost_saving_fraction_min"],
@@ -727,12 +739,14 @@ def _frontier_task(payload: tuple) -> tuple[list[dict], list[dict]]:
         chosen = min(eligible, key=lambda row: (row["source_min_saving"] - target_saving, abs(row["source_accuracy_drop_mean"])))
         target_metrics = [route_metrics(record, score >= chosen["threshold"]) for record, score in zip(target, target_scores)]
         summary = summarize_metrics(target_metrics)
-        risk_feasible = (
-            chosen["source_accuracy_drop_mean"] <= budget["overall_drop"] + 1e-12
+        source_risk_feasible = (
+            chosen["source_accuracy_drop_max"] <= budget["overall_drop"] + 1e-12
             and chosen["source_balanced_drop_max"] <= budget["balanced_drop"] + 1e-12
             and chosen["source_worst_class_drop_max"] <= budget["worst_class_drop"] + 1e-12
         )
-        matched_rows.append({"design": design, "method": method, "target_saving": target_saving, "status": "feasible" if risk_feasible else "risk_violation", "threshold": chosen["threshold"], **{f"target_{key}": value for key, value in summary.items()}})
+        target_risk_feasible = risk_feasible(summary, budget)
+        status = "feasible" if source_risk_feasible and target_risk_feasible else "risk_violation"
+        matched_rows.append({"design": design, "method": method, "target_saving": target_saving, "status": status, "source_risk_feasible": source_risk_feasible, "target_risk_feasible": target_risk_feasible, "threshold": chosen["threshold"], **{f"target_{key}": value for key, value in summary.items()}})
     return method_frontier, matched_rows
 
 
@@ -878,17 +892,80 @@ def figures(cohorts: dict[str, list[dict]], strategy_rows: list[dict], sensitivi
     return created
 
 
-def gate_a(checks: dict, comparisons: dict) -> dict:
+def _pareto_dominates(other: dict, proposed: dict) -> bool:
+    """Compare all preregistered risk dimensions plus mean compute saving."""
+    objectives = (
+        ("cost_saving_fraction_mean", 1.0),
+        ("accuracy_drop_mean", -1.0),
+        ("balanced_accuracy_drop_max", -1.0),
+        ("worst_class_accuracy_drop_max", -1.0),
+    )
+    weak = all(direction * other[key] >= direction * proposed[key] - 1e-12 for key, direction in objectives)
+    strict = any(direction * other[key] > direction * proposed[key] + 1e-12 for key, direction in objectives)
+    return weak and strict
+
+
+def _matched_compute_dominates(rows: list[dict], design: str, competitor: str) -> bool:
+    proposed_rows = {
+        float(row["target_saving"]): row
+        for row in rows
+        if row["design"] == design and row["method"] == "shared_msp" and row["status"] == "feasible"
+    }
+    competitor_rows = {
+        float(row["target_saving"]): row
+        for row in rows
+        if row["design"] == design and row["method"] == competitor and row["status"] == "feasible"
+    }
+    if not proposed_rows or any(level not in competitor_rows for level in proposed_rows):
+        return False
+    metric_keys = (
+        "cost_saving_fraction_mean",
+        "accuracy_drop_mean",
+        "balanced_accuracy_drop_max",
+        "worst_class_accuracy_drop_max",
+    )
+    comparisons = [
+        _pareto_dominates(
+            {key: competitor_rows[level][f"target_{key}"] for key in metric_keys},
+            {key: proposed[f"target_{key}"] for key in metric_keys},
+        )
+        for level, proposed in proposed_rows.items()
+    ]
+    return bool(comparisons) and all(comparisons)
+
+
+def gate_a(checks: dict, comparisons: dict, matched_compute_rows: list[dict], protocol: dict) -> dict:
     nondominated = True
+    audit = {}
+    competitor_methods = {
+        "shared_msp_overall": "shared_msp",
+        "shared_entropy_full": "shared_entropy",
+    }
+    budgets = {
+        "cifar10": protocol["risk_budgets"]["cifar10"],
+        "cifar100_relaxed": protocol["risk_budgets"]["cifar100_relaxed_boundary"],
+    }
     for design in ("cifar10", "cifar100_relaxed"):
-        proposed = comparisons[design]["shared_msp_full"]["target"]
-        if not proposed.get("feasible"):
+        proposed = comparisons[design]["shared_msp_full"]
+        proposed_risk_feasible = risk_feasible(proposed["source"], budgets[design]) and risk_feasible(proposed["target"], budgets[design])
+        design_audit = {"proposed_risk_feasible": proposed_risk_feasible, "competitors": {}}
+        if not proposed_risk_feasible:
             nondominated = False
-            continue
-        for competitor in ("shared_msp_overall", "shared_entropy_full"):
-            other = comparisons[design][competitor]["target"]
-            if other.get("feasible") and other["cost_saving_fraction_mean"] >= proposed["cost_saving_fraction_mean"] and other["accuracy_drop_mean"] <= proposed["accuracy_drop_mean"] and (other["cost_saving_fraction_mean"] > proposed["cost_saving_fraction_mean"] or other["accuracy_drop_mean"] < proposed["accuracy_drop_mean"]):
+        for locked_method, matched_method in competitor_methods.items():
+            competitor = comparisons[design][locked_method]
+            competitor_risk_feasible = risk_feasible(competitor["source"], budgets[design]) and risk_feasible(competitor["target"], budgets[design])
+            locked_dominates = competitor_risk_feasible and _pareto_dominates(competitor["target"], proposed["target"])
+            matched_dominates = _matched_compute_dominates(matched_compute_rows, design, matched_method)
+            fully_dominates = locked_dominates and matched_dominates
+            design_audit["competitors"][locked_method] = {
+                "risk_feasible_at_locked_point": competitor_risk_feasible,
+                "dominates_matched_risk_locked_point": locked_dominates,
+                "dominates_all_feasible_matched_compute_rows": matched_dominates,
+                "fully_dominates_both_views": fully_dominates,
+            }
+            if fully_dominates:
                 nondominated = False
+        audit[design] = design_audit
     tradeoff = any(comparisons[design]["shared_msp_full"]["source"].get("cost_saving_fraction_mean", 0.0) > 0 for design in comparisons)
     gates = {
         "frozen_points_reproduced": checks["all_passed"],
@@ -896,7 +973,7 @@ def gate_a(checks: dict, comparisons: dict) -> dict:
         "nonempty_risk_compute_tradeoff": tradeoff,
         "p3_stop_without_test_preserved": checks["p3_stop_without_test_preserved"],
     }
-    return {"gates": gates, "status": "go_p5c" if all(gates.values()) else "simplify_or_redesign_before_training"}
+    return {"gates": gates, "status": "go_p5c" if all(gates.values()) else "simplify_or_redesign_before_training", "pareto_audit": audit}
 
 
 def main() -> int:
@@ -946,9 +1023,9 @@ def main() -> int:
     print("[P5 7/7] Bootstrap, figures, and Gate A", flush=True)
     bootstrap_rows = bootstrap_locked_points(cohorts, protocol, tables)
     figure_files = figures(cohorts, strategy_rows, sensitivity_rows, figures_dir)
-    decision = gate_a(checks, comparisons)
+    decision = gate_a(checks, comparisons, matched_compute_rows, protocol)
     result = {
-        "schema_version": 1,
+        "schema_version": 2,
         "status": decision["status"],
         "finished_at_utc": datetime.now(timezone.utc).isoformat(),
         "protocol_sha256": sha256(PROTOCOL),
@@ -963,6 +1040,7 @@ def main() -> int:
         "bootstrap_rows": len(bootstrap_rows),
         "figures": figure_files,
         "gate_a": decision["gates"],
+        "gate_a_pareto_audit": decision["pareto_audit"],
         "test_boundary": "No official or external evaluator was executed; only existing versioned summaries may be cited.",
         "logits_manifest_sha256": sha256(output / "development_logits_manifest.json"),
     }

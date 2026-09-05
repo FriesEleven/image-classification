@@ -8,8 +8,10 @@ from scripts.analysis.run_early_exit_p5ab import (
     _shared_strategy_task,
     binary_auc,
     calibration_metrics,
+    gate_a,
     macro_f1,
     reproduction_row_passes,
+    risk_feasible,
     route_metrics,
     select_shared,
 )
@@ -90,3 +92,48 @@ def test_shared_strategy_runs_in_forked_worker_pool():
     assert design == "design"
     assert method == "shared_msp_full"
     assert result["source"]["feasible"]
+
+
+def _summary(saving, overall=0.0, balanced=0.0, worst=0.0):
+    return {
+        "feasible": True,
+        "cost_saving_fraction_mean": saving,
+        "accuracy_drop_mean": overall,
+        "accuracy_drop_max": overall,
+        "balanced_accuracy_drop_max": balanced,
+        "worst_class_accuracy_drop_max": worst,
+    }
+
+
+def test_risk_feasibility_uses_worst_seed_not_mean():
+    budget = {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.04}
+    assert risk_feasible(_summary(0.2, overall=-0.01, worst=0.04), budget)
+    assert not risk_feasible(_summary(0.3, overall=-0.01, worst=0.06), budget)
+
+
+def test_gate_a_does_not_count_risk_violator_as_dominating():
+    checks = {"all_passed": True, "p3_stop_without_test_preserved": True}
+    protocol = {
+        "risk_budgets": {
+            "cifar10": {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.0},
+            "cifar100_relaxed_boundary": {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.04},
+        }
+    }
+    comparisons = {}
+    for design in ("cifar10", "cifar100_relaxed"):
+        proposed = _summary(0.20)
+        violating = _summary(0.30, worst=0.06 if design == "cifar100_relaxed" else 0.01)
+        entropy = _summary(0.19)
+        comparisons[design] = {
+            "shared_msp_full": {"source": proposed, "target": proposed},
+            "shared_msp_overall": {"source": violating, "target": violating},
+            "shared_entropy_full": {"source": entropy, "target": entropy},
+        }
+    matched = []
+    for design in comparisons:
+        for method, saving in (("shared_msp", 0.20), ("shared_entropy", 0.19)):
+            summary = _summary(saving)
+            matched.append({"design": design, "method": method, "target_saving": 0.2, "status": "feasible", **{f"target_{key}": value for key, value in summary.items()}})
+    decision = gate_a(checks, comparisons, matched, protocol)
+    assert decision["status"] == "go_p5c"
+    assert decision["gates"]["proposed_not_pareto_dominated_on_primary_designs"]
