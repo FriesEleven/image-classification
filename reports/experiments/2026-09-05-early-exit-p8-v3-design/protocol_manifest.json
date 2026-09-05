@@ -1,0 +1,73 @@
+{
+  "schema_version": 3,
+  "status": "frozen_before_p8_v3_execution",
+  "reason": "Clean rerun after P8 v2 exposed a TF32 batch-shape numerical boundary failure. No completed P8 v2 timings are reused.",
+  "parent_protocol": "reports/experiments/2026-09-05-early-exit-p8-v2-design/protocol_manifest.json",
+  "parent_protocol_sha256": "d7b15472181a68634ef21afd77b67c517f888ddab7221432d9ad4dca7d40b128",
+  "failed_p8_v2_output": "artifacts/analyses/early_exit_p8_v2_20260905_180241_841768",
+  "failed_p8_v2_receipts": [
+    {
+      "path": "artifacts/analyses/early_exit_p8_v2_20260905_180241_841768/provenance.json",
+      "sha256": "12144b8fd260a325c468549b355cc450e1fede3d53a19b115b3b030437998c0e"
+    },
+    {
+      "path": "artifacts/analyses/early_exit_p8_v2_20260905_180241_841768/checks/cuda_cifar10_s55_b32_r1.json",
+      "sha256": "c4ff325952734d8d429147042a1a47293e70daaaf78a920906c15e8ba7e6bd49"
+    },
+    {
+      "path": "artifacts/analyses/early_exit_p8_v2_20260905_180241_841768/tables/round_metrics.csv",
+      "sha256": "add66b80af9e44cb49249047bb2596c88d10262f2a68788c24968c65e193fcce"
+    },
+    {
+      "path": "artifacts/launcher_logs/early_exit_p8_v2_20260905_180241_841768.log",
+      "sha256": "0fcda09e757dc95e12de0d9ff98ce4f8cdf97099b1cb230001bfd842d604988c"
+    }
+  ],
+  "failure_diagnosis": {
+    "cell": "cuda_cifar10_s55_b32_r1",
+    "samples_checked": 1024,
+    "route_errors": 0,
+    "prediction_errors": 1,
+    "sample_id": 37348,
+    "static_top2_margin": 0.0010271072387695312,
+    "dynamic_top2_margin": 0.0005934238433837891,
+    "failed_sample_max_abs_logit_difference": 0.0018372535705566406,
+    "batch_max_abs_logit_difference": 0.0069122314453125,
+    "tf32_disabled_batch_max_abs_logit_difference": 0.00000286102294921875,
+    "tf32_disabled_route_errors": 0,
+    "tf32_disabled_prediction_errors": 0
+  },
+  "datasets": {
+    "cifar10": {"seeds": [54, 55, 56], "threshold": 0.984},
+    "cifar100": {"seeds": [66, 67, 68], "threshold": 0.903}
+  },
+  "devices": ["cuda", "cpu"],
+  "gpu": "NVIDIA GeForce RTX 3080 Ti",
+  "cpu_threads": 12,
+  "batch_sizes": [1, 4, 8, 16, 32],
+  "modes": ["final_only", "actual_dynamic", "exit8_only", "forced_fallback"],
+  "warmup_batches": 100,
+  "timed_batches": 1000,
+  "rounds": 5,
+  "precision": "FP32 with cuDNN and matmul TF32 disabled",
+  "numerics": {
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "cudnn_allow_tf32": false,
+    "matmul_allow_tf32": false,
+    "deterministic_algorithms": true,
+    "logit_rtol": 0.0001,
+    "logit_atol": 0.00001
+  },
+  "sample_order": "NumPy PCG64 deterministic per-round permutation of all calibration samples, same order across modes and devices; full batches only, cycled to 1000 batches",
+  "route_accounting": "Exact paths returned during timed dynamic execution, aggregated after timing; per-batch early counts saved",
+  "mac_accounting": "Conv/Linear counts; final cost plus exit8-head overhead on unresolved samples; historical no-overhead proxy also disclosed",
+  "fallback": "forward_with_policy threshold=2.0 forces every sample through early-head computation and continuation",
+  "weighted_latency_scope": "batch=1 mechanistic approximation only; no weighted full-batch mixture reported as a batched prediction",
+  "memory": "CUDA allocated baseline, total peak and incremental peak; CPU process lifetime RSS high-water mark only, per-mode peak unavailable",
+  "reference": "Same A3 checkpoint final-only path, not independently trained A0",
+  "correctness": "Before each paired round, require exact route agreement and per-sample dynamic/reference logits within rtol=1e-4, atol=1e-5 on up to 32 unique batches. Count and disclose argmax changes separately; a near-tie argmax change is not fatal when every logit passes the frozen tolerance.",
+  "test_boundary": "Calibration images from CIFAR train=True, download=False; no official or external test",
+  "preservation": "P8 v2 failure and all partial arrays are retained as failed-run evidence. P8 v3 starts in a new output directory and remeasures every cell; no seed, model or threshold was changed.",
+  "expected_raw_files": 1200
+}

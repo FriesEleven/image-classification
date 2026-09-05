@@ -18,21 +18,28 @@ batch-size results and measurement limitations. GPU savings at batch=1 were
 18.85% (CIFAR-10) and 2.75% (CIFAR-100), with average slowdowns at larger batches.
 These first-run arrays remain unchanged.
 
-P8 v2 is prepared, not started. It addresses mismatched timed-sample route
-accounting, forced-fallback overhead, memory labels, and runtime provenance.
-It uses the same six A3 checkpoints, thresholds 0.984/0.903, devices, batch sizes
-and timing counts, plus a fourth forced-fallback mode. It retains all negative
-results. Expected runtime is about 3–4 hours, subject to server contention.
+P8 v2 started and then stopped as designed at `cuda_cifar10_s55_b32_r1`.
+Its partial output is
+`artifacts/analyses/early_exit_p8_v2_20260905_180241_841768`: 46 complete paired
+cells (184 timing arrays) and 47 correctness checks. The failing check had zero
+route errors and one near-tie prediction difference among 1,024 samples.
+Diagnostics tied the difference to batch-shape-sensitive cuDNN TF32 convolution:
+disabling TF32 reduced the maximum checked logit difference from 0.0069122 to
+2.861e-6 and restored zero prediction differences. The partial timings remain
+failed-run evidence and are not reused.
 
-Validation: targeted unit tests passed; all six real checkpoints were checked
-on CPU/GPU at batch sizes 1/8/32 with zero route/prediction mismatches; three
-timing iterations of each mode completed; actual Conv/Linear MAC counts matched
-the retained constants. This was a functional smoke check, not a new paper result.
+P8 v3 is the clean repair. It retains the same six A3 checkpoints, thresholds,
+devices, batch sizes, rounds and timing counts; disables cuDNN/matmul TF32;
+enables deterministic algorithms; and freezes logit-level correctness at
+rtol=1e-4, atol=1e-5. Exact route mismatches or logits outside tolerance remain
+fatal. Near-tie argmax changes are counted and disclosed separately. P8 v3
+remeasures all 1,200 arrays in a new output directory. Expected runtime remains
+about 3–4 hours, subject to server contention.
 
 User launch from the server project directory:
 
 ```bash
-/root/miniconda3/bin/python scripts/launch_early_exit_p8_v2.py
+/root/miniconda3/bin/python scripts/launch_early_exit_p8_v3.py
 ```
 
 After completion, validate 1,200 raw timing arrays, 300 exact workload receipts,
