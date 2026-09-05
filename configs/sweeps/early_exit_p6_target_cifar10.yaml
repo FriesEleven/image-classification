@@ -1,0 +1,8 @@
+name: early_exit_p6_target_cifar10_serial
+description: >-
+  P6 target stage for CIFAR-stem ResNet-18 on CIFAR-10. Seeds are trained
+  independently; policy selection remains forbidden on target samples.
+seeds: [74, 75, 76]
+experiments:
+  - configs/experiments/early_exit_p6_cifar10_a0.yaml
+  - configs/experiments/early_exit_p6_cifar10_a3.yaml

@@ -12,6 +12,36 @@ from image_classification.models.eca import ECALayer
 from image_classification.models.mobilenetv2 import EarlyExitHead
 
 
+def _conv_linear_macs(model: nn.Module, forward) -> int:
+    """Count multiply-accumulates for one image without relying on labels."""
+    macs = 0
+    handles = []
+
+    def count(module, _inputs, output):
+        nonlocal macs
+        if isinstance(module, nn.Conv2d):
+            macs += int(output.numel() * (module.in_channels // module.groups)
+                        * module.kernel_size[0] * module.kernel_size[1])
+        elif isinstance(module, nn.Linear):
+            macs += int(output.numel() * module.in_features)
+
+    for module in model.modules():
+        if isinstance(module, (nn.Conv2d, nn.Linear)):
+            handles.append(module.register_forward_hook(count))
+    parameter = next(model.parameters())
+    sample = torch.zeros(1, 3, 32, 32, device=parameter.device, dtype=parameter.dtype)
+    was_training = model.training
+    model.eval()
+    try:
+        with torch.inference_mode():
+            forward(sample)
+    finally:
+        for handle in handles:
+            handle.remove()
+        model.train(was_training)
+    return macs
+
+
 def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
     total = sum(parameter.numel() for parameter in model.parameters())
     trainable = sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad)
@@ -37,10 +67,13 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
         for module in model.modules()
         if isinstance(module, EarlyExitHead)
     )
-    classifier = sum(parameter.numel() for name, parameter in model.named_parameters() if "classifier" in name)
-    # Exit head linear layers also contain "classifier" in their name. Keep the
-    # final classifier and auxiliary heads disjoint in the persisted accounting.
-    classifier -= exit_heads
+    if config.model_type in {"resnet18", "resnet18_multi_exit"}:
+        classifier = sum(parameter.numel() for parameter in model.model.fc.parameters())
+    else:
+        classifier = sum(parameter.numel() for name, parameter in model.named_parameters() if "classifier" in name)
+        # Exit head linear layers also contain "classifier" in their name. Keep the
+        # final classifier and auxiliary heads disjoint in the persisted accounting.
+        classifier -= exit_heads
     eca_count = sum(isinstance(module, ECALayer) for module in model.modules())
     cbam_count = sum(isinstance(module, CBAM) for module in model.modules())
     guided_cbam_count = len(guided_modules)
@@ -51,7 +84,24 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
         for module in model.modules()
         if isinstance(module, EarlyExitHead)
     )
-    base_flops = 91.0e6
+    path_macs = {}
+    if config.model_type in {"resnet18", "resnet18_multi_exit"}:
+        final_forward = (
+            (lambda sample: model.forward_to_exit(sample, None))
+            if config.model_type == "resnet18_multi_exit" else model
+        )
+        base_flops = _conv_linear_macs(model, final_forward)
+        full_flops = _conv_linear_macs(model, model)
+        path_macs["final"] = base_flops
+        if config.model_type == "resnet18_multi_exit":
+            for position in config.exit_positions:
+                path_macs[f"exit{position}"] = _conv_linear_macs(
+                    model, lambda sample, selected=position: model.forward_to_exit(sample, selected)
+                )
+        exit_head_flops = full_flops - base_flops
+    else:
+        base_flops = 91.0e6
+        full_flops = base_flops + exit_head_flops
     estimated_attention_flops = (
         eca_count * 0.01e6
         + cbam_count * 0.8e6
@@ -96,10 +146,11 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
         "num_guided_cbam_modules": guided_cbam_count,
         "num_se_modules": se_count,
         "num_exit_heads": exit_head_count,
-        "flops_total": base_flops + estimated_attention_flops + exit_head_flops,
+        "flops_total": full_flops + estimated_attention_flops,
         "flops_base": base_flops,
         "flops_attention_adjustment": estimated_attention_flops,
         "flops_exit_head_adjustment": exit_head_flops,
+        "path_macs": path_macs,
         "model_type": config.model_type,
         "architecture_version": config.architecture_version,
         "aux_positions": list(config.aux_positions),

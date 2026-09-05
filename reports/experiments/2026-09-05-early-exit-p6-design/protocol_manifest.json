@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_p6_source_training",
+  "stage": "P6 CIFAR-stem ResNet-18 source-to-target backbone transfer",
+  "research_question": "RQ3: does the simplified shared early-exit method transfer beyond MobileNetV2?",
+  "scope": "Development-only training and policy selection/transfer. No CIFAR official test access is authorized.",
+  "upstream_gates": [
+    {
+      "path": "artifacts/analyses/early_exit_p5ab_20260905_092909/p5ab_results.json",
+      "sha256": "e1270fde3d200004ecc5e4bc976898b9fb882be6fa4224c2743c77ec47bee8cd",
+      "required_status": "go_p5c"
+    },
+    {
+      "path": "reports/experiments/2026-09-05-early-exit-p5c-analysis/analysis_receipt.json",
+      "sha256": "e36049ef0d0a556b3b9763f5f5ed4a1b1ab279e1600802e2e0bd826cd22d8f2e",
+      "required_status": "simplify_to_a3_no_kd"
+    },
+    {
+      "path": "reports/experiments/2026-09-05-early-exit-p8-v3-analysis/analysis_receipt.json",
+      "sha256": "ce620cdfd8a2733106a4e9f10cd14bfedcf02eb0d75c8989765f25589a8c82b3",
+      "required_status": "passed"
+    }
+  ],
+  "architecture_profile": {
+    "path": "reports/experiments/2026-09-05-early-exit-p6-design/architecture_profile.json",
+    "sha256": "775708379b2e4c94740e0a34fbcc6cca5649bf8daca4a1d07d30286d1ab6a5b9",
+    "data_or_labels_accessed": false,
+    "stem": "3x3 stride=1, padding=1, 64 channels; no max-pool",
+    "eligible_exit_boundaries": "completed residual blocks 0 through 6",
+    "selection_targets": {"deployable_mac_fraction": 0.425, "training_only_auxiliary_mac_fraction": 0.825},
+    "selected_positions": {"deployable": 2, "training_only_auxiliary": 6},
+    "selection_note": "Positions 2 and 6 are the nearest legal completed-block boundaries. Their measured fractions are approximately 38.08% and 86.41%; no boundary lies inside the nominal target bands."
+  },
+  "datasets": {
+    "cifar10": {
+      "split_seed": 20261001,
+      "source_training_seeds": [71, 72, 73],
+      "target_training_seeds": [74, 75, 76],
+      "risk_budget": {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.0}
+    },
+    "cifar100": {
+      "split_seed": 20261002,
+      "source_training_seeds": [71, 72, 73],
+      "target_training_seeds": [74, 75, 76],
+      "risk_budget": {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.04}
+    }
+  },
+  "data_partition": {
+    "train": 40000,
+    "model_selection_validation": 5000,
+    "policy_calibration_or_transfer": 5000,
+    "official_test": "not accessed",
+    "stratified": true
+  },
+  "models_per_seed": {
+    "A0": {"model_type": "resnet18", "heads": "final only"},
+    "A3": {
+      "model_type": "resnet18_multi_exit",
+      "exit_positions": [2, 6],
+      "exit_loss_weights": [0.1, 0.15],
+      "exit_distillation_alpha": 0.0,
+      "deployable_exit": 2,
+      "training_only_exit": 6
+    }
+  },
+  "training": {
+    "epochs": 200,
+    "batch_size": 128,
+    "optimizer": "AdamW",
+    "learning_rate": 0.01,
+    "weight_decay": 0.0001,
+    "scheduler": "OneCycleLR",
+    "augmentation": "unchanged repository CIFAR pipeline",
+    "amp": true,
+    "cuda_graph": true,
+    "pretrained_weights": false,
+    "checkpoint_selection": "final-head model-selection validation accuracy only",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "concurrency": 1
+  },
+  "policy_selection": {
+    "score": "deployable exit maximum softmax probability",
+    "shared_within": "backbone and dataset across source seeds",
+    "threshold_grid": {"minimum": 0.0, "maximum": 1.0, "step": 0.001},
+    "minimum_mac_saving_fraction": 0.15,
+    "minimum_early_fraction": 0.15,
+    "maximum_early_fraction": 0.95,
+    "feasibility": "Every source seed must satisfy the dataset-specific overall, balanced, and worst-class budgets, the early-fraction interval, and minimum MAC saving.",
+    "selection_objective": "Among feasible shared thresholds, maximize minimum source-seed MAC saving, then mean source-seed MAC saving, then choose the higher threshold as the deterministic tie-break.",
+    "target_threshold_candidates": 0,
+    "per_model_recalibration": false
+  },
+  "gates": {
+    "source_final_gain_mean_minimum": -0.003,
+    "source_final_gain_each_seed_minimum": -0.0075,
+    "source_policy_must_meet_all_dataset_risk_budgets": true,
+    "source_policy_minimum_saving_each_seed": 0.15,
+    "if_source_fails": "stop_without_target_training; retain all source seeds and negative results",
+    "if_source_passes": "freeze thresholds and source hashes before target training",
+    "if_target_fails": "stop_without_test; no threshold, exit, split, or seed changes",
+    "if_target_passes": "a separate one-time test evaluator still requires explicit user authorization"
+  },
+  "run_accounting": {
+    "source_runs": 12,
+    "target_runs_after_source_gate": 12,
+    "total_planned_runs": 24,
+    "failed_or_unfavorable_seeds_may_be_deleted": false,
+    "replacement_seeds_allowed": false
+  },
+  "forbidden": [
+    "No official CIFAR test iteration during source or target training/analysis.",
+    "No threshold selection on target seeds 74-76.",
+    "No pretrained weights or architecture changes after this freeze.",
+    "No reuse of MobileNetV2 thresholds 0.984 or 0.903 as ResNet-18 locked thresholds.",
+    "No deletion, replacement, or hidden rerun of an unfavorable seed."
+  ]
+}

@@ -14,9 +14,17 @@ from .mobilenetv2 import (
     SEMobileNetV2,
     StageSparseAttentionMobileNetV2,
 )
+from .resnet import BaseCIFARResNet18, MultiExitCIFARResNet18
 
 
 def build_model(config: ExperimentConfig) -> nn.Module:
+    if config.model_type == "resnet18":
+        return BaseCIFARResNet18(num_classes=config.num_classes)
+    if config.model_type == "resnet18_multi_exit":
+        return MultiExitCIFARResNet18(
+            num_classes=config.num_classes,
+            exit_positions=config.exit_positions,
+        )
     if config.model_type == "mobilenetv2":
         return BaseMobileNetV2(num_classes=config.num_classes)
     if config.model_type == "eca":

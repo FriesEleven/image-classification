@@ -207,7 +207,7 @@ def train(config: ExperimentConfig) -> dict:
             train_losses.append(train_metrics["loss"])
             val_accuracies.append(val_metrics["accuracy"])
             append_training_log(paths.training_log, epoch, train_metrics, val_metrics)
-            if config.model_type == "multi_exit":
+            if config.model_type in {"multi_exit", "resnet18_multi_exit"}:
                 append_per_head_training_log(
                     paths.root / "logs/per_head_training.csv",
                     epoch,

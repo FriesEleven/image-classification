@@ -165,3 +165,27 @@ def test_csgha_rejects_targets_before_guidance_source():
             cbam_positions=(1, 2),
             guidance_position=2,
         )
+
+
+def test_resnet18_multi_exit_config_records_block_boundaries():
+    config = ExperimentConfig(
+        experiment_name="p6",
+        model_type="resnet18_multi_exit",
+        exit_positions=(2, 6),
+        exit_loss_weights=(0.1, 0.15),
+        exit_distillation_alpha=0.0,
+    )
+    assert config.experiment_id == "p6_resnet18_multi_exit_pos2-6_cifar10"
+    assert config.architecture_version == "cifar_stem_resnet18_multi_exit_block_boundary_v1"
+    assert config.training_recipe_version == "multi_exit_ce_only_positions_2_6_v1"
+    assert config.to_dict()["exit_positions"] == [2, 6]
+
+
+@pytest.mark.parametrize("positions", [(-1,), (7,)])
+def test_resnet18_multi_exit_rejects_non_deployable_block_boundaries(positions):
+    with pytest.raises(ValueError, match="block boundaries"):
+        ExperimentConfig(
+            model_type="resnet18_multi_exit",
+            exit_positions=positions,
+            exit_loss_weights=(0.1,),
+        )

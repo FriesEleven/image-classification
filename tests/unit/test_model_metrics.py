@@ -69,3 +69,19 @@ def test_multi_exit_metrics_keep_heads_separate_from_final_classifier():
     assert multi_exit["flops_exit_head_adjustment"] == 64 * 10 + 160 * 10
     assert multi_exit["parameters_classifier"] == baseline["parameters_classifier"]
     assert multi_exit["parameters_backbone"] == baseline["parameters_backbone"]
+
+
+def test_resnet18_metrics_report_measured_path_macs_and_disjoint_parameters():
+    baseline_config = ExperimentConfig(model_type="resnet18")
+    exit_config = ExperimentConfig(
+        model_type="resnet18_multi_exit", exit_positions=(2, 6), exit_loss_weights=(0.1, 0.15),
+    )
+    baseline = model_metrics(build_model(baseline_config), baseline_config)
+    multi = model_metrics(build_model(exit_config), exit_config)
+    assert multi["parameters_classifier"] == baseline["parameters_classifier"]
+    assert multi["parameters_backbone"] == baseline["parameters_backbone"]
+    assert multi["parameters_total"] == (
+        multi["parameters_backbone"] + multi["parameters_classifier"] + multi["parameters_exit_heads"]
+    )
+    assert multi["path_macs"]["exit2"] < multi["path_macs"]["exit6"] < multi["path_macs"]["final"]
+    assert multi["flops_total"] == multi["flops_base"] + multi["flops_exit_head_adjustment"]

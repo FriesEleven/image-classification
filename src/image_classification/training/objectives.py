@@ -28,8 +28,8 @@ def training_objective(
     final_loss = criterion(final_logits, targets)
     if isinstance(outputs, torch.Tensor):
         return final_loss
-    if config.model_type != "multi_exit":
-        raise ValueError("Tuple model outputs require model_type=multi_exit")
+    if config.model_type not in {"multi_exit", "resnet18_multi_exit"}:
+        raise ValueError("Tuple model outputs require a supported multi-exit model_type")
     exit_logits = outputs[1:]
     if len(exit_logits) != len(config.exit_loss_weights):
         raise ValueError("Model output count does not match configured early-exit weights")

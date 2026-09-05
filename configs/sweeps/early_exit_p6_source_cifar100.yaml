@@ -1,0 +1,8 @@
+name: early_exit_p6_source_cifar100_serial
+description: >-
+  P6 source stage for CIFAR-stem ResNet-18 on CIFAR-100. Trains matched
+  final-only A0 and CE-only two-exit A3 models without test access.
+seeds: [71, 72, 73]
+experiments:
+  - configs/experiments/early_exit_p6_cifar100_a0.yaml
+  - configs/experiments/early_exit_p6_cifar100_a3.yaml

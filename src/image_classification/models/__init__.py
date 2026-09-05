@@ -12,16 +12,19 @@ from .mobilenetv2 import (
     SEMobileNetV2,
     StageSparseAttentionMobileNetV2,
 )
+from .resnet import BaseCIFARResNet18, MultiExitCIFARResNet18
 
 __all__ = [
     "CBAM",
     "BaseMobileNetV2",
+    "BaseCIFARResNet18",
     "CBAMMobileNetV2",
     "CSGHAMobileNetV2",
     "CrossStageGuidedCBAM",
     "ECAMobileNetV2",
     "HybridAttentionMobileNetV2",
     "MultiExitMobileNetV2",
+    "MultiExitCIFARResNet18",
     "SEBlock",
     "SEMobileNetV2",
     "StageSparseAttentionMobileNetV2",

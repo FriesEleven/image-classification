@@ -174,3 +174,55 @@ def test_multi_exit_adds_only_heads_to_identically_initialized_backbone():
         torch.equal(value, multi_exit.state_dict()[name])
         for name, value in baseline.state_dict().items()
     )
+
+
+def test_cifar_resnet18_stem_and_multi_exit_paths():
+    baseline_config = ExperimentConfig(model_type="resnet18")
+    exit_config = ExperimentConfig(
+        model_type="resnet18_multi_exit",
+        exit_positions=(2, 6),
+        exit_loss_weights=(0.1, 0.15),
+        exit_distillation_alpha=0.0,
+    )
+    baseline = build_model(baseline_config).eval()
+    model = build_model(exit_config).eval()
+    assert model.model.conv1.kernel_size == (3, 3)
+    assert model.model.conv1.stride == (1, 1)
+    assert isinstance(model.model.maxpool, torch.nn.Identity)
+    inputs = torch.randn(2, 3, 32, 32)
+    with torch.inference_mode():
+        final, exit2, exit6 = model(inputs)
+        torch.testing.assert_close(model.forward_to_exit(inputs, 2), exit2)
+        torch.testing.assert_close(model.forward_to_exit(inputs, 6), exit6)
+        torch.testing.assert_close(model.forward_to_exit(inputs, None), final)
+    assert final.shape == exit2.shape == exit6.shape == (2, 10)
+
+
+def test_cifar_resnet18_multi_exit_backbone_initialization_matches_baseline():
+    torch.manual_seed(71)
+    baseline = build_model(ExperimentConfig(model_type="resnet18"))
+    torch.manual_seed(71)
+    multi = build_model(ExperimentConfig(
+        model_type="resnet18_multi_exit", exit_positions=(2, 6), exit_loss_weights=(0.1, 0.15),
+    ))
+    assert all(torch.equal(value, multi.state_dict()[name]) for name, value in baseline.state_dict().items())
+
+
+def test_cifar_resnet18_dynamic_policy_skips_training_only_exit():
+    model = build_model(ExperimentConfig(
+        model_type="resnet18_multi_exit", exit_positions=(2, 6), exit_loss_weights=(0.1, 0.15),
+    )).eval()
+    calls = []
+    handle = model.exit_heads["6"].register_forward_hook(lambda *_args: calls.append(True))
+    inputs = torch.randn(4, 3, 32, 32)
+    with torch.inference_mode():
+        final = model.forward_to_exit(inputs, None)
+        early = model.forward_to_exit(inputs, 2)
+        all_early, early_paths = model.forward_with_policy(inputs, 0.0, exit_position=2)
+        all_final, final_paths = model.forward_with_policy(inputs, 2.0, exit_position=2)
+    handle.remove()
+    torch.testing.assert_close(all_early, early)
+    torch.testing.assert_close(all_final, final)
+    torch.testing.assert_close(early_paths, torch.zeros(4, dtype=torch.long))
+    torch.testing.assert_close(final_paths, torch.ones(4, dtype=torch.long))
+    assert calls == []

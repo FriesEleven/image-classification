@@ -65,3 +65,18 @@ def test_validation_reports_each_multi_exit_head():
     assert len(metrics["per_output"]) == 3
     assert metrics["per_output"][0]["accuracy"] == 1.0
     assert metrics["per_output"][1]["accuracy"] == 0.0
+
+
+def test_resnet_multi_exit_uses_the_same_ce_only_objective_contract():
+    config = ExperimentConfig(
+        model_type="resnet18_multi_exit",
+        exit_positions=(2, 6),
+        exit_loss_weights=(0.1, 0.15),
+        exit_distillation_alpha=0.0,
+    )
+    outputs = tuple(torch.randn(3, 10, requires_grad=True) for _ in range(3))
+    targets = torch.tensor([0, 1, 2])
+    criterion = nn.CrossEntropyLoss()
+    expected = criterion(outputs[0], targets) + 0.1 * criterion(outputs[1], targets) + 0.15 * criterion(outputs[2], targets)
+    actual = training_objective(outputs, targets, criterion, config)
+    torch.testing.assert_close(actual, expected)

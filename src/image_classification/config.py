@@ -20,6 +20,8 @@ MODEL_TYPES = (
     "csgha_v6",
     "stage_sparse",
     "multi_exit",
+    "resnet18",
+    "resnet18_multi_exit",
 )
 DATASETS = ("cifar10", "cifar100")
 DATASET_NUM_CLASSES = {"cifar10": 10, "cifar100": 100}
@@ -123,13 +125,15 @@ class ExperimentConfig:
                 raise ValueError("stage_sparse attention positions must be disjoint")
         elif self.eca_positions:
             raise ValueError("eca_positions are only supported by stage_sparse")
-        if self.model_type == "multi_exit":
+        if self.model_type in {"multi_exit", "resnet18_multi_exit"}:
             if not self.exit_positions:
                 raise ValueError("multi_exit requires at least one exit position")
             if tuple(sorted(set(self.exit_positions))) != self.exit_positions:
                 raise ValueError("multi_exit exit_positions must be unique and increasing")
-            if any(position < 1 or position > 17 for position in self.exit_positions):
+            if self.model_type == "multi_exit" and any(position < 1 or position > 17 for position in self.exit_positions):
                 raise ValueError("multi_exit exit positions must be between 1 and 17")
+            if self.model_type == "resnet18_multi_exit" and any(position < 0 or position > 6 for position in self.exit_positions):
+                raise ValueError("resnet18_multi_exit positions must be block boundaries 0 through 6")
             if len(self.exit_loss_weights) != len(self.exit_positions):
                 raise ValueError("multi_exit requires one exit_loss_weight per exit position")
             if any(weight <= 0 for weight in self.exit_loss_weights):
@@ -162,11 +166,13 @@ class ExperimentConfig:
             "hybrid_leaky": "independent_hybrid_deep_leaky_relu_0.1",
             "stage_sparse": "stage_sparse_v1_independent_se_eca_cbam",
             "multi_exit": "mobilenetv2_multi_exit_v1_detached_final_kd",
+            "resnet18": "cifar_stem_resnet18_v1",
+            "resnet18_multi_exit": "cifar_stem_resnet18_multi_exit_block_boundary_v1",
         }.get(self.model_type, f"{self.model_type}_v1")
 
     @property
     def training_recipe_version(self) -> str:
-        if self.model_type != "multi_exit":
+        if self.model_type not in {"multi_exit", "resnet18_multi_exit"}:
             return "single_head_cross_entropy_v1"
         positions = "_".join(str(position) for position in self.exit_positions)
         objective = "ce_only" if self.exit_distillation_alpha == 0 else "detached_final_kd"
@@ -192,9 +198,10 @@ class ExperimentConfig:
             return (
                 f"{self.experiment_name}_stage_sparse_se{se}_eca{eca}_cbam{cbam}_{self.dataset}"
             )
-        if self.model_type == "multi_exit":
+        if self.model_type in {"multi_exit", "resnet18_multi_exit"}:
             positions = "-".join(map(str, self.exit_positions))
-            return f"{self.experiment_name}_multi_exit_pos{positions}_{self.dataset}"
+            architecture = "multi_exit" if self.model_type == "multi_exit" else "resnet18_multi_exit"
+            return f"{self.experiment_name}_{architecture}_pos{positions}_{self.dataset}"
         if self.model_type in {"cbam", "se"} and self.aux_positions:
             positions = "-".join(map(str, self.aux_positions))
             return f"{self.experiment_name}_{self.model_type}_pos{positions}_{self.dataset}"
@@ -210,7 +217,7 @@ class ExperimentConfig:
         if self.model_type != "stage_sparse":
             # Preserve the resolved-config schema used by all historical runs.
             data.pop("eca_positions")
-        if self.model_type != "multi_exit":
+        if self.model_type not in {"multi_exit", "resnet18_multi_exit"}:
             # Do not alter the resolved-config schema of historical runs.
             for key in (
                 "exit_positions", "exit_loss_weights", "exit_distillation_alpha",

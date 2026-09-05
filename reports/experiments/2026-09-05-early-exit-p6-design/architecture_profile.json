@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "status": "profiled_before_p6_training",
+  "created_at_utc": "2026-09-05T15:33:24.123194+00:00",
+  "data_or_labels_accessed": false,
+  "selection_rule": {
+    "deployable_target_fraction": 0.425,
+    "auxiliary_target_fraction": 0.825,
+    "eligible_boundaries": "completed residual blocks 0 through 6",
+    "tie_break": "lower block position"
+  },
+  "profiles": [
+    {
+      "dataset": "cifar10",
+      "num_classes": 10,
+      "input_shape": [
+        1,
+        3,
+        32,
+        32
+      ],
+      "final_path_macs": 555422720,
+      "candidates": [
+        {
+          "position": 0,
+          "boundary": "after_residual_block_0",
+          "channels": 64,
+          "path_macs_including_exit_head": 77267584,
+          "fraction": 0.1391149141324287
+        },
+        {
+          "position": 1,
+          "boundary": "after_residual_block_1",
+          "channels": 64,
+          "path_macs_including_exit_head": 152765056,
+          "fraction": 0.27504286464910904
+        },
+        {
+          "position": 2,
+          "boundary": "after_residual_block_2",
+          "channels": 128,
+          "path_macs_including_exit_head": 211485952,
+          "fraction": 0.3807657562153741
+        },
+        {
+          "position": 3,
+          "boundary": "after_residual_block_3",
+          "channels": 128,
+          "path_macs_including_exit_head": 286983424,
+          "fraction": 0.5166937067320545
+        },
+        {
+          "position": 4,
+          "boundary": "after_residual_block_4",
+          "channels": 256,
+          "path_macs_including_exit_head": 345704960,
+          "fraction": 0.6224177505738332
+        },
+        {
+          "position": 5,
+          "boundary": "after_residual_block_5",
+          "channels": 256,
+          "path_macs_including_exit_head": 421202432,
+          "fraction": 0.7583457010905136
+        },
+        {
+          "position": 6,
+          "boundary": "after_residual_block_6",
+          "channels": 512,
+          "path_macs_including_exit_head": 479925248,
+          "fraction": 0.8640720494833196
+        }
+      ],
+      "selected": {
+        "deployable": {
+          "position": 2,
+          "boundary": "after_residual_block_2",
+          "channels": 128,
+          "path_macs_including_exit_head": 211485952,
+          "fraction": 0.3807657562153741
+        },
+        "training_only_auxiliary": {
+          "position": 6,
+          "boundary": "after_residual_block_6",
+          "channels": 512,
+          "path_macs_including_exit_head": 479925248,
+          "fraction": 0.8640720494833196
+        }
+      },
+      "parameters_with_all_candidate_heads": 11188112,
+      "parameter_schema_sha256": "83584a1429011d5da5c4814c4cbe5ba7d2a9f06b98ca0733629e3605b1e9bbe1",
+      "module_graph_sha256": "9a1bae46457d2dea89875b0f5b65d64ba6ac85eb4c65ec35bfcb91d238648c86",
+      "selected_model": {
+        "exit_positions": [
+          2,
+          6
+        ],
+        "exit_loss_weights": [
+          0.1,
+          0.15
+        ],
+        "parameters_total": 11180382,
+        "parameters_exit_heads": 6420,
+        "path_macs": {
+          "final": 555422720,
+          "exit2": 211485952,
+          "exit6": 479925248
+        },
+        "parameter_schema_sha256": "966cd52dfee6d1e355b84e09d704924a5f527e2c057daf2736edf4111ce705a7",
+        "module_graph_sha256": "39ca214487eef0d3ed12e42a73d45f99b0cfcc4266d37581a20468aba4d6e339"
+      }
+    },
+    {
+      "dataset": "cifar100",
+      "num_classes": 100,
+      "input_shape": [
+        1,
+        3,
+        32,
+        32
+      ],
+      "final_path_macs": 555468800,
+      "candidates": [
+        {
+          "position": 0,
+          "boundary": "after_residual_block_0",
+          "channels": 64,
+          "path_macs_including_exit_head": 77273344,
+          "fraction": 0.13911374320213846
+        },
+        {
+          "position": 1,
+          "boundary": "after_residual_block_1",
+          "channels": 64,
+          "path_macs_including_exit_head": 152770816,
+          "fraction": 0.2750304175500046
+        },
+        {
+          "position": 2,
+          "boundary": "after_residual_block_2",
+          "channels": 128,
+          "path_macs_including_exit_head": 211497472,
+          "fraction": 0.380754908286478
+        },
+        {
+          "position": 3,
+          "boundary": "after_residual_block_3",
+          "channels": 128,
+          "path_macs_including_exit_head": 286994944,
+          "fraction": 0.5166715826343442
+        },
+        {
+          "position": 4,
+          "boundary": "after_residual_block_4",
+          "channels": 256,
+          "path_macs_including_exit_head": 345728000,
+          "fraction": 0.6224075951700617
+        },
+        {
+          "position": 5,
+          "boundary": "after_residual_block_5",
+          "channels": 256,
+          "path_macs_including_exit_head": 421225472,
+          "fraction": 0.758324269517928
+        },
+        {
+          "position": 6,
+          "boundary": "after_residual_block_6",
+          "channels": 512,
+          "path_macs_including_exit_head": 479971328,
+          "fraction": 0.8640833256521339
+        }
+      ],
+      "selected": {
+        "deployable": {
+          "position": 2,
+          "boundary": "after_residual_block_2",
+          "channels": 128,
+          "path_macs_including_exit_head": 211497472,
+          "fraction": 0.380754908286478
+        },
+        "training_only_auxiliary": {
+          "position": 6,
+          "boundary": "after_residual_block_6",
+          "channels": 512,
+          "path_macs_including_exit_head": 479971328,
+          "fraction": 0.8640833256521339
+        }
+      },
+      "parameters_with_all_candidate_heads": 11361632,
+      "parameter_schema_sha256": "2017b3095c587c12259e0ca0ef3f56eed950c07ccae815e7e42569845021fb52",
+      "module_graph_sha256": "381d9d17d24df34d4c937fa7920004f995e51c7e9eca2aeea73587d8fccef96e",
+      "selected_model": {
+        "exit_positions": [
+          2,
+          6
+        ],
+        "exit_loss_weights": [
+          0.1,
+          0.15
+        ],
+        "parameters_total": 11284332,
+        "parameters_exit_heads": 64200,
+        "path_macs": {
+          "final": 555468800,
+          "exit2": 211497472,
+          "exit6": 479971328
+        },
+        "parameter_schema_sha256": "244082f0cda5daa7e9dd86d9eae3c0cc4e84945cf145a0f9ca38683f3673aedb",
+        "module_graph_sha256": "e9ffb6feef8df0917e39ae673c0575c6a1494a9b8d5ae391173b4218cc1ea395"
+      }
+    }
+  ]
+}
