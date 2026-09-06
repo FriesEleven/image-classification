@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "analysis_name": "early_exit_p6_source_20260906",
+  "status": "stop_without_target",
+  "source_runs_expected": 12,
+  "source_runs_completed": 12,
+  "thresholds_per_dataset": 1001,
+  "official_test_accessed": false,
+  "target_data_accessed": false,
+  "training_commit": "4e286806059e6770fd1b99ffb9e243b19451cbd6",
+  "analysis_code_commit": "3e736dc",
+  "protocol_sha256": "bb51af3f815e7261e67bb95d5092ca3290ad0d6b200e5bb7086a052b3aff02c1",
+  "artifact_sha256": {
+    "artifacts/analyses/early_exit_p6_source_20260906/README.md": "37097d196165576d8fc07e33ec6cd9ff3655dca7f9840eed0d7d6a75e43f9419",
+    "artifacts/analyses/early_exit_p6_source_20260906/source_lock.json": "532521388754abc4baa9c04b3e9923fe6350f8983206fc13beccc00365ae1437",
+    "artifacts/analyses/early_exit_p6_source_20260906/source_seed_metrics.csv": "3cf541995cb2256b45f3ee00757e1280d1c42fb089cfcf8a5e32f07fdb884987",
+    "artifacts/analyses/early_exit_p6_source_20260906/threshold_frontier.csv": "03347d4a5a71a893823c874a2584a54435b2223163225d8e6c1479f314c7d3cc"
+  },
+  "decisions": {
+    "cifar10": {
+      "status": "stop_without_target",
+      "paired_final_gain_mean": 0.005266666666666642,
+      "paired_final_gain_minimum": 0.0033999999999999586,
+      "closest_threshold_with_coverage_and_saving": 0.999,
+      "closest_minimum_saving": 0.19406642969736643,
+      "closest_minimum_early_fraction": 0.3134,
+      "closest_maximum_early_fraction": 0.3354,
+      "closest_maximum_accuracy_drop": 0.0008000000000000229,
+      "closest_maximum_balanced_accuracy_drop": 0.0008000000000000007,
+      "closest_maximum_worst_class_accuracy_drop": 0.006000000000000005
+    },
+    "cifar100": {
+      "status": "stop_without_target",
+      "paired_final_gain_mean": 0.012733333333333338,
+      "paired_final_gain_minimum": 0.008000000000000007,
+      "closest_threshold_with_coverage_and_saving": 0.9500000000000001,
+      "closest_minimum_saving": 0.1521930640612038,
+      "closest_minimum_early_fraction": 0.2458,
+      "closest_maximum_early_fraction": 0.259,
+      "closest_maximum_accuracy_drop": 0.0020000000000000018,
+      "closest_maximum_balanced_accuracy_drop": 0.0020000000000000013,
+      "closest_maximum_worst_class_accuracy_drop": 0.06000000000000005,
+      "best_risk_feasible_threshold": 0.996,
+      "best_risk_feasible_minimum_saving": 0.055091820444280626
+    }
+  }
+}
