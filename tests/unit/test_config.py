@@ -59,6 +59,17 @@ def test_cifar100_config_sets_class_count_and_split():
     assert config.experiment_id.endswith("_cifar100")
 
 
+def test_imagenet100_config_sets_scale_and_validates_its_pool_size():
+    config = ExperimentConfig(
+        dataset="imagenet100", validation_size=10_000, calibration_size=10_000,
+    )
+    assert config.num_classes == 100
+    assert config.input_resolution == 224
+    assert config.architecture_version == "mobilenetv2_imagenet100_224_v1"
+    with pytest.raises(ValueError, match="126689"):
+        ExperimentConfig(dataset="imagenet100", validation_size=120_000, calibration_size=10_000)
+
+
 def test_validation_only_flag_is_parsed():
     config = load_config(["--evaluate_test", "false"])
 

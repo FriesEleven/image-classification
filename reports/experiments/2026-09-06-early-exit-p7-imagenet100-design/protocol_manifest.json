@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_p7_source_training",
+  "stage": "P7 public ImageNet-100 source-to-target scale transfer",
+  "research_question": "RQ3: does the simplified shared early-exit method remain useful beyond CIFAR scale?",
+  "scope": "Development-only training and policy selection/transfer. The official ImageNet validation subset is not prepared or accessed.",
+  "upstream_gates": [
+    {
+      "path": "reports/experiments/2026-09-05-early-exit-p5c-analysis/analysis_receipt.json",
+      "sha256": "e36049ef0d0a556b3b9763f5f5ed4a1b1ab279e1600802e2e0bd826cd22d8f2e",
+      "required_status": "simplify_to_a3_no_kd"
+    },
+    {
+      "path": "reports/experiments/2026-09-05-early-exit-p8-v3-analysis/analysis_receipt.json",
+      "sha256": "ce620cdfd8a2733106a4e9f10cd14bfedcf02eb0d75c8989765f25589a8c82b3",
+      "required_status": "passed"
+    }
+  ],
+  "prior_boundary": {
+    "path": "reports/experiments/2026-09-06-early-exit-p6-source-analysis/analysis_receipt.json",
+    "sha256": "155d20edc6316f0f6d98b510f570325eff8e5d8ab803409a17f62668fd76561c",
+    "required_status": "stop_without_target",
+    "meaning": "P6 ResNet-18 target/test remains stopped; P7 is an independent scale-boundary experiment."
+  },
+  "architecture_profile": {
+    "path": "reports/experiments/2026-09-06-early-exit-p7-imagenet100-design/architecture_profile.json",
+    "sha256": "ebc93efec9e3e9dcd352d710b5f103545f266c32c8a8730639ca11fd749d6b8c",
+    "data_or_labels_accessed": false,
+    "input_shape": [1, 3, 224, 224],
+    "selection_targets": {
+      "deployable_mac_fraction": 0.425,
+      "training_only_auxiliary_mac_fraction": 0.825
+    },
+    "selected_positions": {"deployable": 8, "training_only_auxiliary": 15},
+    "selected_path_fractions": {"deployable": 0.4376890113162215, "training_only_auxiliary": 0.8042164235374332}
+  },
+  "dataset": {
+    "name": "imagenet100",
+    "source_kind": "fixed 100-synset subset of ILSVRC2012 training images supplied by the server public dataset mount",
+    "source_archive": "/root/autodl-pub/ImageNet100/imagenet100.zip",
+    "source_archive_bytes": 14399537092,
+    "source_archive_sha256": "b1e24911c241ab2fd6c38c74913ba67510d69e9d705c2b335408616705970332",
+    "central_directory_sha256": "05696c565ffd1ed7d2506e6083c02ae5effb680dbaa7831dc47f0eba9dbdbb0a",
+    "image_count": 126689,
+    "total_uncompressed_bytes": 14495992270,
+    "class_names": [
+      "n01558993", "n01692333", "n01729322", "n01735189", "n01749939",
+      "n01773797", "n01820546", "n01855672", "n01978455", "n01980166",
+      "n01983481", "n02009229", "n02018207", "n02085620", "n02086240",
+      "n02086910", "n02087046", "n02089867", "n02089973", "n02090622",
+      "n02091831", "n02093428", "n02099849", "n02100583", "n02104029",
+      "n02105505", "n02106550", "n02107142", "n02108089", "n02109047",
+      "n02113799", "n02113978", "n02114855", "n02116738", "n02119022",
+      "n02123045", "n02138441", "n02172182", "n02231487", "n02259212",
+      "n02326432", "n02396427", "n02483362", "n02488291", "n02701002",
+      "n02788148", "n02804414", "n02859443", "n02869837", "n02877765",
+      "n02974003", "n03017168", "n03032252", "n03062245", "n03085013",
+      "n03259280", "n03379051", "n03424325", "n03492542", "n03494278",
+      "n03530642", "n03584829", "n03594734", "n03637318", "n03642806",
+      "n03764736", "n03775546", "n03777754", "n03785016", "n03787032",
+      "n03794056", "n03837869", "n03891251", "n03903868", "n03930630",
+      "n03947888", "n04026417", "n04067472", "n04099969", "n04111531",
+      "n04127249", "n04136333", "n04229816", "n04238763", "n04336792",
+      "n04418357", "n04429376", "n04435653", "n04485082", "n04493381",
+      "n04517823", "n04589890", "n04592741", "n07714571", "n07715103",
+      "n07753275", "n07831146", "n07836838", "n13037406", "n13040303"
+    ],
+    "split_seed": 20261003,
+    "partition": {
+      "training": 106689,
+      "model_selection_validation": 10000,
+      "policy_calibration_or_transfer": 10000,
+      "stratified": true,
+      "same_indices_for_all_training_seeds": true
+    },
+    "locked_test": {
+      "source": "the 50 official ILSVRC2012 validation images for each frozen synset",
+      "samples": 5000,
+      "prepared": false,
+      "accessed": false,
+      "preparation_and_evaluation": "only after source and target gates pass, using a separately frozen one-time evaluator"
+    }
+  },
+  "models_per_seed": {
+    "A0": {"model_type": "mobilenetv2", "heads": "final only"},
+    "A3": {
+      "model_type": "multi_exit",
+      "exit_positions": [8, 15],
+      "exit_loss_weights": [0.1, 0.15],
+      "exit_distillation_alpha": 0.0,
+      "deployable_exit": 8,
+      "training_only_exit": 15
+    }
+  },
+  "training_seeds": {
+    "source": [77, 78, 79],
+    "target_after_source_gate": [80, 81, 82]
+  },
+  "training": {
+    "epochs": 100,
+    "batch_size": 128,
+    "optimizer": "AdamW",
+    "learning_rate": 0.01,
+    "weight_decay": 0.0001,
+    "scheduler": "OneCycleLR",
+    "augmentation": "RandomResizedCrop(224, scale 0.08-1.0), horizontal flip, ImageNet normalization, RandomErasing(p=0.1)",
+    "evaluation_transform": "Resize(256), CenterCrop(224), ImageNet normalization",
+    "amp": true,
+    "cuda_graph": true,
+    "pretrained_weights": false,
+    "checkpoint_selection": "final-head model-selection validation accuracy only",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "cpu_workers": 12,
+    "prefetch_factor": 4,
+    "concurrency": 1
+  },
+  "risk_budget": {
+    "overall_accuracy_drop": 0.005,
+    "balanced_accuracy_drop": 0.005,
+    "worst_class_accuracy_drop": 0.04
+  },
+  "policy_selection": {
+    "score": "deployable-exit maximum softmax probability",
+    "shared_within": "ImageNet-100 MobileNetV2 across all source seeds",
+    "threshold_grid": {"minimum": 0.0, "maximum": 1.0, "step": 0.001},
+    "minimum_mac_saving_fraction": 0.15,
+    "minimum_early_fraction": 0.15,
+    "maximum_early_fraction": 0.95,
+    "feasibility": "Every source seed must satisfy all risk, early-fraction, and corrected-MAC-saving constraints.",
+    "selection_objective": "Maximize minimum source-seed MAC saving, then mean saving, then choose the higher threshold.",
+    "target_threshold_candidates": 0,
+    "per_model_recalibration": false
+  },
+  "gates": {
+    "source_final_gain_mean_minimum": -0.003,
+    "source_final_gain_each_seed_minimum": -0.0075,
+    "source_policy_must_meet_all_risk_budgets": true,
+    "source_policy_minimum_saving_each_seed": 0.15,
+    "if_source_fails": "stop_without_target_training; retain every source seed and report the scale boundary",
+    "if_source_passes": "freeze threshold, source hashes, and analysis before target training",
+    "if_target_fails": "stop_without_test; no threshold, exit, split, class-list, or seed changes",
+    "if_target_passes": "locked-test preparation/evaluation still requires a separate frozen entry point and user authorization"
+  },
+  "run_accounting": {
+    "source_runs": 6,
+    "target_runs_after_source_gate": 6,
+    "total_planned_runs": 12,
+    "failed_or_unfavorable_seeds_may_be_deleted": false,
+    "replacement_seeds_allowed": false
+  },
+  "forbidden": [
+    "No official ILSVRC2012 validation image enumeration or model evaluation during source/target training and source selection.",
+    "No threshold selection on target seeds 80-82.",
+    "No pretrained weights, exit changes, class changes, or training-recipe changes after this freeze.",
+    "No deletion, replacement, or hidden rerun of an unfavorable seed.",
+    "Do not describe this fixed public 100-class subset as full ImageNet-1K."
+  ]
+}

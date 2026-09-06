@@ -4,7 +4,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 import torch
-from torch.utils.data import DataLoader, Subset
+from torch.utils.data import DataLoader, Dataset, Subset
 from torchvision import datasets, transforms
 
 from image_classification.paths import DATA_DIR
@@ -30,6 +30,20 @@ class DatasetLoaders:
     test: DataLoader
     class_names: tuple[str, ...]
     calibration: DataLoader | None = None
+    dataset_manifest: dict | None = None
+
+
+class LockedTestDataset(Dataset):
+    """Record a withheld test-set size without enumerating or loading its samples."""
+
+    def __init__(self, size: int):
+        self.size = size
+
+    def __len__(self) -> int:
+        return self.size
+
+    def __getitem__(self, _index):
+        raise RuntimeError("Locked test data cannot be accessed during development training")
 
 
 DATASET_SPECS = {
@@ -136,6 +150,7 @@ def build_dataloaders(
     split_seed: int = 42,
     calibration_size: int = 0,
     shuffle_seed: int | None = None,
+    include_test: bool = True,
 ) -> DatasetLoaders:
     """Build disjoint train/development loaders and the untouched 10k test loader."""
 
@@ -146,7 +161,11 @@ def build_dataloaders(
     train_transform, evaluation_transform = _transforms(spec)
     training_data = spec.dataset_class(root=DATA_DIR, train=True, download=True, transform=train_transform)
     validation_data = spec.dataset_class(root=DATA_DIR, train=True, download=False, transform=evaluation_transform)
-    test_data = spec.dataset_class(root=DATA_DIR, train=False, download=True, transform=evaluation_transform)
+    test_data = (
+        spec.dataset_class(root=DATA_DIR, train=False, download=True, transform=evaluation_transform)
+        if include_test
+        else LockedTestDataset(10_000)
+    )
     if calibration_size:
         train_indices, validation_indices, calibration_indices = (
             stratified_development_split_indices(

@@ -23,8 +23,10 @@ MODEL_TYPES = (
     "resnet18",
     "resnet18_multi_exit",
 )
-DATASETS = ("cifar10", "cifar100")
-DATASET_NUM_CLASSES = {"cifar10": 10, "cifar100": 100}
+DATASETS = ("cifar10", "cifar100", "imagenet100")
+DATASET_NUM_CLASSES = {"cifar10": 10, "cifar100": 100, "imagenet100": 100}
+DATASET_TRAINING_SAMPLES = {"cifar10": 50_000, "cifar100": 50_000, "imagenet100": 126_689}
+DATASET_INPUT_RESOLUTIONS = {"cifar10": 32, "cifar100": 32, "imagenet100": 224}
 
 
 def _positions(value: str | Sequence[int] | None) -> tuple[int, ...]:
@@ -90,12 +92,15 @@ class ExperimentConfig:
             raise ValueError(f"Unsupported model type: {self.model_type}")
         if self.dataset not in DATASETS:
             raise ValueError(f"Unsupported dataset: {self.dataset}")
-        if not 0 < self.validation_size < 50_000:
-            raise ValueError("validation_size must be between 1 and 49,999")
+        training_samples = DATASET_TRAINING_SAMPLES[self.dataset]
+        if not 0 < self.validation_size < training_samples:
+            raise ValueError(f"validation_size must be between 1 and {training_samples - 1}")
         if self.calibration_size < 0:
             raise ValueError("calibration_size cannot be negative")
-        if self.validation_size + self.calibration_size >= 50_000:
-            raise ValueError("validation_size plus calibration_size must be below 50,000")
+        if self.validation_size + self.calibration_size >= training_samples:
+            raise ValueError(
+                f"validation_size plus calibration_size must be below {training_samples}"
+            )
         if self.calibration_size and self.calibration_size < self.num_classes:
             raise ValueError("calibration_size must include at least one sample per class")
         if self.split_seed is not None and self.split_seed < 0:
@@ -157,7 +162,15 @@ class ExperimentConfig:
         return DATASET_NUM_CLASSES[self.dataset]
 
     @property
+    def input_resolution(self) -> int:
+        return DATASET_INPUT_RESOLUTIONS[self.dataset]
+
+    @property
     def architecture_version(self) -> str:
+        if self.dataset == "imagenet100" and self.model_type == "mobilenetv2":
+            return "mobilenetv2_imagenet100_224_v1"
+        if self.dataset == "imagenet100" and self.model_type == "multi_exit":
+            return "mobilenetv2_imagenet100_224_multi_exit_v1"
         return {
             "csgha": "csgha_v3_bounded_relu",
             "csgha_v4": "csgha_v4_bounded_deep_leaky_relu_0.1",

@@ -71,6 +71,20 @@ def test_multi_exit_metrics_keep_heads_separate_from_final_classifier():
     assert multi_exit["parameters_backbone"] == baseline["parameters_backbone"]
 
 
+def test_imagenet100_multi_exit_metrics_measure_224_path_macs():
+    config = ExperimentConfig(
+        model_type="multi_exit",
+        dataset="imagenet100",
+        exit_positions=(8, 15),
+        exit_loss_weights=(0.1, 0.15),
+    )
+    metrics = model_metrics(build_model(config), config)
+    assert metrics["path_macs"]["final"] > 299_000_000
+    assert metrics["path_macs"]["exit8"] < metrics["path_macs"]["exit15"]
+    assert metrics["path_macs"]["exit15"] < metrics["path_macs"]["final"]
+    assert "deterministic forward hooks" in metrics["flops_note"]
+
+
 def test_resnet18_metrics_report_measured_path_macs_and_disjoint_parameters():
     baseline_config = ExperimentConfig(model_type="resnet18")
     exit_config = ExperimentConfig(

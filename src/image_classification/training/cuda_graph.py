@@ -6,7 +6,9 @@ import torch
 from torch.amp import autocast
 
 
-def prepare_training_graph(model, batch_size: int, device: torch.device, amp: bool) -> dict:
+def prepare_training_graph(
+    model, batch_size: int, device: torch.device, amp: bool, input_resolution: int = 32,
+) -> dict:
     if device.type != "cuda":
         raise ValueError("cuda_graph requires CUDA; refusing a silent backend change")
     if getattr(model, "_training_graph_prepared", False):
@@ -16,7 +18,7 @@ def prepare_training_graph(model, batch_size: int, device: torch.device, amp: bo
     original_state = {name: value.detach().clone() for name, value in model.state_dict().items()}
     cpu_rng = torch.get_rng_state()
     cuda_rng = torch.cuda.get_rng_state(device)
-    sample = torch.zeros(batch_size, 3, 32, 32, device=device)
+    sample = torch.zeros(batch_size, 3, input_resolution, input_resolution, device=device)
     model.train()
     started = time.perf_counter()
     try:

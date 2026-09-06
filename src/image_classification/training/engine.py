@@ -137,7 +137,13 @@ def train(config: ExperimentConfig) -> dict:
     _write_json(paths.root / "provenance.json", provenance)
     _write_json(paths.root / "metrics.json", model_metrics(model, config))
     if config.measure_inference:
-        benchmark = benchmark_inference(model, device)
+        if config.input_resolution == 32:
+            # Preserve the historical CIFAR call contract and evidence path.
+            benchmark = benchmark_inference(model, device)
+        else:
+            benchmark = benchmark_inference(
+                model, device, input_size=(1, 3, config.input_resolution, config.input_resolution),
+            )
     else:
         # Shared-GPU training latency is not a valid isolated inference result.
         # Null values are intentionally distinct from a measured zero latency.
@@ -149,7 +155,9 @@ def train(config: ExperimentConfig) -> dict:
         }
     _write_json(paths.root / "benchmark.json", benchmark)
     if config.cuda_graph:
-        capture = prepare_training_graph(model, config.batch_size, device, config.amp)
+        capture = prepare_training_graph(
+            model, config.batch_size, device, config.amp, config.input_resolution,
+        )
         provenance["graph_capture"] = capture
         _write_json(paths.root / "provenance.json", provenance)
         print(f"Training graph prepared in {capture['capture_seconds']:.2f}s", flush=True)
@@ -164,7 +172,12 @@ def train(config: ExperimentConfig) -> dict:
         split_seed=resolved_split_seed,
         calibration_size=config.calibration_size,
         shuffle_seed=config.seed,
+        include_test=config.evaluate_test,
     )
+    dataset_manifest = getattr(loaders, "dataset_manifest", None)
+    if dataset_manifest is not None:
+        provenance["dataset_manifest"] = dataset_manifest
+        _write_json(paths.root / "provenance.json", provenance)
     split_path = paths.root / "split_indices.json"
     calibration_loader = getattr(loaders, "calibration", None)
     split_record = {

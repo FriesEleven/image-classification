@@ -1,0 +1,21 @@
+experiment_name: early_exit_p7_imagenet100_a3
+model_type: multi_exit
+dataset: imagenet100
+validation_size: 10000
+calibration_size: 10000
+split_seed: 20261003
+evaluate_test: false
+epochs: 100
+batch_size: 128
+lr: 0.01
+amp: true
+cuda_graph: true
+torch_num_threads: 1
+measure_inference: false
+accumulation_steps: 1
+num_workers: 12
+prefetch_factor: 4
+exit_positions: [8, 15]
+exit_loss_weights: [0.1, 0.15]
+exit_distillation_alpha: 0.0
+exit_temperature: 3.0

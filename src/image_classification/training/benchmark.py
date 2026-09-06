@@ -12,7 +12,7 @@ from image_classification.models.eca import ECALayer
 from image_classification.models.mobilenetv2 import EarlyExitHead
 
 
-def _conv_linear_macs(model: nn.Module, forward) -> int:
+def _conv_linear_macs(model: nn.Module, forward, input_resolution: int = 32) -> int:
     """Count multiply-accumulates for one image without relying on labels."""
     macs = 0
     handles = []
@@ -29,7 +29,9 @@ def _conv_linear_macs(model: nn.Module, forward) -> int:
         if isinstance(module, (nn.Conv2d, nn.Linear)):
             handles.append(module.register_forward_hook(count))
     parameter = next(model.parameters())
-    sample = torch.zeros(1, 3, 32, 32, device=parameter.device, dtype=parameter.dtype)
+    sample = torch.zeros(
+        1, 3, input_resolution, input_resolution, device=parameter.device, dtype=parameter.dtype,
+    )
     was_training = model.training
     model.eval()
     try:
@@ -85,6 +87,7 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
         if isinstance(module, EarlyExitHead)
     )
     path_macs = {}
+    measured_mobilenet = config.dataset == "imagenet100"
     if config.model_type in {"resnet18", "resnet18_multi_exit"}:
         final_forward = (
             (lambda sample: model.forward_to_exit(sample, None))
@@ -99,10 +102,30 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
                     model, lambda sample, selected=position: model.forward_to_exit(sample, selected)
                 )
         exit_head_flops = full_flops - base_flops
+    elif measured_mobilenet:
+        final_forward = (
+            (lambda sample: model.forward_to_exit(sample, None))
+            if config.model_type == "multi_exit" else model
+        )
+        base_flops = _conv_linear_macs(
+            model, final_forward, input_resolution=config.input_resolution,
+        )
+        full_flops = _conv_linear_macs(
+            model, model, input_resolution=config.input_resolution,
+        )
+        path_macs["final"] = base_flops
+        if config.model_type == "multi_exit":
+            for position in config.exit_positions:
+                path_macs[f"exit{position}"] = _conv_linear_macs(
+                    model,
+                    lambda sample, selected=position: model.forward_to_exit(sample, selected),
+                    input_resolution=config.input_resolution,
+                )
+        exit_head_flops = full_flops - base_flops
     else:
         base_flops = 91.0e6
         full_flops = base_flops + exit_head_flops
-    estimated_attention_flops = (
+    estimated_attention_flops = 0 if measured_mobilenet else (
         eca_count * 0.01e6
         + cbam_count * 0.8e6
         + guided_cbam_count * 0.8e6
@@ -169,6 +192,8 @@ def model_metrics(model: nn.Module, config: ExperimentConfig) -> dict:
         ),
         "guidance_scale_cap": 0.25 if config.model_type == "csgha_v6" else 1.0,
         "flops_note": (
+            "Conv/Linear MACs are measured by deterministic forward hooks at the configured input resolution."
+            if measured_mobilenet else
             "FLOPs are an analytical full-forward estimate, not profiler output. "
             "Early-exit deployment paths require separate prefix measurements."
         ),

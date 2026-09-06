@@ -1,0 +1,8 @@
+name: early_exit_p7_imagenet100_source_serial
+description: >-
+  P7 ImageNet-100 source stage on public training images. Trains matched
+  final-only A0 and simplified no-KD A3 models without official validation access.
+seeds: [77, 78, 79]
+experiments:
+  - configs/experiments/early_exit_p7_imagenet100_a0.yaml
+  - configs/experiments/early_exit_p7_imagenet100_a3.yaml

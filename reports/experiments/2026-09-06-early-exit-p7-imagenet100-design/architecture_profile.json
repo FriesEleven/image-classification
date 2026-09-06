@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "status": "profiled_before_p7_training",
+  "created_at_utc": "2026-09-06T00:46:20.225681+00:00",
+  "data_or_labels_accessed": false,
+  "input_shape": [
+    1,
+    3,
+    224,
+    224
+  ],
+  "selection_rule": {
+    "deployable_target_fraction": 0.425,
+    "auxiliary_target_fraction": 0.825,
+    "eligible_boundaries": "MobileNetV2 completed features 1 through 17",
+    "tie_break": "lower feature position"
+  },
+  "final_path_macs": 299622272,
+  "candidates": [
+    {
+      "position": 1,
+      "channels": 16,
+      "path_macs_including_exit_head": 20874816,
+      "fraction": 0.06967044158853451
+    },
+    {
+      "position": 2,
+      "channels": 24,
+      "path_macs_including_exit_head": 50078048,
+      "fraction": 0.16713726808666612
+    },
+    {
+      "position": 3,
+      "channels": 24,
+      "path_macs_including_exit_head": 75818336,
+      "fraction": 0.25304639569651216
+    },
+    {
+      "position": 4,
+      "channels": 32,
+      "path_macs_including_exit_head": 91285888,
+      "fraction": 0.30466990117476983
+    },
+    {
+      "position": 5,
+      "channels": 32,
+      "path_macs_including_exit_head": 102274432,
+      "fraction": 0.341344557990669
+    },
+    {
+      "position": 6,
+      "channels": 32,
+      "path_macs_including_exit_head": 113262976,
+      "fraction": 0.3780192148065682
+    },
+    {
+      "position": 7,
+      "channels": 64,
+      "path_macs_including_exit_head": 120830208,
+      "fraction": 0.4032751210163709
+    },
+    {
+      "position": 8,
+      "channels": 64,
+      "path_macs_including_exit_head": 131141376,
+      "fraction": 0.4376890113162215
+    },
+    {
+      "position": 9,
+      "channels": 64,
+      "path_macs_including_exit_head": 141452544,
+      "fraction": 0.4721029016160721
+    },
+    {
+      "position": 10,
+      "channels": 64,
+      "path_macs_including_exit_head": 151763712,
+      "fraction": 0.5065167919159227
+    },
+    {
+      "position": 11,
+      "channels": 96,
+      "path_macs_including_exit_head": 164486528,
+      "fraction": 0.5489796432756507
+    },
+    {
+      "position": 12,
+      "channels": 96,
+      "path_macs_including_exit_head": 187178624,
+      "fraction": 0.6247153215632781
+    },
+    {
+      "position": 13,
+      "channels": 96,
+      "path_macs_including_exit_head": 209870720,
+      "fraction": 0.7004509998509056
+    },
+    {
+      "position": 14,
+      "channels": 160,
+      "path_macs_including_exit_head": 225484992,
+      "fraction": 0.7525641885527121
+    },
+    {
+      "position": 15,
+      "channels": 160,
+      "path_macs_including_exit_head": 240961152,
+      "fraction": 0.8042164235374332
+    },
+    {
+      "position": 16,
+      "channels": 160,
+      "path_macs_including_exit_head": 256437312,
+      "fraction": 0.8558686585221542
+    },
+    {
+      "position": 17,
+      "channels": 320,
+      "path_macs_including_exit_head": 279455872,
+      "fraction": 0.9326939220326051
+    }
+  ],
+  "selected": {
+    "deployable": {
+      "position": 8,
+      "channels": 64,
+      "path_macs_including_exit_head": 131141376,
+      "fraction": 0.4376890113162215
+    },
+    "training_only_auxiliary": {
+      "position": 15,
+      "channels": 160,
+      "path_macs_including_exit_head": 240961152,
+      "fraction": 0.8042164235374332
+    }
+  },
+  "selected_model": {
+    "exit_positions": [
+      8,
+      15
+    ],
+    "exit_loss_weights": [
+      0.1,
+      0.15
+    ],
+    "parameters_total": 2374572,
+    "parameters_exit_heads": 22600,
+    "path_macs": {
+      "final": 299622272,
+      "exit8": 131141376,
+      "exit15": 240961152
+    },
+    "parameter_schema_sha256": "8ed8963e25e288f5b3ca7933e93e1d11eaf0920820bff21f78a8643f18fd81bf"
+  }
+}
