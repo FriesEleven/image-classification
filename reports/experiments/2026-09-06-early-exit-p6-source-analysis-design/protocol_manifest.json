@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_p6_source_analysis",
+  "scope": "Development-only source gate on P6 ResNet-18 seeds 71-73. No target or official-test sample may be evaluated.",
+  "training_protocol": {
+    "path": "reports/experiments/2026-09-05-early-exit-p6-design/protocol_manifest.json",
+    "sha256": "6c2e59e06d9d440d505d57fcdfbce87cfa9618cf9bf0d6811da376dafb07a7e2"
+  },
+  "source_manifests": [
+    {
+      "path": "artifacts/sweeps/early_exit_p6_source_cifar10_serial_p6_source_r1_20260905_233844/manifest.json",
+      "sha256": "9fa2ecdec6db7665cceb048b59565e4ecdc3d903c568c941f82fb5c81bd423d7"
+    },
+    {
+      "path": "artifacts/sweeps/early_exit_p6_source_cifar100_serial_p6_source_r1_20260906_014618/manifest.json",
+      "sha256": "5fcb2793d11653e971f3d144ed6ef9aad9bc7a9dc65ac708ed3ad3efbb95836b"
+    }
+  ],
+  "runtime_commit": "4e286806059e6770fd1b99ffb9e243b19451cbd6",
+  "datasets": {
+    "cifar10": {
+      "seeds": [71, 72, 73],
+      "risk_budget": {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.0},
+      "final_path_macs": 555422720,
+      "exit_path_macs": 211485952,
+      "exit_head_macs": 1280
+    },
+    "cifar100": {
+      "seeds": [71, 72, 73],
+      "risk_budget": {"overall_drop": 0.0, "balanced_drop": 0.0, "worst_class_drop": 0.04},
+      "final_path_macs": 555468800,
+      "exit_path_macs": 211497472,
+      "exit_head_macs": 12800
+    }
+  },
+  "numerics": {
+    "device": "NVIDIA GeForce RTX 3080 Ti",
+    "precision": "FP32",
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "cudnn_allow_tf32": false,
+    "matmul_allow_tf32": false,
+    "deterministic_algorithms": true
+  },
+  "selection": {
+    "split": "calibration only",
+    "score": "maximum softmax probability from deployable exit at block 2",
+    "thresholds": "0.000 through 1.000 inclusive in steps of 0.001",
+    "shared_across_source_seeds": true,
+    "minimum_early_fraction_each_seed": 0.15,
+    "maximum_early_fraction_each_seed": 0.95,
+    "minimum_mac_saving_each_seed": 0.15,
+    "fallback_cost": "final path plus deployable exit-head MACs on unresolved samples",
+    "feasibility": "Every source seed satisfies all dataset-specific risk, routing, and saving constraints.",
+    "objective": "Maximize minimum seed MAC saving, then mean seed MAC saving, then choose the higher threshold."
+  },
+  "final_head_gate": {
+    "paired_a3_minus_a0_mean_minimum": -0.003,
+    "paired_a3_minus_a0_each_seed_minimum": -0.0075
+  },
+  "decision": {
+    "pass": "Freeze one threshold and all source evidence hashes, then permit target training for that dataset.",
+    "fail": "Record stop_without_target for that dataset; do not change threshold grid, architecture, split, or seeds."
+  },
+  "forbidden": [
+    "No target seed 74-76 checkpoint or sample access.",
+    "No official CIFAR test iteration.",
+    "No threshold selection per model.",
+    "No seed removal, replacement, or rerun."
+  ]
+}
