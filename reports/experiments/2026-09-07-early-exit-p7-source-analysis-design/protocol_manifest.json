@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_p7_source_analysis",
+  "scope": "Development-only source gate on P7 ImageNet-100 seeds 77-79. No target seed or official ImageNet validation sample may be evaluated.",
+  "training_protocol": {
+    "path": "reports/experiments/2026-09-06-early-exit-p7-imagenet100-design/protocol_manifest.json",
+    "sha256": "05e70c1e7e3374856036c5d70a7622940c5de997880ca3752b644a589f26245c"
+  },
+  "architecture_profile": {
+    "path": "reports/experiments/2026-09-06-early-exit-p7-imagenet100-design/architecture_profile.json",
+    "sha256": "ebc93efec9e3e9dcd352d710b5f103545f266c32c8a8730639ca11fd749d6b8c"
+  },
+  "source_manifest": {
+    "path": "artifacts/sweeps/early_exit_p7_imagenet100_source_serial_p7_source_r1_20260906_090517/manifest.json",
+    "sha256": "74ad29e1f0bdbe50efe707b334caa0c820aef13206a235009b7d9bee34a1e1cd"
+  },
+  "prepared_dataset_manifest": {
+    "path": "data/imagenet100/manifest.json",
+    "sha256": "40bae131b40ceab7a0557f1ed3186980d27835375673e1fd2a88c3581ba85031"
+  },
+  "analysis_dependencies": [
+    {
+      "path": "scripts/analysis/analyze_early_exit_p6_source.py",
+      "sha256": "76033e3f7070d04d383ee11317ccd014cc300fb291d262f5c6542c4b3bf7c12a"
+    },
+    {
+      "path": "scripts/analysis/analyze_early_exit_p0.py",
+      "sha256": "3e82778195f8e6ab90b03d709df3ebb502c749e812622e73a4cbdfcc12e29303"
+    },
+    {
+      "path": "src/image_classification/data/imagenet100.py",
+      "sha256": "51e3eda0129daa168a98b24eeba67e15f41c14b86e3ed124d69af76b116acdfe"
+    },
+    {
+      "path": "src/image_classification/models/mobilenetv2.py",
+      "sha256": "a221cb8efdaee51b321de08b038c7a4e7a46a32065506e333ebced58b8964d2e"
+    }
+  ],
+  "training_commit": "e62375ba3f3083f891f965b973698dfec60f017e",
+  "dataset": {
+    "name": "imagenet100",
+    "num_classes": 100,
+    "source_seeds": [77, 78, 79],
+    "calibration_samples_each_seed": 10000,
+    "split_seed": 20261003,
+    "deployable_exit_position": 8,
+    "training_only_exit_position": 15
+  },
+  "cost_model": {
+    "reference_final_path_macs": 299622272,
+    "deployable_exit_path_macs_including_head": 131141376,
+    "deployable_exit_head_macs": 6400,
+    "fallback_path_macs": 299628672,
+    "training_only_exit_excluded_at_deployment": true
+  },
+  "risk_budget": {
+    "overall_drop": 0.005,
+    "balanced_drop": 0.005,
+    "worst_class_drop": 0.04
+  },
+  "numerics": {
+    "device": "NVIDIA GeForce RTX 3080 Ti",
+    "precision": "FP32",
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "cudnn_allow_tf32": false,
+    "matmul_allow_tf32": false,
+    "deterministic_algorithms": true
+  },
+  "selection": {
+    "split": "calibration only",
+    "score": "maximum softmax probability from deployable exit 8",
+    "threshold_minimum": 0.0,
+    "threshold_maximum": 1.0,
+    "threshold_step": 0.001,
+    "shared_across_source_seeds": true,
+    "minimum_early_fraction_each_seed": 0.15,
+    "maximum_early_fraction_each_seed": 0.95,
+    "minimum_mac_saving_each_seed": 0.15,
+    "fallback_cost": "final path plus deployable exit-8 head MACs on unresolved samples",
+    "feasibility": "Every source seed satisfies all frozen risk, routing, and corrected-MAC-saving constraints.",
+    "objective": "Maximize minimum source-seed MAC saving, then mean saving, then choose the higher threshold."
+  },
+  "final_head_gate": {
+    "paired_a3_minus_a0_mean_minimum": -0.003,
+    "paired_a3_minus_a0_each_seed_minimum": -0.0075
+  },
+  "decision": {
+    "pass": "Freeze one shared threshold and all source evidence hashes, then permit target training for seeds 80-82.",
+    "fail": "Record stop_without_target; do not change threshold grid, risk budget, architecture, split, or seeds."
+  },
+  "forbidden": [
+    "No target seed 80-82 checkpoint or sample access.",
+    "No official ILSVRC2012 validation image preparation, enumeration, or evaluation.",
+    "No threshold selection per model.",
+    "No seed removal, replacement, or rerun.",
+    "No use of the training-only exit at position 15 in deployment-cost or routing decisions."
+  ]
+}
