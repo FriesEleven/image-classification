@@ -1,0 +1,86 @@
+{
+  "status": "passed",
+  "manifest_sha256": "4ffbf010f640fd9b8e4f4ffa44c8f4af8b9bc2cc86816bb5721f9dc7ffe0620b",
+  "runs": [
+    {
+      "run": "early_exit_p7_imagenet100_a0_p7_target_r1_seed80_mobilenetv2_imagenet100",
+      "files": {
+        "summary.json": "f16f1b286f0b45f49ed488c7dfa9bc2863b01bc7f5318e2340ee6077f9d8d99b",
+        "config.yaml": "565f58df387c797f3c5a30305529b5be3f1d04dc9b6bc6b573e674c2c45c8615",
+        "provenance.json": "316751f1a97ea4b356f685044f19bc3849948ceb708e8fb8e2306f3afd421fa3",
+        "split_indices.json": "32eedf38ea8e88a6f50b2ed42384e0c8569d02293e19a23123fa19b81eb27a6a",
+        "logs/training.csv": "fe5e2b1e5895aad5b627915ac2a01a8029a908dd791c8773e8a8822b80bd32e0",
+        "checkpoints/model_best.pth": "1f552d178b43a7472b0b152d52e96f86d9a936f841d806e54bf1734676c616c5",
+        "checkpoints/model_latest.pth": "33ee5a321e4717a9854b30309ec5fc6658341b73f6ac8bb3c7a5afc407ab5c57",
+        "checkpoints/final.pth": "3dc747d37efaf5c18b04f6529a887286a1d7b4e0855c294298b5acd4906a6b99"
+      }
+    },
+    {
+      "run": "early_exit_p7_imagenet100_a0_p7_target_r1_seed81_mobilenetv2_imagenet100",
+      "files": {
+        "summary.json": "2484b5a3c9dec0352d0e142e154082aab5e87b977f6395e44bec18fe4c3acb0d",
+        "config.yaml": "fb67b93d179c967f1243e30030cac9a94a240ee6b8958f5f59a36f53f27e2087",
+        "provenance.json": "a7e2e721932c9ea8648a6a6ea160f95363b23885cb1f14b55ffa77f471bff96d",
+        "split_indices.json": "1a0842531cbf0660ad3886b2e714b4fe985029bf60be8b284859c17a4038a61e",
+        "logs/training.csv": "c561baa5606436e9b5bd269aa40f85d1be52b5be9ee6c959422142a8d8d85281",
+        "checkpoints/model_best.pth": "09dd48f52e82ec0a6d837f6aa38e2a4eb476f7a3232e808ff085c4f039b0f7ac",
+        "checkpoints/model_latest.pth": "8455725a290a9026baf411faf0dfeaa142979f1471b9715f741b2fe30ab696ba",
+        "checkpoints/final.pth": "72be71b0e287bb824453f2de03b604ad1b938f22ec9376970aa3184833c2f9e5"
+      }
+    },
+    {
+      "run": "early_exit_p7_imagenet100_a0_p7_target_r1_seed82_mobilenetv2_imagenet100",
+      "files": {
+        "summary.json": "898eb4ecb2d2aeeee232b7130dfbc9ae9332677c2f11c16c84150e433c55f310",
+        "config.yaml": "eafc919b076c5512862680780544ac210cbe9391403c627fc7220fccff07705c",
+        "provenance.json": "5b4d8654e9ffb4c6ee62bc4d4a820561560f55972f79b9d01ccf74621a452374",
+        "split_indices.json": "d744cb855904afc7c709bbd6b41bcc81ae019a0bdf6d68003813107dd91f8461",
+        "logs/training.csv": "f5e3925d89926a4d0b7992ed17f0dd5c71c25d0c6b38814d90ed9d2ea0c39f12",
+        "checkpoints/model_best.pth": "ca62e6b14dc7e6b59210f2b8fff87def5aa741055b81aea3d8d24f90291f5e3f",
+        "checkpoints/model_latest.pth": "c4645f2356698d19bb0c5120d7393b118dd7b6fe32426971dc807fe2378c05b3",
+        "checkpoints/final.pth": "32cdc77b2207bdc28d4078b2dde594a1f989d268b7a6602b3f27367b8782617f"
+      }
+    },
+    {
+      "run": "early_exit_p7_imagenet100_a3_p7_target_r1_seed80_multi_exit_pos8-15_imagenet100",
+      "files": {
+        "summary.json": "541ec30ac097c3b62ff7ffe6550884b9be54ca94beee4948a23fa765107046ba",
+        "config.yaml": "774f7a27f3cc04b8c3b96a360effca803064963cbec2a3d8eb70c7e14f3c8524",
+        "provenance.json": "03318fb42df9302c4ad86e0e1556305302dd86c777cce03f2bf9c80185f1d794",
+        "split_indices.json": "32eedf38ea8e88a6f50b2ed42384e0c8569d02293e19a23123fa19b81eb27a6a",
+        "logs/training.csv": "f3f700222df51b7954cee5fac410ed47b5b240114aca4dfc2708d2c2cd1440d5",
+        "checkpoints/model_best.pth": "a4c707a0e8bfc7be5622719c4cb8e1d01aaffa2152a28458db778c81ef23f761",
+        "checkpoints/model_latest.pth": "4125afe2c0cb5245fe20921340911cf94655bb240aec25ee7b614bef50eb32aa",
+        "checkpoints/final.pth": "b26c399bdac076886d0461367a1b748d12963ac00966af5af7216b0e1f8602f7"
+      }
+    },
+    {
+      "run": "early_exit_p7_imagenet100_a3_p7_target_r1_seed81_multi_exit_pos8-15_imagenet100",
+      "files": {
+        "summary.json": "7fd72a019f411a64f4de0766b30c7c833acc6f080f522ec34d0436a3a018d8d3",
+        "config.yaml": "4b368a25a718a9e6caaf339f868c4b0471e19c6fccb42a904b3b5d512d4cd521",
+        "provenance.json": "ef644f3949dd927a2b0150f62da473719e085672dbe8b3383bae91aa8908e514",
+        "split_indices.json": "1a0842531cbf0660ad3886b2e714b4fe985029bf60be8b284859c17a4038a61e",
+        "logs/training.csv": "285468cbbef198e609050046d1c0f06269551ef395a8fef7247992d799130cb1",
+        "checkpoints/model_best.pth": "3b64ff306aa2589894cec4a6f90b78e5bfe477801922cfac78ffe6b7ac799a7b",
+        "checkpoints/model_latest.pth": "46dc687fbb57688c105f15d34461294f1f3df7843932e6664e3c60eb39add89f",
+        "checkpoints/final.pth": "49515d6c9606568e10c40dd84bbd1cbfac88d87208569d2fef5ad6319418fd63"
+      }
+    },
+    {
+      "run": "early_exit_p7_imagenet100_a3_p7_target_r1_seed82_multi_exit_pos8-15_imagenet100",
+      "files": {
+        "summary.json": "c81d53ce5ff0e5c630d8be13915daf09b019391ff7fa5ef7f40dbda9f7bdadad",
+        "config.yaml": "6627c7ae5882d607d252679261319281d773a11f4edfdbcbc59c86e129c4bb97",
+        "provenance.json": "26b90b180f2cdd6e57a36c89e46117a5bf18fdda6266c59a75678ffb26a79494",
+        "split_indices.json": "d744cb855904afc7c709bbd6b41bcc81ae019a0bdf6d68003813107dd91f8461",
+        "logs/training.csv": "883d92f703605b51026517b45e11fca88b6737f4b19c87f6abc2b6a825ab864f",
+        "checkpoints/model_best.pth": "96c1fd3782291ac44b1e618ecfe9a8a8526ec4bbc153450f435970601b413476",
+        "checkpoints/model_latest.pth": "173fb8debf96b539a302558f900f7f342a39e77f591b55cceafb5bf0ea455339",
+        "checkpoints/final.pth": "17a9325010258a95002cba087d00ac7ef6c19e0eec13780c0c151e1898f7d476"
+      }
+    }
+  ],
+  "protocol_sha256": "1aef3d2ccba784c9930e2276527c4e49a8e7ca7aa288d4daf0aa23361b00ac14",
+  "official_test_accessed": false
+}

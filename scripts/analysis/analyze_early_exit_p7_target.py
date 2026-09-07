@@ -11,10 +11,10 @@ import torch
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / 'src'))
-from scripts.launch_early_exit_p7_target import load_protocol, validated_plan, sha256, PROTOCOL
-from scripts.analysis.analyze_early_exit_p0 import _collect_logits
-from scripts.analysis.analyze_early_exit_p6_source import configure_numerics, route_metrics, feasible
 from image_classification.selection.early_exit import softmax_confidence
+from scripts.analysis.analyze_early_exit_p0 import _collect_logits
+from scripts.analysis.analyze_early_exit_p6_source import configure_numerics, feasible, route_metrics
+from scripts.launch_early_exit_p7_target import PROTOCOL, load_protocol, sha256, validated_plan
 
 
 def execute(manifest_path, output, audit_only=False):
@@ -67,18 +67,18 @@ def execute(manifest_path, output, audit_only=False):
         assert labels.shape == (10000,) and np.all(np.bincount(labels, minlength=100) == 100)
         path = output / f'seed{seed}_logits.npz'
         np.savez_compressed(path, labels=labels, final_logits=values[0], exit8_logits=values[1], exit15_logits=values[2])
-        record = dict(labels=labels, final_logits=values[0], exit_logits=values[1], num_classes=100,
-                      exit_cost_fraction=cost['deployable_exit_path_macs_including_head'] / cost['reference_final_path_macs'],
-                      fallback_cost_fraction=cost['fallback_path_macs'] / cost['reference_final_path_macs'])
+        record = {'labels': labels, 'final_logits': values[0], 'exit_logits': values[1], 'num_classes': 100,
+                      'exit_cost_fraction': cost['deployable_exit_path_macs_including_head'] / cost['reference_final_path_macs'],
+                      'fallback_cost_fraction': cost['fallback_path_macs'] / cost['reference_final_path_macs']}
         metrics = route_metrics(record, softmax_confidence(values[1]) >= gate['threshold'])
         row = dict(seed=seed, paired_final_gain=a3['summary']['best_validation_accuracy'] - a0['summary']['best_validation_accuracy'],
                    policy_gate_passed=feasible(metrics, gate['risk_budget'], selection), logits_sha256=sha256(path), **metrics)
         rows.append(row)
         print(json.dumps(row), flush=True)
     final_pass = np.mean([r['paired_final_gain'] for r in rows]) >= gate['final_head_gain_mean_minimum'] - 1e-12 and min(r['paired_final_gain'] for r in rows) >= gate['final_head_gain_each_seed_minimum'] - 1e-12
-    result = dict(status='ready_for_locked_test_design' if final_pass and all(r['policy_gate_passed'] for r in rows) else 'stop_without_test',
-                  final_head_gate_passed=bool(final_pass), threshold=gate['threshold'], threshold_candidates=0,
-                  official_test_accessed=False, manifest_sha256=sha256(manifest_path), protocol_sha256=sha256(PROTOCOL), seeds=rows)
+    result = {'status': 'ready_for_locked_test_design' if final_pass and all(r['policy_gate_passed'] for r in rows) else 'stop_without_test',
+                  'final_head_gate_passed': bool(final_pass), 'threshold': gate['threshold'], 'threshold_candidates': 0,
+                  'official_test_accessed': False, 'manifest_sha256': sha256(manifest_path), 'protocol_sha256': sha256(PROTOCOL), 'seeds': rows}
     (output / 'target_results.json').write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(result, indent=2))
 

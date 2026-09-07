@@ -1,0 +1,73 @@
+{
+  "status": "ready_for_locked_test_design",
+  "final_head_gate_passed": true,
+  "threshold": 0.85,
+  "threshold_candidates": 0,
+  "official_test_accessed": false,
+  "manifest_sha256": "4ffbf010f640fd9b8e4f4ffa44c8f4af8b9bc2cc86816bb5721f9dc7ffe0620b",
+  "protocol_sha256": "1aef3d2ccba784c9930e2276527c4e49a8e7ca7aa288d4daf0aa23361b00ac14",
+  "seeds": [
+    {
+      "seed": 80,
+      "paired_final_gain": 0.009399999999999964,
+      "policy_gate_passed": true,
+      "logits_sha256": "e0f50f515de292bcbc7ce8f504e46f3bd2fcdbe1c532f458ab57f05c39b2a885",
+      "accuracy": 0.832,
+      "reference_accuracy": 0.8363,
+      "accuracy_drop": 0.0043000000000000815,
+      "balanced_accuracy": 0.8319999999999999,
+      "reference_balanced_accuracy": 0.8362999999999998,
+      "balanced_accuracy_drop": 0.004300000000000002,
+      "worst_class_accuracy_drop": 0.040000000000000036,
+      "early_fraction": 0.2757,
+      "expected_cost_fraction": 0.8449863316329167,
+      "mac_saving_fraction": 0.1550136683670833,
+      "premature_count": 53,
+      "rescue_count": 10,
+      "samples": 10000
+    },
+    {
+      "seed": 81,
+      "paired_final_gain": 0.0028000000000000247,
+      "policy_gate_passed": true,
+      "logits_sha256": "75faa8107d72a37b77578ec30388777dfe4e701952fb33089c5363d139e1fc32",
+      "accuracy": 0.8324,
+      "reference_accuracy": 0.8355,
+      "accuracy_drop": 0.0030999999999999917,
+      "balanced_accuracy": 0.8324000000000001,
+      "reference_balanced_accuracy": 0.8355,
+      "balanced_accuracy_drop": 0.0031000000000000003,
+      "worst_class_accuracy_drop": 0.029999999999999916,
+      "early_fraction": 0.2724,
+      "expected_cost_fraction": 0.8468420283843252,
+      "mac_saving_fraction": 0.1531579716156748,
+      "premature_count": 43,
+      "rescue_count": 12,
+      "samples": 10000
+    },
+    {
+      "seed": 82,
+      "paired_final_gain": 0.005099999999999993,
+      "policy_gate_passed": true,
+      "logits_sha256": "4659ed904eb9489fc15ff1fa6192f011b8c97db264ac044a76d8b566d9f758d9",
+      "accuracy": 0.8326,
+      "reference_accuracy": 0.8363,
+      "accuracy_drop": 0.0037000000000000366,
+      "balanced_accuracy": 0.8325999999999999,
+      "reference_balanced_accuracy": 0.8362999999999999,
+      "balanced_accuracy_drop": 0.003699999999999999,
+      "worst_class_accuracy_drop": 0.040000000000000036,
+      "early_fraction": 0.2704,
+      "expected_cost_fraction": 0.8479666930821484,
+      "mac_saving_fraction": 0.15203330691785155,
+      "premature_count": 52,
+      "rescue_count": 15,
+      "samples": 10000
+    }
+  ],
+  "artifact_sha256": {
+    "artifacts/analyses/early_exit_p7_target_20260907/audit.json": "838b52840e704f0a26d3c8fab7126ef50247a0a7f8907bd8813650a7d3995f2c",
+    "artifacts/analyses/early_exit_p7_target_20260907/target_results.json": "727897c91d433c942e0b25f851e507dad751b1e41b9c1388c9d4a393a8d50b6f"
+  },
+  "independent_recalculation": "passed"
+}
