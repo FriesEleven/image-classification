@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_p7_target_training",
+  "scope": "Target-seed confirmation for P7 ImageNet-100 using the source-locked threshold. No threshold selection and no official ImageNet validation access are allowed.",
+  "training_protocol": {
+    "path": "reports/experiments/2026-09-06-early-exit-p7-imagenet100-design/protocol_manifest.json",
+    "sha256": "05e70c1e7e3374856036c5d70a7622940c5de997880ca3752b644a589f26245c"
+  },
+  "source_analysis_receipt": {
+    "path": "reports/experiments/2026-09-07-early-exit-p7-source-analysis/analysis_receipt.json",
+    "sha256": "e8e8befdc4566dd92084cb43422350c19238aa4558fe77f7712f6419d1f909c3",
+    "required_status": "ready_for_p7_target_training"
+  },
+  "source_lock": {
+    "path": "artifacts/analyses/early_exit_p7_source_20260907/source_lock.json",
+    "sha256": "6b7ee40077611127762f1cda7ab21614c76829232fae3d83c2c27dccc2c727b9",
+    "required_status": "ready_for_p7_target_training"
+  },
+  "prepared_dataset_manifest": {
+    "path": "data/imagenet100/manifest.json",
+    "sha256": "40bae131b40ceab7a0557f1ed3186980d27835375673e1fd2a88c3581ba85031"
+  },
+  "target_sweep": {
+    "path": "configs/sweeps/early_exit_p7_imagenet100_target.yaml",
+    "sha256": "e5d742dbe8f6f745cacbd9fe77d293dccc1c7003791dfc2ee95091afb3e58e98"
+  },
+  "experiment_configs": [
+    {
+      "path": "configs/experiments/early_exit_p7_imagenet100_a0.yaml",
+      "sha256": "92aeaab2626d461cfe300ebbca0ee041bfc8321e48411123d0c9a4a7867ffdb1"
+    },
+    {
+      "path": "configs/experiments/early_exit_p7_imagenet100_a3.yaml",
+      "sha256": "a9f14ca8880cb7651d4cce4c21b4f9b1b7f9fe6fbd8fdae18a631a8ba7f2b69f"
+    }
+  ],
+  "source_gate": {
+    "selected_shared_threshold": 0.85,
+    "feasible_source_thresholds": 11,
+    "minimum_source_seed_mac_saving": 0.15540730101132127,
+    "maximum_source_seed_accuracy_drop": 0.0050000000000000044,
+    "maximum_source_seed_balanced_accuracy_drop": 0.005000000000000002,
+    "maximum_source_seed_worst_class_accuracy_drop": 0.030000000000000027
+  },
+  "target_training": {
+    "seeds": [80, 81, 82],
+    "variants": ["A0", "A3"],
+    "runs": 6,
+    "concurrency": 1,
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "cpu_workers": 12,
+    "epochs": 100,
+    "batch_size": 128,
+    "split_seed": 20261003,
+    "validation_size": 10000,
+    "calibration_size": 10000,
+    "evaluate_test": false
+  },
+  "target_evaluation_after_training": {
+    "split": "fixed calibration split only",
+    "threshold": 0.85,
+    "threshold_candidates": 0,
+    "per_model_recalibration": false,
+    "risk_budget": {
+      "overall_drop": 0.005,
+      "balanced_drop": 0.005,
+      "worst_class_drop": 0.04
+    },
+    "minimum_early_fraction_each_seed": 0.15,
+    "maximum_early_fraction_each_seed": 0.95,
+    "minimum_mac_saving_each_seed": 0.15,
+    "final_head_gain_mean_minimum": -0.003,
+    "final_head_gain_each_seed_minimum": -0.0075,
+    "pass": "Every target seed and the paired final-head aggregate satisfy all frozen gates; only then may a separate official-test protocol be considered.",
+    "fail": "Stop without official-test preparation or evaluation and report the fixed-threshold transfer boundary."
+  },
+  "official_test": {
+    "prepared": false,
+    "accessed": false,
+    "authorization_required_after_target_pass": true
+  },
+  "forbidden": [
+    "No target-seed threshold search, tuning, or recalibration.",
+    "No replacement, removal, or hidden rerun of seeds 80-82.",
+    "No architecture, training recipe, split, class-list, or risk-budget changes.",
+    "No official ILSVRC2012 validation preparation, enumeration, or evaluation.",
+    "No concurrent GPU training runs."
+  ]
+}

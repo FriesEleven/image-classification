@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "analysis_name": "early_exit_p7_source_20260907",
+  "status": "ready_for_p7_target_training",
+  "source_runs_expected": 6,
+  "source_runs_completed": 6,
+  "thresholds_evaluated": 1001,
+  "feasible_thresholds": 11,
+  "official_test_accessed": false,
+  "target_data_accessed": false,
+  "training_commit": "e62375ba3f3083f891f965b973698dfec60f017e",
+  "analysis_code_commit": "5c18c42f1d5c0c78c133cabcca7d7c19bb0d9c8b",
+  "protocol_sha256": "07ca97da9daa1fbe04b040a4966a9d5208e0fc38e2e9c03a0682a638f34d3783",
+  "artifact_sha256": {
+    "artifacts/analyses/early_exit_p7_source_20260907/README.md": "69b362148660a099a219584e6a778cfa54e80669f26caa66a0127a26bb77e062",
+    "artifacts/analyses/early_exit_p7_source_20260907/source_lock.json": "6b7ee40077611127762f1cda7ab21614c76829232fae3d83c2c27dccc2c727b9",
+    "artifacts/analyses/early_exit_p7_source_20260907/source_seed_metrics.csv": "639ce7fd40d077995c13d60836d08de4e13a507693cf6822bff4b30dabeb53ab",
+    "artifacts/analyses/early_exit_p7_source_20260907/threshold_frontier.csv": "0c7bbe9c5cf644f5c32b292269be15c7a0ca8b24991057bc4a21af2c85cc7732"
+  },
+  "calibration_logits_sha256": {
+    "seed77": "d4c811c47d5c6ab6150d25102b5f1ef6ad556652ed38a8d77cf88798d67486aa",
+    "seed78": "7f999ebcc6eb614d2591973848143bbc8ce00bf071d5bfec58b4f4c1041cdbc4",
+    "seed79": "c529d7f9eee01246d4355c3afd6e191c6fe2b362061abc07225b016084319ca3"
+  },
+  "decision": {
+    "final_head_gate_passed": true,
+    "policy_gate_passed": true,
+    "paired_a3_minus_a0_gain_by_seed": {
+      "77": 0.0141,
+      "78": 0.0080,
+      "79": 0.0084
+    },
+    "paired_final_gain_mean": 0.010166666666666694,
+    "paired_final_gain_minimum": 0.008000000000000007,
+    "selected_shared_threshold": 0.85,
+    "minimum_source_seed_mac_saving": 0.15540730101132127,
+    "mean_source_seed_mac_saving": 0.15664443217892696,
+    "maximum_source_seed_accuracy_drop": 0.0050000000000000044,
+    "maximum_source_seed_balanced_accuracy_drop": 0.005000000000000002,
+    "maximum_source_seed_worst_class_accuracy_drop": 0.030000000000000027,
+    "minimum_source_seed_early_fraction": 0.2764,
+    "maximum_source_seed_early_fraction": 0.2799
+  },
+  "independent_audit": {
+    "status": "passed",
+    "selected_threshold": 0.85,
+    "minimum_saving": 0.15540730101132127,
+    "feasible_thresholds": 11
+  }
+}

@@ -1,0 +1,9 @@
+name: early_exit_p7_imagenet100_target_serial
+description: >-
+  P7 ImageNet-100 target confirmation on untouched seeds 80-82. Trains matched
+  final-only A0 and simplified no-KD A3 models; source threshold 0.850 remains
+  frozen and official ImageNet validation access remains forbidden.
+seeds: [80, 81, 82]
+experiments:
+  - configs/experiments/early_exit_p7_imagenet100_a0.yaml
+  - configs/experiments/early_exit_p7_imagenet100_a3.yaml
