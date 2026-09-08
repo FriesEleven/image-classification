@@ -1,0 +1,5 @@
+{
+  "status": "completed",
+  "new_training_runs": 0,
+  "note": "All 30 A0-A4 seeds retained. Historical wall time is descriptive, not matched-hardware training speed. Training peak memory unavailable. No assertion that A3 dominates A4. Existing final/policy validation scopes remain distinct; this is not new official A3 evidence."
+}

@@ -1,0 +1,82 @@
+{
+  "status": "completed",
+  "official_test_accessed": true,
+  "threshold_candidates": 0,
+  "threshold": 0.85,
+  "all_policy_gates_passed": false,
+  "lock_sha256": "9b6d4908ec3138b06e5e565a5dfad7e71bf1b4e3e6c28f5dd5eebc7fae0028f2",
+  "records": {
+    "80/A0": {
+      "accuracy": 0.8164,
+      "logits_sha256": "89c3ad72fa0f531222b71fd3c5c3034803d5b52afe4819460d6cfb33431d3cf7"
+    },
+    "81/A0": {
+      "accuracy": 0.8158,
+      "logits_sha256": "06112a1b90abde190d396709cd81a09213d6873612773e3cbe67bb0aae0a622b"
+    },
+    "82/A0": {
+      "accuracy": 0.8118,
+      "logits_sha256": "0a6c19f77e88728bc6b37e65a11284ba801ead235b6c3d47a6f43143ce4ccb64"
+    },
+    "80/A3": {
+      "accuracy": 0.8282,
+      "logits_sha256": "7422c67df75122c6efec635ea3e04c8cff0e4dd58fbf5a1bdc0aa4819273061c",
+      "policy": {
+        "accuracy": 0.8252,
+        "reference_accuracy": 0.8282,
+        "accuracy_drop": 0.0030000000000000027,
+        "balanced_accuracy": 0.8251999999999999,
+        "reference_balanced_accuracy": 0.8281999999999998,
+        "balanced_accuracy_drop": 0.0029999999999999983,
+        "worst_class_accuracy_drop": 0.040000000000000036,
+        "early_fraction": 0.2554,
+        "expected_cost_fraction": 0.8564016783158228,
+        "mac_saving_fraction": 0.1435983216841772,
+        "premature_count": 23,
+        "rescue_count": 8,
+        "samples": 5000
+      },
+      "policy_gate_passed": false
+    },
+    "81/A3": {
+      "accuracy": 0.824,
+      "logits_sha256": "551cb80959dd71f160461278aaa551f94da5419a047bc8e4a886fb0d3a2ccc65",
+      "policy": {
+        "accuracy": 0.8194,
+        "reference_accuracy": 0.824,
+        "accuracy_drop": 0.0045999999999999375,
+        "balanced_accuracy": 0.8193999999999998,
+        "reference_balanced_accuracy": 0.824,
+        "balanced_accuracy_drop": 0.0046,
+        "worst_class_accuracy_drop": 0.07999999999999996,
+        "early_fraction": 0.2544,
+        "expected_cost_fraction": 0.8569640106647347,
+        "mac_saving_fraction": 0.1430359893352653,
+        "premature_count": 34,
+        "rescue_count": 11,
+        "samples": 5000
+      },
+      "policy_gate_passed": false
+    },
+    "82/A3": {
+      "accuracy": 0.8214,
+      "logits_sha256": "5e3690702bce5d75981f457bc55375382d2daa5bc08e9c0d110bf16955c26a31",
+      "policy": {
+        "accuracy": 0.8192,
+        "reference_accuracy": 0.8214,
+        "accuracy_drop": 0.0021999999999999797,
+        "balanced_accuracy": 0.8192,
+        "reference_balanced_accuracy": 0.8214000000000001,
+        "balanced_accuracy_drop": 0.002199999999999999,
+        "worst_class_accuracy_drop": 0.039999999999999925,
+        "early_fraction": 0.2582,
+        "expected_cost_fraction": 0.8548271477388704,
+        "mac_saving_fraction": 0.14517285226112964,
+        "premature_count": 23,
+        "rescue_count": 12,
+        "samples": 5000
+      },
+      "policy_gate_passed": false
+    }
+  }
+}

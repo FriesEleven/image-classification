@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "errors": [],
+  "round_rows": 1200,
+  "cells": 300,
+  "raw_files": 1200,
+  "workloads": 300,
+  "check_files": 300,
+  "latency_observations": 1200000,
+  "route_count_observations": 600000,
+  "check_totals": {
+    "samples_checked": 117120,
+    "route_errors": 0,
+    "prediction_errors": 0,
+    "logit_tolerance_errors": 0
+  },
+  "check_maxima": {
+    "max_abs_logit_difference": 3.0517578125e-05,
+    "max_tolerance_ratio": 0.12403760105371475
+  },
+  "input_hashes": {
+    "protocol_manifest.json": "58569287e0844e3f1abdbfe46a1e60cdf33438126a3a35ff7de704fdfbc96c5f",
+    "p8_v3_results.json": "3857bf3da65e9625ffeead2c36fbe319d21148563dc5eedfb584c92471957faf",
+    "round_metrics.csv": "a0d0b8ad485678afb0505d9b6357befa641fb98b3963b9020a80b765a9811116",
+    "seed_metrics.csv": "6ca7bdd1d502fc9c166f4ad144a4bedf4e8b12edaf376903b5e854afbde73b21"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "status": "completed",
+  "started_at": "2026-09-08T00:28:28.612253+00:00",
+  "stages": [
+    {
+      "name": "fair_comparison",
+      "command": [
+        "/root/miniconda3/bin/python",
+        "scripts/analysis/paper_readiness.py",
+        "--stage",
+        "comparison",
+        "--output",
+        "/root/autodl-tmp/image-classification/artifacts/analyses/paper_readiness_20260908_r1"
+      ],
+      "status": "completed",
+      "started_at": "2026-09-08T00:28:28.612268+00:00",
+      "returncode": 0,
+      "finished_at": "2026-09-08T00:29:01.986483+00:00"
+    },
+    {
+      "name": "a3_tradeoffs",
+      "command": [
+        "/root/miniconda3/bin/python",
+        "scripts/analysis/paper_readiness.py",
+        "--stage",
+        "tradeoffs",
+        "--output",
+        "/root/autodl-tmp/image-classification/artifacts/analyses/paper_readiness_20260908_r1"
+      ],
+      "status": "completed",
+      "started_at": "2026-09-08T00:29:01.986527+00:00",
+      "returncode": 0,
+      "finished_at": "2026-09-08T00:29:02.123183+00:00"
+    },
+    {
+      "name": "latency_replication",
+      "command": [
+        "/root/miniconda3/bin/python",
+        "scripts/analysis/benchmark_early_exit_p8_v3.py",
+        "--output",
+        "/root/autodl-tmp/image-classification/artifacts/analyses/paper_readiness_20260908_r1/latency"
+      ],
+      "status": "completed",
+      "started_at": "2026-09-08T00:29:02.123217+00:00",
+      "returncode": 0,
+      "finished_at": "2026-09-08T04:05:57.149187+00:00"
+    },
+    {
+      "name": "latency_audit",
+      "command": [
+        "/root/miniconda3/bin/python",
+        "scripts/analysis/paper_readiness.py",
+        "--stage",
+        "latency_audit",
+        "--output",
+        "/root/autodl-tmp/image-classification/artifacts/analyses/paper_readiness_20260908_r1"
+      ],
+      "status": "completed",
+      "started_at": "2026-09-08T04:05:57.149226+00:00",
+      "returncode": 0,
+      "finished_at": "2026-09-08T04:06:01.099017+00:00"
+    }
+  ],
+  "finished_at": "2026-09-08T04:06:01.099060+00:00"
+}
