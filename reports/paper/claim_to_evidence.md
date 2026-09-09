@@ -1,5 +1,10 @@
 # Claim-to-evidence audit
 
+> Historical A4 ledger retained below. The expanded manuscript's 2026-09-09
+> evidence map is [final-20260909/claim_to_evidence.md](final-20260909/claim_to_evidence.md).
+> The RTX 4090 D expected-path timing below is not the latest actual-dynamic
+> latency result and is not used as the new manuscript's headline claim.
+
 This ledger maps every central numerical claim in the manuscript to a frozen,
 versioned evidence record.  The table/figure generators read these records but
 do not instantiate evaluators, data loaders, or official-test sweeps.

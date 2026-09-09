@@ -1,0 +1,45 @@
+{
+  "status": "completed",
+  "all_policy_gates_passed": false,
+  "validation": "independent saved-array recalculation",
+  "new_model_evaluation": false,
+  "new_threshold_candidates": 0,
+  "inventory_files_checked": 1818,
+  "hash_mismatches": [],
+  "official_result_sha256": "ac009a3203a3579997c8a5665b63ba1d766cc685f53d865b24017c3700afb749",
+  "per_seed": [
+    [
+      80,
+      81.64,
+      82.82000000000001,
+      82.52000000000001,
+      0.30000000000000027,
+      4.0000000000000036,
+      14.359832168417718,
+      23,
+      8
+    ],
+    [
+      81,
+      81.58,
+      82.39999999999999,
+      81.94,
+      0.45999999999999375,
+      7.9999999999999964,
+      14.30359893352653,
+      34,
+      11
+    ],
+    [
+      82,
+      81.17999999999999,
+      82.14,
+      81.92,
+      0.21999999999999797,
+      3.9999999999999925,
+      14.517285226112964,
+      23,
+      12
+    ]
+  ]
+}
