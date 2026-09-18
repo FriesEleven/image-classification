@@ -1,0 +1,25 @@
+{
+  "source_repository_commit": "26bcaec974f4a71edbf4cca7f56355add8b0b8ed",
+  "inputs": {
+    "artifacts/analyses/minimal_core_evidence_20260918_r1/output_hashes.json": "1b493c3603a937f25d226a5c8e4ce306558561611beeae6eaaa9f3775afc8748",
+    "artifacts/analyses/minimal_core_evidence_20260918_r1/protocol_manifest.json": "4a26d4c71801d16a8e818f3526c9fb002d9d3f2cc88b059968ec4a5f80ec9df3",
+    "artifacts/analyses/minimal_core_evidence_20260918_r1/input_manifest.json": "644a618c2d7c635633da354b1e01768ba5ca22fb5947357194130d4d34b28601",
+    "artifacts/analyses/minimal_core_evidence_20260918_r1/fit_audit_partitions.json": "801158baf9129ddc52747f852c8083df43f05070c7025d2a83b8c6d046ff02a3",
+    "artifacts/analyses/minimal_core_evidence_20260918_r1/shared_vs_individual_seed_metrics.csv": "64641eba9b469bc3a4859eef28a795854f144f8b22863898de968ed15024cd0d",
+    "artifacts/analyses/minimal_core_evidence_20260918_r1/shared_vs_individual_summary.csv": "01232f6b38580c505c0013214829dbb42e67dc810b7398adc1b8bece64ad0f94",
+    "artifacts/analyses/minimal_core_evidence_20260918_r1/a3_joint_operating_points.csv": "7550f677acec306a6b0cae2db22c04f6d5c8d565d8d0276a813413ccfc196365",
+    "artifacts/analyses/minimal_core_evidence_20260918_r1/a3_latency_round_metrics.csv": "5c8509c2923a19e81a3963404028a8e48c77c9d4be71f1e754c5245f76e86b52",
+    "artifacts/analyses/minimal_core_evidence_20260918_r1/analysis_receipt.json": "acdb08ca6de12c81fc06282ef5209aa761cd163bbf347c14697c5eb6ac974281",
+    "scripts/analysis/build_minimal_core_paper_materials.py": "8bd70fa0d00b9ca031905cd3a51b05b4a8078f6be9669acadcf14d13aa6625b7"
+  },
+  "outputs": {
+    "reports/paper/final-20260918/a3_joint_manuscript.tex": "73bb51038d8bcdd333e8dc26f554370e49d5d5078f062dc14f9c45a7bab576db",
+    "reports/paper/final-20260918/a3_joint_seed_manuscript.csv": "eb37a4e5b0b362a7ec6040318c639286fd68b7545482e0609e6bbec33f48beb8",
+    "reports/paper/final-20260918/a3_joint_summary_manuscript.csv": "0e8d820458b74425ce0e9a2972e2c0363746067450c30f01c5a10eea5a569ca7",
+    "reports/paper/final-20260918/recalculation_audit.json": "af13b591e55cda8fda95d188a0886e47d4a8106e81e1e0df98a5543d1dad8b1e",
+    "reports/paper/final-20260918/shared_policy_manuscript.csv": "e598140de0aecd77bd131d5df5e6c2a933bad748d86c9c75b8e82c29092686f0",
+    "reports/paper/final-20260918/shared_policy_manuscript.tex": "12966f0922f07a1c9ddebee387184219abacc7085f839ff320c3bc5bd0035303",
+    "reports/paper/final-20260918/shared_policy_tradeoffs.pdf": "698c55ffc2839698deadf9e2b1f9c932b287381938c9f6e9d08a2eed881de492"
+  },
+  "raw_predictions": "artifacts/analyses/minimal_core_evidence_20260918_r1/m2_raw/"
+}

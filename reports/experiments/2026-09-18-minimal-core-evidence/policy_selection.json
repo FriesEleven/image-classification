@@ -1,0 +1,725 @@
+{
+  "status": "completed",
+  "selections": [
+    {
+      "case": "cifar10",
+      "strategy": "S",
+      "split": "source_F",
+      "seed": 54,
+      "threshold": 0.9832884467022444,
+      "candidates": 1002,
+      "risk_feasible_candidates": 657,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "S",
+      "split": "source_F",
+      "seed": 55,
+      "threshold": 0.9832884467022444,
+      "candidates": 1002,
+      "risk_feasible_candidates": 657,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "S",
+      "split": "source_F",
+      "seed": 56,
+      "threshold": 0.9832884467022444,
+      "candidates": 1002,
+      "risk_feasible_candidates": 657,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "S",
+      "split": "target_E",
+      "seed": 57,
+      "threshold": 0.9832884467022444,
+      "candidates": 1002,
+      "risk_feasible_candidates": 657,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "S",
+      "split": "target_E",
+      "seed": 58,
+      "threshold": 0.9832884467022444,
+      "candidates": 1002,
+      "risk_feasible_candidates": 657,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "S",
+      "split": "target_E",
+      "seed": 59,
+      "threshold": 0.9832884467022444,
+      "candidates": 1002,
+      "risk_feasible_candidates": 657,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "I",
+      "split": "source_F",
+      "seed": 54,
+      "threshold": 0.8288590837041686,
+      "candidates": 1002,
+      "risk_feasible_candidates": 837,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "I",
+      "split": "source_F",
+      "seed": 55,
+      "threshold": 0.9832434135080674,
+      "candidates": 1002,
+      "risk_feasible_candidates": 665,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "I",
+      "split": "source_F",
+      "seed": 56,
+      "threshold": 0.8540860639810137,
+      "candidates": 1002,
+      "risk_feasible_candidates": 819,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "I",
+      "split": "target_E",
+      "seed": 57,
+      "threshold": 0.4754492935988174,
+      "candidates": 1002,
+      "risk_feasible_candidates": 767,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "I",
+      "split": "target_E",
+      "seed": 58,
+      "threshold": 0.9237678369646429,
+      "candidates": 1002,
+      "risk_feasible_candidates": 763,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "I",
+      "split": "target_E",
+      "seed": 59,
+      "threshold": 0.930177560791802,
+      "candidates": 1002,
+      "risk_feasible_candidates": 729,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "A",
+      "split": "source_F",
+      "seed": 54,
+      "threshold": 0.9832884467022444,
+      "candidates": 1002,
+      "risk_feasible_candidates": 657,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "A",
+      "split": "source_F",
+      "seed": 55,
+      "threshold": 0.9832884467022444,
+      "candidates": 1002,
+      "risk_feasible_candidates": 657,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "A",
+      "split": "source_F",
+      "seed": 56,
+      "threshold": 0.9832884467022444,
+      "candidates": 1002,
+      "risk_feasible_candidates": 657,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "A",
+      "split": "target_E",
+      "seed": 57,
+      "threshold": 0.9832884467022444,
+      "candidates": 1002,
+      "risk_feasible_candidates": 657,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "A",
+      "split": "target_E",
+      "seed": 58,
+      "threshold": 0.9832884467022444,
+      "candidates": 1002,
+      "risk_feasible_candidates": 657,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "A",
+      "split": "target_E",
+      "seed": 59,
+      "threshold": 0.9832884467022444,
+      "candidates": 1002,
+      "risk_feasible_candidates": 657,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "C",
+      "split": "source_F",
+      "seed": 54,
+      "threshold": 0.76412065512808,
+      "candidates": 1002,
+      "risk_feasible_candidates": 673,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "C",
+      "split": "source_F",
+      "seed": 55,
+      "threshold": 0.76412065512808,
+      "candidates": 1002,
+      "risk_feasible_candidates": 673,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "C",
+      "split": "source_F",
+      "seed": 56,
+      "threshold": 0.76412065512808,
+      "candidates": 1002,
+      "risk_feasible_candidates": 673,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "C",
+      "split": "target_E",
+      "seed": 57,
+      "threshold": 0.76412065512808,
+      "candidates": 1002,
+      "risk_feasible_candidates": 673,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "C",
+      "split": "target_E",
+      "seed": 58,
+      "threshold": 0.76412065512808,
+      "candidates": 1002,
+      "risk_feasible_candidates": 673,
+      "status": "selected"
+    },
+    {
+      "case": "cifar10",
+      "strategy": "C",
+      "split": "target_E",
+      "seed": 59,
+      "threshold": 0.76412065512808,
+      "candidates": 1002,
+      "risk_feasible_candidates": 673,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "S",
+      "split": "source_F",
+      "seed": 60,
+      "threshold": 0.9959847200781687,
+      "candidates": 1002,
+      "risk_feasible_candidates": 172,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "S",
+      "split": "source_F",
+      "seed": 61,
+      "threshold": 0.9959847200781687,
+      "candidates": 1002,
+      "risk_feasible_candidates": 172,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "S",
+      "split": "source_F",
+      "seed": 62,
+      "threshold": 0.9959847200781687,
+      "candidates": 1002,
+      "risk_feasible_candidates": 172,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "S",
+      "split": "target_E",
+      "seed": 63,
+      "threshold": 0.9959847200781687,
+      "candidates": 1002,
+      "risk_feasible_candidates": 172,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "S",
+      "split": "target_E",
+      "seed": 64,
+      "threshold": 0.9959847200781687,
+      "candidates": 1002,
+      "risk_feasible_candidates": 172,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "S",
+      "split": "target_E",
+      "seed": 65,
+      "threshold": 0.9959847200781687,
+      "candidates": 1002,
+      "risk_feasible_candidates": 172,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "I",
+      "split": "source_F",
+      "seed": 60,
+      "threshold": 0.9864114070841032,
+      "candidates": 1002,
+      "risk_feasible_candidates": 232,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "I",
+      "split": "source_F",
+      "seed": 61,
+      "threshold": 0.9885952487998491,
+      "candidates": 1002,
+      "risk_feasible_candidates": 216,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "I",
+      "split": "source_F",
+      "seed": 62,
+      "threshold": 0.9959882184282695,
+      "candidates": 1002,
+      "risk_feasible_candidates": 177,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "I",
+      "split": "target_E",
+      "seed": 63,
+      "threshold": 0.9738826191807668,
+      "candidates": 1002,
+      "risk_feasible_candidates": 272,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "I",
+      "split": "target_E",
+      "seed": 64,
+      "threshold": 0.9655623112312851,
+      "candidates": 1002,
+      "risk_feasible_candidates": 292,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "I",
+      "split": "target_E",
+      "seed": 65,
+      "threshold": 0.9917342938857675,
+      "candidates": 1002,
+      "risk_feasible_candidates": 199,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "A",
+      "split": "source_F",
+      "seed": 60,
+      "threshold": 0.9959847200781687,
+      "candidates": 1002,
+      "risk_feasible_candidates": 172,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "A",
+      "split": "source_F",
+      "seed": 61,
+      "threshold": 0.9959847200781687,
+      "candidates": 1002,
+      "risk_feasible_candidates": 172,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "A",
+      "split": "source_F",
+      "seed": 62,
+      "threshold": 0.9959847200781687,
+      "candidates": 1002,
+      "risk_feasible_candidates": 172,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "A",
+      "split": "target_E",
+      "seed": 63,
+      "threshold": 0.9959847200781687,
+      "candidates": 1002,
+      "risk_feasible_candidates": 172,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "A",
+      "split": "target_E",
+      "seed": 64,
+      "threshold": 0.9959847200781687,
+      "candidates": 1002,
+      "risk_feasible_candidates": 172,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "A",
+      "split": "target_E",
+      "seed": 65,
+      "threshold": 0.9959847200781687,
+      "candidates": 1002,
+      "risk_feasible_candidates": 172,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "C",
+      "split": "source_F",
+      "seed": 60,
+      "threshold": 0.12209463505559268,
+      "candidates": 1002,
+      "risk_feasible_candidates": 1002,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "C",
+      "split": "source_F",
+      "seed": 61,
+      "threshold": 0.12209463505559268,
+      "candidates": 1002,
+      "risk_feasible_candidates": 1002,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "C",
+      "split": "source_F",
+      "seed": 62,
+      "threshold": 0.12209463505559268,
+      "candidates": 1002,
+      "risk_feasible_candidates": 1002,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "C",
+      "split": "target_E",
+      "seed": 63,
+      "threshold": 0.12209463505559268,
+      "candidates": 1002,
+      "risk_feasible_candidates": 1002,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "C",
+      "split": "target_E",
+      "seed": 64,
+      "threshold": 0.12209463505559268,
+      "candidates": 1002,
+      "risk_feasible_candidates": 1002,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_strict",
+      "strategy": "C",
+      "split": "target_E",
+      "seed": 65,
+      "threshold": 0.12209463505559268,
+      "candidates": 1002,
+      "risk_feasible_candidates": 1002,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "S",
+      "split": "source_F",
+      "seed": 60,
+      "threshold": 0.8930026577136758,
+      "candidates": 1002,
+      "risk_feasible_candidates": 415,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "S",
+      "split": "source_F",
+      "seed": 61,
+      "threshold": 0.8930026577136758,
+      "candidates": 1002,
+      "risk_feasible_candidates": 415,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "S",
+      "split": "source_F",
+      "seed": 62,
+      "threshold": 0.8930026577136758,
+      "candidates": 1002,
+      "risk_feasible_candidates": 415,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "S",
+      "split": "target_E",
+      "seed": 66,
+      "threshold": 0.8930026577136758,
+      "candidates": 1002,
+      "risk_feasible_candidates": 415,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "S",
+      "split": "target_E",
+      "seed": 67,
+      "threshold": 0.8930026577136758,
+      "candidates": 1002,
+      "risk_feasible_candidates": 415,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "S",
+      "split": "target_E",
+      "seed": 68,
+      "threshold": 0.8930026577136758,
+      "candidates": 1002,
+      "risk_feasible_candidates": 415,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "I",
+      "split": "source_F",
+      "seed": 60,
+      "threshold": 0.8927485770764255,
+      "candidates": 1002,
+      "risk_feasible_candidates": 418,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "I",
+      "split": "source_F",
+      "seed": 61,
+      "threshold": 0.8540471147428504,
+      "candidates": 1002,
+      "risk_feasible_candidates": 454,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "I",
+      "split": "source_F",
+      "seed": 62,
+      "threshold": 0.8529981538743339,
+      "candidates": 1002,
+      "risk_feasible_candidates": 457,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "I",
+      "split": "target_E",
+      "seed": 66,
+      "threshold": 0.9228092966609763,
+      "candidates": 1002,
+      "risk_feasible_candidates": 403,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "I",
+      "split": "target_E",
+      "seed": 67,
+      "threshold": 0.8935450878636738,
+      "candidates": 1002,
+      "risk_feasible_candidates": 436,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "I",
+      "split": "target_E",
+      "seed": 68,
+      "threshold": 0.9506995769568252,
+      "candidates": 1002,
+      "risk_feasible_candidates": 350,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "A",
+      "split": "source_F",
+      "seed": 60,
+      "threshold": 0.8930026577136758,
+      "candidates": 1002,
+      "risk_feasible_candidates": 415,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "A",
+      "split": "source_F",
+      "seed": 61,
+      "threshold": 0.8930026577136758,
+      "candidates": 1002,
+      "risk_feasible_candidates": 415,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "A",
+      "split": "source_F",
+      "seed": 62,
+      "threshold": 0.8930026577136758,
+      "candidates": 1002,
+      "risk_feasible_candidates": 415,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "A",
+      "split": "target_E",
+      "seed": 66,
+      "threshold": 0.8930026577136758,
+      "candidates": 1002,
+      "risk_feasible_candidates": 415,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "A",
+      "split": "target_E",
+      "seed": 67,
+      "threshold": 0.8930026577136758,
+      "candidates": 1002,
+      "risk_feasible_candidates": 415,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "A",
+      "split": "target_E",
+      "seed": 68,
+      "threshold": 0.8930026577136758,
+      "candidates": 1002,
+      "risk_feasible_candidates": 415,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "C",
+      "split": "source_F",
+      "seed": 60,
+      "threshold": 0.12209463505559268,
+      "candidates": 1002,
+      "risk_feasible_candidates": 1002,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "C",
+      "split": "source_F",
+      "seed": 61,
+      "threshold": 0.12209463505559268,
+      "candidates": 1002,
+      "risk_feasible_candidates": 1002,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "C",
+      "split": "source_F",
+      "seed": 62,
+      "threshold": 0.12209463505559268,
+      "candidates": 1002,
+      "risk_feasible_candidates": 1002,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "C",
+      "split": "target_E",
+      "seed": 66,
+      "threshold": 0.12209463505559268,
+      "candidates": 1002,
+      "risk_feasible_candidates": 1002,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "C",
+      "split": "target_E",
+      "seed": 67,
+      "threshold": 0.12209463505559268,
+      "candidates": 1002,
+      "risk_feasible_candidates": 1002,
+      "status": "selected"
+    },
+    {
+      "case": "cifar100_relaxed",
+      "strategy": "C",
+      "split": "target_E",
+      "seed": 68,
+      "threshold": 0.12209463505559268,
+      "candidates": 1002,
+      "risk_feasible_candidates": 1002,
+      "status": "selected"
+    }
+  ]
+}

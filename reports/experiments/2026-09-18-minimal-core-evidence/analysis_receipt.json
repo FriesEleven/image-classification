@@ -1,0 +1,31 @@
+{
+  "status": "passed",
+  "technical_audit": true,
+  "scientific_failed_points": [
+    {
+      "dataset": "cifar100",
+      "seed": "68",
+      "risk_feasible": "True",
+      "saving_floor_pass": "False"
+    }
+  ],
+  "all_seeds_retained": true,
+  "m1_rows": 72,
+  "m2_models": 6,
+  "timing_rows": 60,
+  "checked_sample_executions": 60000,
+  "correctness_errors": {
+    "route_errors": 0,
+    "prediction_errors": 0,
+    "logit_tolerance_errors": 0
+  },
+  "limitations": [
+    "post-hoc historical development exposure",
+    "I recalibrates target, shared methods do not",
+    "only three seeds",
+    "official benchmarks exposed to other project methods",
+    "resident subset timing, full-test accuracy",
+    "no population or simultaneous risk guarantee",
+    "no end-to-end service timing"
+  ]
+}

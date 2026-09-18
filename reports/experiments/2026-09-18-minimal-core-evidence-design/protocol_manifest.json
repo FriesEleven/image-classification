@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_result_generation",
+  "frozen_at": "2026-09-18T01:18:05.938262+00:00",
+  "guide": "docs/minimal_core_evidence_experiment_guide_20260918.md",
+  "guide_sha256": "479e4653f4248397dca2dbad8639be3eb79791bbb6f586d0a0f0b97fbcb61bc8",
+  "variant_m1": "historical_A4",
+  "score": "msp",
+  "cases": [
+    [
+      "cifar10",
+      "cifar10_source",
+      "cifar10_target",
+      0.0
+    ],
+    [
+      "cifar100_strict",
+      "cifar100_source",
+      "cifar100_target",
+      0.0
+    ],
+    [
+      "cifar100_relaxed",
+      "cifar100_source",
+      "cifar100_confirmation",
+      0.04
+    ]
+  ],
+  "rng": "NumPy PCG64",
+  "rng_seed": 20260918,
+  "quantiles": 1001,
+  "tolerance": 1e-12,
+  "savings_floor": 0.15,
+  "fit_audit_split": "Per class sorted IDs then seeded permutation; source pool first, overlapping IDs inherit F/E, novel confirmation IDs fill exactly half-class quota. Reset PCG64 per dataset.",
+  "data_amendment": "CIFAR100 confirmation has a different 5000-image pool. ID-aligned overlap assignment is used instead of independently random splits to ensure target E never overlaps source F. Every cohort still has balanced 2500 F and 2500 E.",
+  "split_file_sha256": "801158baf9129ddc52747f852c8083df43f05070c7025d2a83b8c6d046ff02a3",
+  "input_manifest_sha256": "644a618c2d7c635633da354b1e01768ba5ca22fb5947357194130d4d34b28601",
+  "strategies": {
+    "S": "shared max-min, all class constraints",
+    "I": "per-model fit recalibration",
+    "A": "shared mean, all class constraints",
+    "C": "shared max-min, no class constraint"
+  },
+  "m2": {
+    "models": {
+      "cifar10": {
+        "seeds": [
+          54,
+          55,
+          56
+        ],
+        "threshold": 0.984
+      },
+      "cifar100": {
+        "seeds": [
+          66,
+          67,
+          68
+        ],
+        "threshold": 0.903
+      }
+    },
+    "scope": "official benchmark supplementary locked assessment; prior project exposure",
+    "threshold_searches": 0,
+    "device": "cuda",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "batch_size": 1,
+    "cpu_threads": 1,
+    "rounds": 5,
+    "warmup": 100,
+    "timed_calls": 1000,
+    "precision": "deterministic FP32 TF32 disabled",
+    "rtol": 0.0001,
+    "atol": 1e-05,
+    "required_route_errors": 0,
+    "required_prediction_errors": 0,
+    "full_accuracy": "10000 official test images evaluated as singleton resident inputs",
+    "timing_workload": "One seeded permutation per dataset; first 1000 official IDs, identical across six seed-round schedules for that dataset; 100 warmup calls cycle within this subset",
+    "latency_scope": "synchronized model-only wall clock; excludes preprocessing/input transfer, queueing, and path-copy after timing"
+  },
+  "bootstrap": {
+    "repetitions": 2000,
+    "seed": 20260918,
+    "scope": "paired stratified image bootstrap conditional on three fixed models; not population or simultaneous risk guarantee"
+  },
+  "authorization": {
+    "m1": "current user request",
+    "m2": "User explicitly approved six fixed A3 checkpoints, CIFAR10/CIFAR100 official locked assessment and singleton timing via question reply in this task; launch requires explicit flag"
+  },
+  "stop_rules": "Input/source/ID/correctness errors fail-stop; keep partial output; no automatic scientific retry"
+}

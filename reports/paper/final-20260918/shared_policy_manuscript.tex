@@ -1,0 +1,31 @@
+% Post-hoc A4 fit/audit comparison. SD uses three training seeds.
+\begin{tabular}{lllrrrr}
+\hline
+Cohort & Scope & Strategy & Accuracy (\%) & MAC saved (\%) & Worst drop (pp) & Gates \\
+\hline
+C10 & source-F & S & 87.45 $\pm$ 0.19 & 36.87 $\pm$ 0.45 & 0.00 & pass \\
+C10 & source-F & I & 87.49 $\pm$ 0.24 & 43.49 $\pm$ 5.37 & 0.00 & pass \\
+C10 & source-F & A & 87.45 $\pm$ 0.19 & 36.87 $\pm$ 0.45 & 0.00 & pass \\
+C10 & source-F & C & 87.45 $\pm$ 0.19 & 48.58 $\pm$ 0.19 & 1.20 & fail \\
+C10 & target-E & S & 86.68 $\pm$ 0.33 & 36.27 $\pm$ 1.40 & 0.00 & pass \\
+C10 & target-E & I & 86.71 $\pm$ 0.40 & 46.50 $\pm$ 7.43 & 2.40 & fail \\
+C10 & target-E & A & 86.68 $\pm$ 0.33 & 36.27 $\pm$ 1.40 & 0.00 & pass \\
+C10 & target-E & C & 86.71 $\pm$ 0.47 & 48.70 $\pm$ 0.62 & 0.80 & fail \\
+C100 strict & source-F & S & 56.17 $\pm$ 0.44 & 9.61 $\pm$ 0.35 & 0.00 & fail \\
+C100 strict & source-F & I & 56.27 $\pm$ 0.46 & 11.69 $\pm$ 1.61 & 0.00 & fail \\
+C100 strict & source-F & A & 56.17 $\pm$ 0.44 & 9.61 $\pm$ 0.35 & 0.00 & fail \\
+C100 strict & source-F & C & 56.65 $\pm$ 0.48 & 57.01 $\pm$ 0.00 & 24.00 & fail \\
+C100 strict & target-E & S & 56.69 $\pm$ 0.72 & 9.70 $\pm$ 0.16 & 4.00 & fail \\
+C100 strict & target-E & I & 56.89 $\pm$ 0.54 & 14.88 $\pm$ 2.94 & 4.00 & fail \\
+C100 strict & target-E & A & 56.69 $\pm$ 0.72 & 9.70 $\pm$ 0.16 & 4.00 & fail \\
+C100 strict & target-E & C & 57.56 $\pm$ 1.35 & 57.00 $\pm$ 0.01 & 16.00 & fail \\
+C100 relaxed & source-F & S & 57.13 $\pm$ 0.52 & 23.49 $\pm$ 0.14 & 4.00 & pass \\
+C100 relaxed & source-F & I & 57.31 $\pm$ 0.40 & 25.09 $\pm$ 1.24 & 4.00 & pass \\
+C100 relaxed & source-F & A & 57.13 $\pm$ 0.52 & 23.49 $\pm$ 0.14 & 4.00 & pass \\
+C100 relaxed & source-F & C & 56.65 $\pm$ 0.48 & 57.01 $\pm$ 0.00 & 24.00 & fail \\
+C100 relaxed & target-E & S & 57.24 $\pm$ 0.43 & 24.11 $\pm$ 0.42 & 8.00 & fail \\
+C100 relaxed & target-E & I & 57.07 $\pm$ 0.23 & 21.79 $\pm$ 1.94 & 4.00 & pass \\
+C100 relaxed & target-E & A & 57.24 $\pm$ 0.43 & 24.11 $\pm$ 0.42 & 8.00 & fail \\
+C100 relaxed & target-E & C & 56.87 $\pm$ 0.10 & 57.00 $\pm$ 0.01 & 36.00 & fail \\
+\hline
+\end{tabular}

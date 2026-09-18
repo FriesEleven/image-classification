@@ -1,0 +1,38 @@
+{
+  "status": "completed",
+  "started_at": "2026-09-18T01:27:41.888377+00:00",
+  "stages": [
+    {
+      "name": "M2_locked_A3",
+      "command": [
+        "/root/miniconda3/bin/python",
+        "scripts/analysis/minimal_core_evidence.py",
+        "--stage",
+        "m2",
+        "--output",
+        "/root/autodl-tmp/image-classification/artifacts/analyses/minimal_core_evidence_20260918_r1",
+        "--authorize-a3-cifar-official-test"
+      ],
+      "status": "completed",
+      "started_at": "2026-09-18T01:27:41.888397+00:00",
+      "returncode": 0,
+      "finished_at": "2026-09-18T01:44:38.450635+00:00"
+    },
+    {
+      "name": "M3_audit",
+      "command": [
+        "/root/miniconda3/bin/python",
+        "scripts/analysis/minimal_core_evidence.py",
+        "--stage",
+        "m3",
+        "--output",
+        "/root/autodl-tmp/image-classification/artifacts/analyses/minimal_core_evidence_20260918_r1"
+      ],
+      "status": "completed",
+      "started_at": "2026-09-18T01:44:38.450662+00:00",
+      "returncode": 0,
+      "finished_at": "2026-09-18T01:44:46.066997+00:00"
+    }
+  ],
+  "finished_at": "2026-09-18T01:44:46.067043+00:00"
+}

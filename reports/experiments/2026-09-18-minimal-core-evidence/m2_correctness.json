@@ -1,0 +1,56 @@
+[
+  {
+    "dataset": "cifar10",
+    "seed": 54,
+    "samples_checked": 10000,
+    "route_errors": 0,
+    "prediction_errors": 0,
+    "logit_tolerance_errors": 0,
+    "max_abs_logit_difference": 0.0
+  },
+  {
+    "dataset": "cifar10",
+    "seed": 55,
+    "samples_checked": 10000,
+    "route_errors": 0,
+    "prediction_errors": 0,
+    "logit_tolerance_errors": 0,
+    "max_abs_logit_difference": 0.0
+  },
+  {
+    "dataset": "cifar10",
+    "seed": 56,
+    "samples_checked": 10000,
+    "route_errors": 0,
+    "prediction_errors": 0,
+    "logit_tolerance_errors": 0,
+    "max_abs_logit_difference": 0.0
+  },
+  {
+    "dataset": "cifar100",
+    "seed": 66,
+    "samples_checked": 10000,
+    "route_errors": 0,
+    "prediction_errors": 0,
+    "logit_tolerance_errors": 0,
+    "max_abs_logit_difference": 0.0
+  },
+  {
+    "dataset": "cifar100",
+    "seed": 67,
+    "samples_checked": 10000,
+    "route_errors": 0,
+    "prediction_errors": 0,
+    "logit_tolerance_errors": 0,
+    "max_abs_logit_difference": 0.0
+  },
+  {
+    "dataset": "cifar100",
+    "seed": 68,
+    "samples_checked": 10000,
+    "route_errors": 0,
+    "prediction_errors": 0,
+    "logit_tolerance_errors": 0,
+    "max_abs_logit_difference": 0.0
+  }
+]

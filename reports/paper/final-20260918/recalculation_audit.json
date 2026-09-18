@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "source_outputs_verified": 94,
+  "m1_recomputed_rows": 72,
+  "m2_recomputed_models": 6,
+  "raw_timing_arrays_verified": 60,
+  "new_model_execution": false,
+  "new_official_dataset_access": false,
+  "bootstrap_repetitions": 2000,
+  "bootstrap_seed": 20260918,
+  "tail_warning": "Paired p95 saving is negative for both datasets; mean latency speedup does not establish tail latency speedup."
+}
